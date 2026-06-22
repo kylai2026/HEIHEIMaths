@@ -1399,6 +1399,16 @@ body {
 .sync-status.sync-error { background: rgba(239, 68, 68, 0.35); }
 .sync-status.sync-offline { background: rgba(255,255,255,0.12); }
 
+.hud-item.user-hud {
+  background: rgba(255, 255, 255, 0.2);
+  font-weight: 700;
+  text-transform: lowercase;
+}
+
+.hud-item.user-hud.hidden {
+  display: none;
+}
+
 .btn-logout {
   border: 1px solid rgba(255, 255, 255, 0.45);
   background: rgba(255, 255, 255, 0.12);

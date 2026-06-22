@@ -57,9 +57,15 @@ const App = {
   },
 
   updateAuthUI() {
-    const loggedIn = !!CloudSync.getProfile();
+    const profile = CloudSync.getProfile();
+    const loggedIn = !!profile;
     document.getElementById('logoutBtn')?.classList.toggle('hidden', !loggedIn);
     document.getElementById('switchProfile')?.classList.toggle('hidden', !loggedIn);
+    const nameEl = document.getElementById('currentUser');
+    if (nameEl) {
+      nameEl.textContent = loggedIn ? profile.studentName : '';
+      nameEl.classList.toggle('hidden', !loggedIn);
+    }
   },
 
   async logout() {
@@ -89,9 +95,8 @@ const App = {
         const studentName = document.getElementById('studentName').value.trim();
         if (!familyCode || !studentName) return;
 
-        const nameOk = studentName.toLowerCase() === EXPECTED_STUDENT_NAME.toLowerCase();
-        const codeOk = familyCode === EXPECTED_FAMILY_CODE;
-        if (!nameOk || !codeOk) {
+        const validName = validateAccount(studentName, familyCode);
+        if (!validName) {
           errEl.textContent = '帳號或密碼唔啱，再試吓！';
           errEl.classList.remove('hidden');
           return;
@@ -102,9 +107,13 @@ const App = {
         btn.textContent = '連線中…';
 
         try {
-          await CloudSync.registerProfile(familyCode, studentName);
+          await CloudSync.registerProfile(familyCode, validName);
           modal.classList.add('hidden');
           this.updateAuthUI();
+          this.renderHUD();
+          this.renderHome();
+          this.renderProgress();
+          this.renderRewards();
           resolve();
         } catch (err) {
           errEl.textContent = '連線失敗，請檢查密碼或網絡後再試。';

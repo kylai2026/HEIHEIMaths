@@ -152,6 +152,7 @@ const CloudSync = {
   },
 
   async registerProfile(familyCode, studentName) {
+    localStorage.removeItem(Storage.KEY);
     this.setProfile(familyCode, studentName);
     if (!this.client) {
       if (this.isConfigured() && typeof supabase !== 'undefined') {

@@ -2,6 +2,20 @@
 const SUPABASE_URL = 'https://dptzfcfmyplqnxfqndub.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_uvWhBj7R-Kc2t8tubTRCiA_I0qsAYGC';
 
-/* 學生登入帳號（要手動輸入） */
-const EXPECTED_STUDENT_NAME = 'heihei';
-const EXPECTED_FAMILY_CODE = '2026';
+/* 學生登入帳號（每個帳號進度獨立，雲端以帳號名稱分開儲存） */
+const USER_ACCOUNTS = [
+  { username: 'heihei', password: '2026' },
+  { username: 'mother', password: '2026' },
+  { username: 'test', password: '2026' },
+  { username: 'father', password: '2026' },
+  { username: 'chunchun', password: '2026' }
+];
+
+function validateAccount(username, password) {
+  const name = username.trim().toLowerCase();
+  const code = password.trim();
+  const match = USER_ACCOUNTS.find(
+    a => a.username.toLowerCase() === name && a.password === code
+  );
+  return match ? match.username : null;
+}
