@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=6">
+  <link rel="stylesheet" href="css/style.css?v=7">
 </head>
 <body>
   <header class="header">
@@ -209,12 +209,12 @@
     <div class="modal-content profile-modal">
       <div class="modal-icon">👋</div>
       <h3>歡迎嚟到舅父晞晞數學補習網！</h3>
-      <p class="profile-intro">輸入家庭密碼同名字，進度會自動儲存到雲端。<br>換手機、換電腦都唔會冇晒！</p>
+      <p class="profile-intro">輸入帳號同密碼，進度會自動儲存到雲端。<br>換手機、換電腦都唔會冇晒！</p>
       <form id="profileForm" class="profile-form">
-        <label for="familyCode">家庭密碼 <span class="label-hint">（舅父俾你嘅密碼）</span></label>
-        <input type="password" id="familyCode" required value="61147815" autocomplete="off">
-        <label for="studentName">你的名字</label>
-        <input type="text" id="studentName" required value="heihei" autocomplete="name">
+        <label for="studentName">帳號</label>
+        <input type="text" id="studentName" required placeholder="輸入帳號" autocomplete="username">
+        <label for="familyCode">密碼 <span class="label-hint">（舅父俾你嘅密碼）</span></label>
+        <input type="password" id="familyCode" required placeholder="輸入密碼" autocomplete="off">
         <p class="profile-error hidden" id="profileError"></p>
         <button type="submit" class="btn btn-primary btn-lg" id="profileSubmit">開始練習</button>
       </form>
@@ -237,14 +237,14 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js?v=6"></script>
-  <script src="js/utils.js?v=6"></script>
-  <script src="js/cloud-sync.js?v=6"></script>
-  <script src="js/scoring.js?v=6"></script>
-  <script src="js/topics-config.js?v=6"></script>
-  <script src="js/p34-questions.js?v=6"></script>
-  <script src="js/question-pool.js?v=6"></script>
-  <script src="js/questions.js?v=6"></script>
-  <script src="js/app.js?v=6"></script>
+  <script src="js/supabase-config.js?v=7"></script>
+  <script src="js/utils.js?v=7"></script>
+  <script src="js/cloud-sync.js?v=7"></script>
+  <script src="js/scoring.js?v=7"></script>
+  <script src="js/topics-config.js?v=7"></script>
+  <script src="js/p34-questions.js?v=7"></script>
+  <script src="js/question-pool.js?v=7"></script>
+  <script src="js/questions.js?v=7"></script>
+  <script src="js/app.js?v=7"></script>
 </body>
 </html>

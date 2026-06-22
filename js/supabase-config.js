@@ -2,6 +2,6 @@
 const SUPABASE_URL = 'https://dptzfcfmyplqnxfqndub.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_uvWhBj7R-Kc2t8tubTRCiA_I0qsAYGC';
 
-/* 預設學生帳號（首次開網自動登入） */
-const DEFAULT_FAMILY_CODE = '61147815';
-const DEFAULT_STUDENT_NAME = 'heihei';
+/* 學生登入帳號（要手動輸入） */
+const EXPECTED_STUDENT_NAME = 'heihei';
+const EXPECTED_FAMILY_CODE = '2026';

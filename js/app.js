@@ -19,8 +19,7 @@ const App = {
     this.sanitizeLegacyUI();
     const syncResult = await CloudSync.init();
     if (syncResult.needSetup) {
-      const autoOk = await this.tryAutoProfileSetup();
-      if (!autoOk) await this.showProfileSetup();
+      await this.showProfileSetup();
     }
     if (!CloudSync.isConfigured()) {
       document.getElementById('switchProfile')?.remove();
@@ -59,34 +58,12 @@ const App = {
     });
   },
 
-  fillProfileDefaults() {
-    const familyInput = document.getElementById('familyCode');
-    const nameInput = document.getElementById('studentName');
-    if (familyInput && typeof DEFAULT_FAMILY_CODE === 'string' && DEFAULT_FAMILY_CODE) {
-      familyInput.value = DEFAULT_FAMILY_CODE;
-    }
-    if (nameInput && typeof DEFAULT_STUDENT_NAME === 'string' && DEFAULT_STUDENT_NAME) {
-      nameInput.value = DEFAULT_STUDENT_NAME;
-    }
-  },
-
-  async tryAutoProfileSetup() {
-    if (typeof DEFAULT_FAMILY_CODE !== 'string' || !DEFAULT_FAMILY_CODE.trim()) return false;
-    if (typeof DEFAULT_STUDENT_NAME !== 'string' || !DEFAULT_STUDENT_NAME.trim()) return false;
-    try {
-      await CloudSync.registerProfile(DEFAULT_FAMILY_CODE, DEFAULT_STUDENT_NAME);
-      return true;
-    } catch {
-      return false;
-    }
-  },
-
   showProfileSetup() {
     return new Promise((resolve) => {
       const modal = document.getElementById('profileModal');
       const form = document.getElementById('profileForm');
       const errEl = document.getElementById('profileError');
-      this.fillProfileDefaults();
+      form.reset();
       modal.classList.remove('hidden');
 
       form.onsubmit = async (e) => {
@@ -95,6 +72,14 @@ const App = {
         const familyCode = document.getElementById('familyCode').value.trim();
         const studentName = document.getElementById('studentName').value.trim();
         if (!familyCode || !studentName) return;
+
+        const nameOk = studentName.toLowerCase() === EXPECTED_STUDENT_NAME.toLowerCase();
+        const codeOk = familyCode === EXPECTED_FAMILY_CODE;
+        if (!nameOk || !codeOk) {
+          errEl.textContent = '帳號或密碼唔啱，再試吓！';
+          errEl.classList.remove('hidden');
+          return;
+        }
 
         const btn = document.getElementById('profileSubmit');
         btn.disabled = true;
