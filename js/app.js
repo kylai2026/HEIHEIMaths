@@ -494,6 +494,8 @@ const App = {
     document.getElementById('feedback').classList.add('hidden');
     document.getElementById('actionRow').classList.add('hidden');
     document.getElementById('solutionBox').classList.add('hidden');
+    document.getElementById('solutionBox').classList.remove('teach-box');
+    document.getElementById('showSolution').classList.remove('hidden');
     document.getElementById('hintText').textContent = q.hint;
     this.state.practiceAnswered = false;
     this.state.currentQuestion = q;
@@ -533,8 +535,9 @@ const App = {
     });
     document.getElementById('nextQuestion').addEventListener('click', () => this.nextPracticeQuestion());
     document.getElementById('showSolution').addEventListener('click', () => {
-      document.getElementById('solutionBox').innerHTML = this.state.currentQuestion.solution;
+      document.getElementById('solutionBox').innerHTML = this.buildTeachingHTML(this.state.currentQuestion);
       document.getElementById('solutionBox').classList.remove('hidden');
+      document.getElementById('solutionBox').classList.add('teach-box');
     });
   },
 
@@ -556,12 +559,14 @@ const App = {
     this.updateWeeklyCapHint();
 
     let rewardMsg = '';
-    if (correct && scoreResult.pointsEarned > 0) {
-      rewardMsg += `+${scoreResult.pointsEarned} 積分 🎁`;
-    } else if (correct && scoreResult.weeklyCapped) {
-      rewardMsg += '本週呢個難度積分已滿';
+    if (correct) {
+      if (scoreResult.pointsEarned > 0) {
+        rewardMsg += `+${scoreResult.pointsEarned} 積分 🎁`;
+      } else if (scoreResult.weeklyCapped) {
+        rewardMsg += '本週呢個難度積分已滿';
+      }
+      if (scoreResult.xp > 0) rewardMsg += ` · +${scoreResult.xp} XP`;
     }
-    if (scoreResult.xp > 0) rewardMsg += ` · +${scoreResult.xp} XP`;
 
     if (scoreResult.levelUp) {
       AudioManager.playSfx('levelUp');
@@ -578,15 +583,42 @@ const App = {
     return rewardMsg;
   },
 
+  buildTeachingHTML(q) {
+    const answer = q.answerDisplay || (q.options && q.correctIndex != null ? q.options[q.correctIndex] : '');
+    const hintBlock = q.hint ? `<p class="teach-hint"><strong>💡 提示：</strong>${q.hint}</p>` : '';
+    const steps = q.solution || `<p>正確答案係 <strong>${answer}</strong></p>`;
+    return `
+      <p class="teach-intro">唔緊要，一齊學返點做！</p>
+      <p class="teach-answer"><strong>✅ 正確答案：</strong>${answer}</p>
+      ${hintBlock}
+      <div class="teach-steps">${steps}</div>
+    `;
+  },
+
+  showTeachingSolution(q) {
+    const box = document.getElementById('solutionBox');
+    box.innerHTML = this.buildTeachingHTML(q);
+    box.classList.remove('hidden');
+    box.classList.add('teach-box');
+  },
+
   showFeedback(correct, q, rewardMsg) {
     const feedback = document.getElementById('feedback');
+    const solutionBox = document.getElementById('solutionBox');
+    const showSolutionBtn = document.getElementById('showSolution');
     feedback.classList.remove('hidden', 'correct', 'wrong');
+    solutionBox.classList.remove('teach-box');
+    solutionBox.classList.add('hidden');
+
     if (correct) {
       feedback.classList.add('correct');
       feedback.innerHTML = `🎉 答對了！${rewardMsg ? '<br><small>' + rewardMsg + '</small>' : ''}`;
+      showSolutionBtn.classList.remove('hidden');
     } else {
       feedback.classList.add('wrong');
-      feedback.innerHTML = `❌ 答錯了。正確答案：<strong>${q.answerDisplay}</strong>${rewardMsg ? '<br><small>' + rewardMsg + '</small>' : ''}`;
+      feedback.innerHTML = `❌ 答錯了，今次冇積分。睇下面學返點做！`;
+      showSolutionBtn.classList.add('hidden');
+      this.showTeachingSolution(q);
     }
     document.getElementById('actionRow').classList.remove('hidden');
     this.state.practiceAnswered = true;
@@ -698,6 +730,7 @@ const App = {
   },
 
   showQuizQuestion() {
+    document.getElementById('quizTeachBox')?.classList.add('hidden');
     const q = this.state.quizQuestions[this.state.quizIndex];
     const total = this.state.quizQuestions.length;
     const current = this.state.quizIndex + 1;
@@ -743,14 +776,30 @@ const App = {
     Storage.save(qData);
     this.renderDailyProgress();
 
+    let teachEl = document.getElementById('quizTeachBox');
+    if (!correct) {
+      if (!teachEl) {
+        teachEl = document.createElement('div');
+        teachEl.id = 'quizTeachBox';
+        teachEl.className = 'solution-box teach-box';
+        document.getElementById('quizActive').appendChild(teachEl);
+      }
+      teachEl.innerHTML = this.buildTeachingHTML(q);
+      teachEl.classList.remove('hidden');
+    } else {
+      teachEl?.classList.add('hidden');
+    }
+
+    const delay = correct ? 1200 : 4500;
     setTimeout(() => {
+      document.getElementById('quizTeachBox')?.classList.add('hidden');
       this.state.quizIndex++;
       if (this.state.quizIndex >= this.state.quizQuestions.length) {
         this.showQuizResult();
       } else {
         this.showQuizQuestion();
       }
-    }, 1200);
+    }, delay);
   },
 
   showQuizResult() {

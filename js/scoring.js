@@ -131,7 +131,7 @@ const Scoring = {
         if (toAdd < tierConfig.points) result.weeklyCapped = true;
       }
     } else {
-      result.xp = this.XP_WRONG;
+      result.xp = 0;
       data.currentStreak = 0;
     }
 

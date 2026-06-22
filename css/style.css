@@ -1053,11 +1053,49 @@ body {
 .solution-box {
   margin-top: 1rem;
   padding: 1.25rem;
-  background: #f8fafc;
+  background: var(--card);
+  border: 2px solid var(--primary-light);
   border-left: 4px solid var(--primary);
   border-radius: var(--radius-sm);
   font-size: 0.95rem;
   line-height: 1.8;
+}
+
+.solution-box.teach-box {
+  background: var(--warning-light);
+  border-color: var(--warning);
+  border-left-color: var(--warning);
+}
+
+.teach-intro {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.65rem;
+  color: var(--text);
+}
+
+.teach-answer {
+  margin-bottom: 0.5rem;
+}
+
+.teach-hint {
+  margin: 0.5rem 0 0.75rem;
+  padding: 0.65rem 0.85rem;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+}
+
+html[data-theme="dark"] .teach-hint {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.teach-steps h4 {
+  margin-bottom: 0.35rem;
+}
+
+.teach-steps p {
+  margin: 0.25rem 0;
 }
 
 .solution-box h4 {
