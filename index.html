@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>舅父晞晞數學補習網</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=6">
+</head>
+<body>
+  <header class="header">
+    <div class="header-bg"></div>
+    <div class="header-inner">
+      <div class="logo">
+        <img src="assets/img/logo-uncle.png" alt="舅父晞晞" class="logo-img">
+        <div>
+          <h1>舅父晞晞數學補習網</h1>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="hud-item sync-hud" id="syncStatus" title="同步狀態">離線</div>
+        <div class="hud-item level-hud" title="等級">
+          <img src="assets/img/tier-medium.png" alt="" class="hud-img" id="hudLevelImg">
+          <span class="hud-val">Lv.<strong id="hudLevel">1</strong></span>
+        </div>
+        <div class="hud-item" title="經驗值">
+          <span class="hud-icon">⚡</span>
+          <span class="hud-val"><strong id="hudXp">0</strong> / 100 XP</span>
+        </div>
+        <div class="hud-item points" title="可兌換禮物積分">
+          <img src="assets/img/gift-small.png" alt="" class="hud-img small">
+          <span class="hud-val"><strong id="hudPoints">0</strong> 分</span>
+        </div>
+      </div>
+      <div class="xp-bar-wrap">
+        <div class="xp-bar"><div class="xp-bar-fill" id="hudXpFill"></div></div>
+        <span class="xp-bar-label" id="hudXpLabel">距離下一級還需 100 XP</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav-tabs" id="navTabs">
+    <button class="nav-tab active" data-view="home"><img src="assets/img/tier-easy.png" alt="" class="nav-icon">主頁</button>
+    <button class="nav-tab" data-view="practice"><img src="assets/img/tier-medium.png" alt="" class="nav-icon">分題練習</button>
+    <button class="nav-tab" data-view="quiz"><img src="assets/img/bg-pattern.png" alt="" class="nav-icon">模擬小測</button>
+    <button class="nav-tab" data-view="rewards"><img src="assets/img/gift-big.png" alt="" class="nav-icon">獎勵</button>
+    <button class="nav-tab" data-view="tips"><img src="assets/img/logo-uncle.png" alt="" class="nav-icon">溫習秘笈</button>
+    <button class="nav-tab" data-view="progress"><img src="assets/img/tier-hard.png" alt="" class="nav-icon">學習記錄</button>
+  </nav>
+
+  <main class="main">
+    <section class="view active" id="view-home">
+      <div class="hero-banner">
+        <img src="assets/img/hero-banner.png" alt="數學學習" class="hero-img">
+        <div class="hero-text">
+          <h2>加油！舅父晞晞信你可以做到 💪</h2>
+          <p>每日練習 <strong>20 分鐘</strong>，做題賺積分，換取禮物！</p>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <span class="stat-num" id="totalAnswered">0</span>
+          <span class="stat-label">已做題目</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" id="totalCorrect">0</span>
+          <span class="stat-label">答對題數</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" id="accuracyRate">0%</span>
+          <span class="stat-label">正確率</span>
+        </div>
+        <div class="stat-card highlight">
+          <span class="stat-num" id="streakDays">0</span>
+          <span class="stat-label">連續練習天數</span>
+        </div>
+      </div>
+
+      <div class="points-rules">
+        <h3>🎁 積分規則</h3>
+        <div class="tier-rules-grid" id="tierRulesGrid"></div>
+      </div>
+
+      <h3 class="section-title">📚 小三、小四課題練習（題目隨機出現）</h3>
+      <div id="tierSections"></div>
+
+      <div class="daily-challenge">
+        <img src="assets/img/hero-banner.png" alt="" class="daily-bg">
+        <div class="daily-content">
+          <h3>🎯 今日挑戰</h3>
+          <p>10 條全隨機題目（初/中/高級混合），按難度賺積分！</p>
+          <button class="btn btn-primary btn-lg" id="startDaily">開始今日挑戰</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-practice">
+      <div class="practice-layout">
+        <aside class="topic-sidebar" id="topicSidebar"></aside>
+        <div class="practice-area">
+          <div class="practice-header">
+            <h2 id="practiceTitle">選擇課題開始練習</h2>
+            <div class="practice-meta">
+              <span id="practiceCount">0 / 10</span>
+              <span class="badge" id="practiceTopicBadge"></span>
+            </div>
+          </div>
+          <div class="tier-selector" id="tierSelector">
+            <button class="tier-btn tier-easy" data-tier="easy">
+              <img src="assets/img/tier-easy.png" alt=""> 初級 +1分
+            </button>
+            <button class="tier-btn tier-medium active" data-tier="medium">
+              <img src="assets/img/tier-medium.png" alt=""> 中級 +2分
+            </button>
+            <button class="tier-btn tier-hard" data-tier="hard">
+              <img src="assets/img/tier-hard.png" alt=""> 高級 +3分
+            </button>
+          </div>
+          <p class="weekly-cap-hint" id="weeklyCapHint"></p>
+          <div class="question-card" id="questionCard">
+            <p class="placeholder-text">👈 請喺左邊揀一個課題</p>
+          </div>
+          <div class="answer-area hidden" id="answerArea">
+            <label for="answerInput">你嘅答案：</label>
+            <div class="input-row">
+              <input type="text" id="answerInput" placeholder="例如：3/4 或 1 1/2 或 12.5" autocomplete="off">
+              <button class="btn btn-primary" id="submitAnswer">提交</button>
+            </div>
+            <p class="hint-text" id="hintText"></p>
+          </div>
+          <div class="feedback hidden" id="feedback"></div>
+          <div class="action-row hidden" id="actionRow">
+            <button class="btn btn-secondary" id="showSolution">睇解法</button>
+            <button class="btn btn-primary" id="nextQuestion">下一題 →</button>
+          </div>
+          <div class="solution-box hidden" id="solutionBox"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-quiz">
+      <div class="quiz-intro" id="quizIntro">
+        <img src="assets/img/bg-pattern.png" alt="" class="quiz-hero-img">
+        <h2>📝 模擬小測</h2>
+        <p><strong>20 條選擇題</strong>，涵蓋小三、小四課題，難度隨機！</p>
+        <ul class="quiz-rules">
+          <li>每題只有一個正確答案</li>
+          <li>唔使計時，慢慢諗清楚先答</li>
+          <li>做完會顯示成績同弱項分析</li>
+        </ul>
+        <button class="btn btn-primary btn-lg" id="startQuiz">開始模擬小測</button>
+      </div>
+      <div class="quiz-active hidden" id="quizActive">
+        <div class="quiz-progress">
+          <span id="quizProgress">第 1 / 20 題</span>
+          <div class="progress-bar"><div class="progress-fill" id="quizProgressFill"></div></div>
+        </div>
+        <div class="question-card" id="quizQuestion"></div>
+        <div class="options-grid" id="quizOptions"></div>
+      </div>
+      <div class="quiz-result hidden" id="quizResult"></div>
+    </section>
+
+    <section class="view" id="view-rewards">
+      <h2>🏆 獎勵中心</h2>
+      <div class="rewards-hero">
+        <div class="level-card" id="levelCard"></div>
+        <div class="coins-card points-card">
+          <img src="assets/img/gift-medium.png" alt="" class="points-hero-img">
+          <span class="big-coins"><strong id="rewardPoints">0</strong> 分</span>
+          <p>答題賺積分，換取禮物！</p>
+        </div>
+      </div>
+      <div class="weekly-status" id="weeklyStatus"></div>
+      <h3>🛍️ 禮物兌換</h3>
+      <p class="gift-note">30 分 → 小禮物 · 60 分 → 中級禮物 · 100 分 → 大獎</p>
+      <div class="shop-grid gift-grid" id="giftGrid"></div>
+      <h3>🎖️ 徽章成就</h3>
+      <div class="badges-grid" id="badgesGrid"></div>
+      <h3>已兌換禮物</h3>
+      <div class="owned-rewards" id="ownedRewards"></div>
+    </section>
+
+    <section class="view" id="view-tips">
+      <h2>💡 溫習秘笈</h2>
+      <p class="tips-intro">舅父晞晞話你知：記住呢啲技巧就可以搶分！</p>
+      <div class="tips-grid" id="tipsGrid"></div>
+    </section>
+
+    <section class="view" id="view-progress">
+      <h2>📊 學習記錄</h2>
+      <div class="progress-summary" id="progressSummary"></div>
+      <h3>各課題表現</h3>
+      <div class="topic-progress-list" id="topicProgressList"></div>
+      <h3>最近測驗成績</h3>
+      <div class="quiz-history" id="quizHistory"></div>
+      <button class="btn btn-danger btn-sm" id="resetProgress">重設所有記錄</button>
+      <button class="btn btn-secondary btn-sm" id="switchProfile" style="margin-left:0.5rem">切換學生帳號</button>
+    </section>
+  </main>
+
+  <div class="modal hidden" id="profileModal">
+    <div class="modal-content profile-modal">
+      <div class="modal-icon">👋</div>
+      <h3>歡迎嚟到舅父晞晞數學補習網！</h3>
+      <p class="profile-intro">輸入家庭密碼同名字，進度會自動儲存到雲端。<br>換手機、換電腦都唔會冇晒！</p>
+      <form id="profileForm" class="profile-form">
+        <label for="familyCode">家庭密碼 <span class="label-hint">（舅父俾你嘅密碼）</span></label>
+        <input type="password" id="familyCode" required value="61147815" autocomplete="off">
+        <label for="studentName">你的名字</label>
+        <input type="text" id="studentName" required value="heihei" autocomplete="name">
+        <p class="profile-error hidden" id="profileError"></p>
+        <button type="submit" class="btn btn-primary btn-lg" id="profileSubmit">開始練習</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="rewardModal">
+    <div class="modal-content">
+      <div class="modal-icon" id="modalIcon">🎉</div>
+      <img id="modalImage" class="modal-image hidden" alt="">
+      <h3 id="modalTitle">獲得獎勵！</h3>
+      <p id="modalMessage"></p>
+      <button class="btn btn-primary" id="modalClose">太好啦！</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <img src="assets/img/logo-uncle.png" alt="" class="footer-logo">
+    <p>舅父晞晞數學補習網 · 加油！🌟</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js?v=6"></script>
+  <script src="js/utils.js?v=6"></script>
+  <script src="js/cloud-sync.js?v=6"></script>
+  <script src="js/scoring.js?v=6"></script>
+  <script src="js/topics-config.js?v=6"></script>
+  <script src="js/p34-questions.js?v=6"></script>
+  <script src="js/question-pool.js?v=6"></script>
+  <script src="js/questions.js?v=6"></script>
+  <script src="js/app.js?v=6"></script>
+</body>
+</html>

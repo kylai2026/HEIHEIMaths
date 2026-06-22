@@ -1,0 +1,5 @@
+# 如將來用本地覆蓋設定，可避免提交密鑰
+js/supabase-config.local.js
+
+# Cursor 暫存圖片
+assets/img/c__Users_*
