@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=7">
+  <link rel="stylesheet" href="css/style.css?v=8">
 </head>
 <body>
   <header class="header">
@@ -24,6 +24,7 @@
       </div>
       <div class="header-stats">
         <div class="hud-item sync-hud" id="syncStatus" title="同步狀態">離線</div>
+        <button type="button" class="btn-logout hidden" id="logoutBtn" title="登出帳號">登出</button>
         <div class="hud-item level-hud" title="等級">
           <img src="assets/img/tier-medium.png" alt="" class="hud-img" id="hudLevelImg">
           <span class="hud-val">Lv.<strong id="hudLevel">1</strong></span>
@@ -201,7 +202,7 @@
       <h3>最近測驗成績</h3>
       <div class="quiz-history" id="quizHistory"></div>
       <button class="btn btn-danger btn-sm" id="resetProgress">重設所有記錄</button>
-      <button class="btn btn-secondary btn-sm" id="switchProfile" style="margin-left:0.5rem">切換學生帳號</button>
+      <button class="btn btn-secondary btn-sm" id="switchProfile" style="margin-left:0.5rem">登出</button>
     </section>
   </main>
 
@@ -211,10 +212,14 @@
       <h3>歡迎嚟到舅父晞晞數學補習網！</h3>
       <p class="profile-intro">輸入帳號同密碼，進度會自動儲存到雲端。<br>換手機、換電腦都唔會冇晒！</p>
       <form id="profileForm" class="profile-form">
-        <label for="studentName">帳號</label>
-        <input type="text" id="studentName" required placeholder="輸入帳號" autocomplete="username">
-        <label for="familyCode">密碼 <span class="label-hint">（舅父俾你嘅密碼）</span></label>
-        <input type="password" id="familyCode" required placeholder="輸入密碼" autocomplete="off">
+        <div class="profile-field">
+          <label class="profile-label" for="studentName">帳號：</label>
+          <input type="text" id="studentName" required placeholder="輸入帳號" autocomplete="username">
+        </div>
+        <div class="profile-field">
+          <label class="profile-label" for="familyCode">密碼：</label>
+          <input type="password" id="familyCode" required placeholder="輸入密碼" autocomplete="off">
+        </div>
         <p class="profile-error hidden" id="profileError"></p>
         <button type="submit" class="btn btn-primary btn-lg" id="profileSubmit">開始練習</button>
       </form>
@@ -237,14 +242,14 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js?v=7"></script>
-  <script src="js/utils.js?v=7"></script>
-  <script src="js/cloud-sync.js?v=7"></script>
-  <script src="js/scoring.js?v=7"></script>
-  <script src="js/topics-config.js?v=7"></script>
-  <script src="js/p34-questions.js?v=7"></script>
-  <script src="js/question-pool.js?v=7"></script>
-  <script src="js/questions.js?v=7"></script>
-  <script src="js/app.js?v=7"></script>
+  <script src="js/supabase-config.js?v=8"></script>
+  <script src="js/utils.js?v=8"></script>
+  <script src="js/cloud-sync.js?v=8"></script>
+  <script src="js/scoring.js?v=8"></script>
+  <script src="js/topics-config.js?v=8"></script>
+  <script src="js/p34-questions.js?v=8"></script>
+  <script src="js/question-pool.js?v=8"></script>
+  <script src="js/questions.js?v=8"></script>
+  <script src="js/app.js?v=8"></script>
 </body>
 </html>

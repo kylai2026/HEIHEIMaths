@@ -1177,6 +1177,27 @@ body {
 .sync-status.sync-error { background: rgba(239, 68, 68, 0.35); }
 .sync-status.sync-offline { background: rgba(255,255,255,0.12); }
 
+.btn-logout {
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  padding: 0.35rem 0.85rem;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-logout:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.btn-logout.hidden {
+  display: none;
+}
+
 .profile-modal {
   max-width: 400px;
   text-align: left;
@@ -1189,6 +1210,25 @@ body {
 .profile-intro {
   text-align: center;
   font-size: 0.9rem;
+}
+
+.profile-form .profile-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+}
+
+.profile-form .profile-label {
+  flex: 0 0 3.5rem;
+  font-weight: 700;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.profile-form .profile-field input {
+  flex: 1;
+  min-width: 0;
 }
 
 .profile-form label {

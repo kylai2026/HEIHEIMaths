@@ -23,7 +23,9 @@ const App = {
     }
     if (!CloudSync.isConfigured()) {
       document.getElementById('switchProfile')?.remove();
+      document.getElementById('logoutBtn')?.remove();
     }
+    this.updateAuthUI();
     QuestionBank.init();
     this.bindNavigation();
     this.bindTierSelector();
@@ -46,16 +48,26 @@ const App = {
         this.renderRewards();
       }
     });
-    document.getElementById('switchProfile').addEventListener('click', async () => {
-      if (!confirm('切換帳號會登出而家嘅學生，確定嗎？')) return;
-      CloudSync.clearProfile();
-      localStorage.removeItem(Storage.KEY);
-      await this.showProfileSetup();
-      this.renderHUD();
-      this.renderHome();
-      this.renderProgress();
-      this.renderRewards();
-    });
+    document.getElementById('logoutBtn')?.addEventListener('click', () => this.logout());
+    document.getElementById('switchProfile')?.addEventListener('click', () => this.logout());
+  },
+
+  updateAuthUI() {
+    const loggedIn = !!CloudSync.getProfile();
+    document.getElementById('logoutBtn')?.classList.toggle('hidden', !loggedIn);
+    document.getElementById('switchProfile')?.classList.toggle('hidden', !loggedIn);
+  },
+
+  async logout() {
+    if (!confirm('確定要登出嗎？')) return;
+    CloudSync.clearProfile();
+    localStorage.removeItem(Storage.KEY);
+    this.updateAuthUI();
+    await this.showProfileSetup();
+    this.renderHUD();
+    this.renderHome();
+    this.renderProgress();
+    this.renderRewards();
   },
 
   showProfileSetup() {
@@ -88,6 +100,7 @@ const App = {
         try {
           await CloudSync.registerProfile(familyCode, studentName);
           modal.classList.add('hidden');
+          this.updateAuthUI();
           resolve();
         } catch (err) {
           errEl.textContent = '連線失敗，請檢查密碼或網絡後再試。';
