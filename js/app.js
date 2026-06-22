@@ -12,10 +12,13 @@ const App = {
     dailyMode: false,
     randomMode: false,
     randomTopicPool: null,
-    practiceTier: 'medium'
+    practiceTier: 'medium',
+    sessionLastTick: Date.now()
   },
 
   async init() {
+    UserSettings.init();
+    AudioManager.init();
     this.sanitizeLegacyUI();
     const syncResult = await CloudSync.init();
     if (syncResult.needSetup) {
@@ -39,6 +42,7 @@ const App = {
     this.bindQuiz();
     this.bindDaily();
     this.bindModal();
+    this.bindSessionTracking();
     document.getElementById('resetProgress').addEventListener('click', async () => {
       if (confirm('確定要重設所有學習記錄嗎？（雲端記錄都會一併清除）')) {
         Storage.reset();
@@ -113,6 +117,92 @@ const App = {
     });
   },
 
+  bindSessionTracking() {
+    this.state.sessionLastTick = Date.now();
+    setInterval(() => this.trackSessionTime(), 60000);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') this.trackSessionTime(true);
+    });
+  },
+
+  trackSessionTime(force = false) {
+    const now = Date.now();
+    const mins = (now - this.state.sessionLastTick) / 60000;
+    if (force || mins >= 1) {
+      if (mins >= 0.5) Storage.addSessionMinutes(Math.min(mins, 30));
+      this.state.sessionLastTick = now;
+      this.renderDailyProgress();
+    }
+  },
+
+  renderDailyProgress() {
+    const data = Storage.load();
+    const today = Storage.getTodayLog(data);
+    const acc = today.answered > 0 ? Math.round((today.correct / today.answered) * 100) : 0;
+    const goalDone = today.goalMet;
+    const panel = document.getElementById('dailyProgressPanel');
+    if (!panel) return;
+
+    const last7 = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const key = Storage.getDateKey(d);
+      const log = data.dailyLog?.[key] || { answered: 0, minutes: 0, goalMet: false };
+      last7.push({
+        key,
+        label: i === 0 ? '今日' : `${d.getMonth() + 1}/${d.getDate()}`,
+        ...log
+      });
+    }
+
+    panel.innerHTML = `
+      <div class="daily-progress-head">
+        <h3>📅 今日學習進度</h3>
+        <span class="daily-goal-badge ${goalDone ? 'done' : ''}">${goalDone ? '✅ 今日目標達成' : '目標：做 5 題或練習 10 分鐘'}</span>
+      </div>
+      <div class="daily-today-stats">
+        <div class="daily-stat"><strong>${today.answered}</strong><span>今日做題</span></div>
+        <div class="daily-stat"><strong>${today.correct}</strong><span>答對</span></div>
+        <div class="daily-stat"><strong>${acc}%</strong><span>正確率</span></div>
+        <div class="daily-stat"><strong>${today.minutes || 0}</strong><span>分鐘</span></div>
+        <div class="daily-stat"><strong>${today.points || 0}</strong><span>積分</span></div>
+      </div>
+      <div class="daily-week-row">
+        ${last7.map(d => `
+          <div class="daily-week-cell ${d.goalMet ? 'met' : ''} ${d.key === Storage.getDateKey() ? 'today' : ''}" title="${d.label}：${d.answered} 題 · ${d.minutes || 0} 分鐘">
+            <span class="dw-label">${d.label}</span>
+            <span class="dw-num">${d.answered || '—'}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+
+    const logPanel = document.getElementById('dailyLogPanel');
+    if (logPanel) {
+      const keys = Object.keys(data.dailyLog || {}).sort().reverse().slice(0, 14);
+      if (!keys.length) {
+        logPanel.innerHTML = '<p class="muted-text">尚未有每日記錄，開始做題就會自動記低！</p>';
+      } else {
+        logPanel.innerHTML = keys.map(key => {
+          const log = data.dailyLog[key];
+          const rate = log.answered > 0 ? Math.round((log.correct / log.answered) * 100) : 0;
+          return `
+            <div class="daily-log-item ${log.goalMet ? 'met' : ''}">
+              <div class="daily-log-date">${key}${log.dailyChallenge ? ' · 🎯 挑戰' : ''}</div>
+              <div class="daily-log-stats">
+                <span>${log.answered} 題</span>
+                <span>答對 ${log.correct}（${rate}%）</span>
+                <span>${log.minutes || 0} 分鐘</span>
+                <span>+${log.points || 0} 分 · +${log.xp || 0} XP</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+  },
+
   sanitizeLegacyUI() {
     ['hudExamScore', 'examScoreDisplay', 'scoreGoalBar'].forEach(id => {
       document.getElementById(id)?.remove();
@@ -168,6 +258,7 @@ const App = {
   bindNavigation() {
     document.querySelectorAll('.nav-tab').forEach(tab => {
       tab.addEventListener('click', () => {
+        AudioManager.playSfx('click');
         this.switchView(tab.dataset.view);
       });
     });
@@ -183,6 +274,7 @@ const App = {
     });
     if (view === 'progress') this.renderProgress();
     if (view === 'rewards') this.renderRewards();
+    if (view === 'home') this.renderDailyProgress();
     this.renderHUD();
   },
 
@@ -264,6 +356,7 @@ const App = {
 
     this.renderTierRules();
     this.renderTierSections();
+    this.renderDailyProgress();
     this.renderHUD();
   },
 
@@ -437,13 +530,20 @@ const App = {
   },
 
   processAnswer(correct, topicId, tier) {
+    this.trackSessionTime();
+    AudioManager.playSfx(correct ? 'correct' : 'wrong');
+
     const data = Storage.load();
     const scoreResult = Scoring.awardAnswer(data, correct, tier);
+    Storage.recordAnswer(topicId, correct, {
+      points: scoreResult.pointsEarned || 0,
+      xp: scoreResult.xp || 0
+    }, data);
     Storage.save(data);
-    Storage.recordAnswer(topicId, correct);
 
     this.renderHUD();
     this.renderHome();
+    this.renderDailyProgress();
     this.updateWeeklyCapHint();
 
     let rewardMsg = '';
@@ -455,6 +555,7 @@ const App = {
     if (scoreResult.xp > 0) rewardMsg += ` · +${scoreResult.xp} XP`;
 
     if (scoreResult.levelUp) {
+      AudioManager.playSfx('levelUp');
       this.showModal('🎊', `升級了！Lv.${scoreResult.newLevel.level}`,
         `儲滿 100 XP 升一級！你而家係 Lv.${scoreResult.newLevel.level}`,
         'assets/img/tier-medium.png');
@@ -528,6 +629,9 @@ const App = {
         const dailyReward = Scoring.awardDaily(Storage.load());
         if (dailyReward) {
           Storage.save(Storage.load());
+          Storage.markDailyChallengeDone();
+          this.renderDailyProgress();
+          AudioManager.playSfx('levelUp');
           this.showModal('🎯', '今日挑戰完成！', `+${dailyReward.xp} XP`);
         }
       }
@@ -550,6 +654,7 @@ const App = {
 
   bindDaily() {
     document.getElementById('startDaily').addEventListener('click', () => {
+      AudioManager.playSfx('click');
       this.state.dailyMode = true;
       this.state.randomMode = true;
       this.state.randomTopicPool = TOPICS.filter(t => t.exam).map(t => t.id);
@@ -621,6 +726,13 @@ const App = {
     } else {
       this.state.quizWeak[q.topicName] = (this.state.quizWeak[q.topicName] || 0) + 1;
     }
+
+    this.trackSessionTime();
+    AudioManager.playSfx(correct ? 'correct' : 'wrong');
+    const qData = Storage.load();
+    Storage.updateDailyLog(qData, { answered: 1, correct: correct ? 1 : 0 });
+    Storage.save(qData);
+    this.renderDailyProgress();
 
     setTimeout(() => {
       this.state.quizIndex++;
@@ -774,6 +886,7 @@ const App = {
 
   renderProgress() {
     const data = Storage.load();
+    this.renderDailyProgress();
     const rate = data.totalAnswered > 0
       ? Math.round((data.totalCorrect / data.totalAnswered) * 100) : 0;
     document.getElementById('progressSummary').innerHTML = `

@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=8">
+  <link rel="stylesheet" href="css/style.css?v=9">
 </head>
 <body>
   <header class="header">
@@ -44,6 +44,24 @@
       </div>
     </div>
   </header>
+
+  <div class="settings-bar" id="settingsBar">
+    <div class="settings-group">
+      <span class="settings-label">字型</span>
+      <button type="button" class="settings-btn" data-font="sm" title="細字">小</button>
+      <button type="button" class="settings-btn active" data-font="md" title="中字">中</button>
+      <button type="button" class="settings-btn" data-font="lg" title="大字">大</button>
+    </div>
+    <div class="settings-group">
+      <button type="button" class="settings-btn" id="themeToggle" title="切換夜晚模式">☀️</button>
+    </div>
+    <div class="settings-group">
+      <span class="settings-label">聲音</span>
+      <button type="button" class="settings-btn" id="muteMusic" title="背景音樂">🎵</button>
+      <button type="button" class="settings-btn" id="muteSfx" title="音效">🔊</button>
+      <button type="button" class="settings-btn" id="muteAll" title="全部靜音">🔇</button>
+    </div>
+  </div>
 
   <nav class="nav-tabs" id="navTabs">
     <button class="nav-tab active" data-view="home"><img src="assets/img/tier-easy.png" alt="" class="nav-icon">主頁</button>
@@ -82,6 +100,8 @@
           <span class="stat-label">連續練習天數</span>
         </div>
       </div>
+
+      <div class="daily-progress-panel" id="dailyProgressPanel"></div>
 
       <div class="points-rules">
         <h3>🎁 積分規則</h3>
@@ -197,6 +217,8 @@
     <section class="view" id="view-progress">
       <h2>📊 學習記錄</h2>
       <div class="progress-summary" id="progressSummary"></div>
+      <h3>📅 每日學習記錄</h3>
+      <div class="daily-log-panel" id="dailyLogPanel"></div>
       <h3>各課題表現</h3>
       <div class="topic-progress-list" id="topicProgressList"></div>
       <h3>最近測驗成績</h3>
@@ -242,14 +264,16 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js?v=8"></script>
-  <script src="js/utils.js?v=8"></script>
-  <script src="js/cloud-sync.js?v=8"></script>
-  <script src="js/scoring.js?v=8"></script>
-  <script src="js/topics-config.js?v=8"></script>
-  <script src="js/p34-questions.js?v=8"></script>
-  <script src="js/question-pool.js?v=8"></script>
-  <script src="js/questions.js?v=8"></script>
-  <script src="js/app.js?v=8"></script>
+  <script src="js/supabase-config.js?v=9"></script>
+  <script src="js/settings.js?v=9"></script>
+  <script src="js/audio.js?v=9"></script>
+  <script src="js/utils.js?v=9"></script>
+  <script src="js/cloud-sync.js?v=9"></script>
+  <script src="js/scoring.js?v=9"></script>
+  <script src="js/topics-config.js?v=9"></script>
+  <script src="js/p34-questions.js?v=9"></script>
+  <script src="js/question-pool.js?v=9"></script>
+  <script src="js/questions.js?v=9"></script>
+  <script src="js/app.js?v=9"></script>
 </body>
 </html>

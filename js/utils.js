@@ -167,7 +167,65 @@ const Storage = {
     if (!data.redeemedGifts && data.unlockedRewards) {
       data.redeemedGifts = data.unlockedRewards;
     }
+    if (!data.dailyLog) data.dailyLog = {};
     return data;
+  },
+
+  getDateKey(date = new Date()) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  },
+
+  ensureDailyEntry(data, key = this.getDateKey()) {
+    if (!data.dailyLog) data.dailyLog = {};
+    if (!data.dailyLog[key]) {
+      data.dailyLog[key] = {
+        answered: 0,
+        correct: 0,
+        points: 0,
+        xp: 0,
+        minutes: 0,
+        dailyChallenge: false,
+        goalMet: false
+      };
+    }
+    return data.dailyLog[key];
+  },
+
+  updateDailyLog(data, { answered = 0, correct = 0, points = 0, xp = 0, minutes = 0, dailyChallenge = false } = {}) {
+    const day = this.ensureDailyEntry(data);
+    day.answered += answered;
+    day.correct += correct;
+    day.points += points;
+    day.xp += xp;
+    day.minutes = Math.round((day.minutes + minutes) * 10) / 10;
+    if (dailyChallenge) day.dailyChallenge = true;
+    day.goalMet = day.answered >= 5 || day.minutes >= 10 || day.dailyChallenge;
+
+    const keys = Object.keys(data.dailyLog).sort();
+    if (keys.length > 90) {
+      keys.slice(0, keys.length - 90).forEach(k => delete data.dailyLog[k]);
+    }
+    return day;
+  },
+
+  getTodayLog(data) {
+    return this.ensureDailyEntry(data);
+  },
+
+  addSessionMinutes(minutes) {
+    if (minutes <= 0) return;
+    const data = this.load();
+    this.updateDailyLog(data, { minutes });
+    this.save(data);
+  },
+
+  markDailyChallengeDone() {
+    const data = this.load();
+    this.updateDailyLog(data, { dailyChallenge: true });
+    this.save(data);
   },
 
   defaultData() {
@@ -187,7 +245,8 @@ const Storage = {
       bestStreak: 0,
       examCorrect: 0,
       dailyCompleted: 0,
-      lastDailyDate: null
+      lastDailyDate: null,
+      dailyLog: {}
     };
   },
 
@@ -204,8 +263,8 @@ const Storage = {
     localStorage.setItem(this.KEY, JSON.stringify(data));
   },
 
-  recordAnswer(topicId, correct, scoreResult = null) {
-    const data = this.load();
+  recordAnswer(topicId, correct, extras = {}, dataRef = null) {
+    const data = dataRef || this.load();
     data.totalAnswered++;
     if (correct) data.totalCorrect++;
 
@@ -227,8 +286,15 @@ const Storage = {
       data.lastPracticeDate = today;
     }
 
-    this.save(data);
-    return { data, scoreResult };
+    this.updateDailyLog(data, {
+      answered: 1,
+      correct: correct ? 1 : 0,
+      points: extras.points || 0,
+      xp: extras.xp || 0
+    });
+
+    if (!dataRef) this.save(data);
+    return data;
   },
 
   recordQuiz(score, total, weakTopics) {
