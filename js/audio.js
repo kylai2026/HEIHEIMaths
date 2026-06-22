@@ -1,10 +1,15 @@
 const AudioManager = {
   ctx: null,
-  musicNodes: null,
+  bgAudio: null,
+  fallbackTimer: null,
   musicGain: null,
   unlocked: false,
   muteMusic: false,
   muteSfx: false,
+  usingFallback: false,
+
+  /* 柔和兒童背景音樂（Mixkit 免費授權） */
+  BG_MUSIC_URL: 'https://assets.mixkit.co/music/preview/mixkit-happy-kids-876.mp3',
 
   init() {
     document.addEventListener('click', () => this.ensureContext(), { once: true });
@@ -16,8 +21,9 @@ const AudioManager = {
   syncFromSettings(settings) {
     this.muteMusic = !!settings.muteMusic;
     this.muteSfx = !!settings.muteSfx;
+    if (this.bgAudio) this.bgAudio.volume = this.muteMusic ? 0 : 0.22;
     if (this.musicGain) {
-      this.musicGain.gain.value = this.muteMusic ? 0 : 0.08;
+      this.musicGain.gain.value = this.muteMusic ? 0 : 0.06;
     }
     if (!this.muteMusic && this.unlocked) this.startMusic();
     else this.stopMusic();
@@ -74,10 +80,10 @@ const AudioManager = {
 
     if (name === 'wrong') {
       const o = ctx.createOscillator();
-      o.type = 'sawtooth';
+      o.type = 'sine';
       o.frequency.setValueAtTime(220, t);
-      o.frequency.exponentialRampToValueAtTime(160, t + 0.2);
-      g.gain.exponentialRampToValueAtTime(0.1, t + 0.02);
+      o.frequency.exponentialRampToValueAtTime(180, t + 0.2);
+      g.gain.exponentialRampToValueAtTime(0.08, t + 0.02);
       g.gain.exponentialRampToValueAtTime(0.0001, t + 0.25);
       o.connect(g);
       o.start(t);
@@ -88,7 +94,7 @@ const AudioManager = {
     if (name === 'levelUp') {
       [392, 494, 587, 784].forEach((freq, i) => {
         const o = ctx.createOscillator();
-        o.type = 'square';
+        o.type = 'triangle';
         o.frequency.setValueAtTime(freq, t + i * 0.1);
         const gg = ctx.createGain();
         gg.gain.setValueAtTime(0.0001, t + i * 0.1);
@@ -103,49 +109,83 @@ const AudioManager = {
   },
 
   startMusic() {
-    if (this.muteMusic || this.musicNodes) return;
+    if (this.muteMusic) return;
+    if (!this.usingFallback && !this.bgAudio) {
+      this.bgAudio = new Audio(this.BG_MUSIC_URL);
+      this.bgAudio.loop = true;
+      this.bgAudio.volume = 0.22;
+      this.bgAudio.preload = 'auto';
+      this.bgAudio.addEventListener('error', () => {
+        this.bgAudio = null;
+        this.startFallbackMusic();
+      });
+    }
+
+    if (this.bgAudio && !this.usingFallback) {
+      this.bgAudio.play().catch(() => this.startFallbackMusic());
+      return;
+    }
+
+    if (!this.bgAudio) this.startFallbackMusic();
+  },
+
+  startFallbackMusic() {
+    if (this.muteMusic || this.usingFallback) return;
+    this.usingFallback = true;
+    if (this.bgAudio) {
+      this.bgAudio.pause();
+      this.bgAudio = null;
+    }
+
     const ctx = this.ensureContext();
     if (!ctx) return;
 
     this.musicGain = ctx.createGain();
-    this.musicGain.gain.value = 0.08;
+    this.musicGain.gain.value = 0.06;
     this.musicGain.connect(ctx.destination);
 
-    const notes = [261.63, 329.63, 392, 493.88];
-    this.musicNodes = notes.map((freq, i) => {
-      const o = ctx.createOscillator();
-      o.type = 'sine';
-      o.frequency.value = freq;
-      const g = ctx.createGain();
-      g.gain.value = 0.035 + (i % 2) * 0.01;
-      o.connect(g);
-      g.connect(this.musicGain);
-      o.start();
-      return { o, g, base: freq };
-    });
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 1200;
+    filter.connect(this.musicGain);
 
+    /* 柔和五声音阶，像音乐盒 */
+    const melody = [523.25, 587.33, 659.25, 783.99, 659.25, 587.33];
     let step = 0;
-    this.musicTimer = setInterval(() => {
-      if (!this.ctx || this.muteMusic) return;
-      step = (step + 1) % 16;
-      this.musicNodes.forEach((node, i) => {
-        const detune = ((step + i * 3) % 8) * 0.5;
-        node.o.frequency.setTargetAtTime(node.base * (1 + detune * 0.01), this.ctx.currentTime, 0.4);
-      });
-    }, 900);
+
+    const playNote = () => {
+      if (!this.ctx || this.muteMusic || !this.usingFallback) return;
+      const t = this.ctx.currentTime;
+      const o = this.ctx.createOscillator();
+      o.type = 'sine';
+      o.frequency.value = melody[step % melody.length];
+      const g = this.ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.12, t + 0.08);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 1.6);
+      o.connect(g);
+      g.connect(filter);
+      o.start(t);
+      o.stop(t + 1.7);
+      step++;
+    };
+
+    playNote();
+    this.fallbackTimer = setInterval(playNote, 1800);
   },
 
   stopMusic() {
-    if (this.musicTimer) {
-      clearInterval(this.musicTimer);
-      this.musicTimer = null;
+    if (this.bgAudio) {
+      this.bgAudio.pause();
+      this.bgAudio.currentTime = 0;
     }
-    if (this.musicNodes) {
-      this.musicNodes.forEach(n => {
-        try { n.o.stop(); } catch { /* already stopped */ }
-      });
-      this.musicNodes = null;
+
+    if (this.fallbackTimer) {
+      clearInterval(this.fallbackTimer);
+      this.fallbackTimer = null;
     }
+
+    this.usingFallback = false;
     this.musicGain = null;
   }
 };
