@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fde68a"/>
-      <stop offset="100%" stop-color="#fef9c3"/>
+      <stop offset="0%" stop-color="#e0f2fe"/>
+      <stop offset="100%" stop-color="#bae6fd"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -11,23 +11,25 @@
       <stop offset="100%" stop-color="#fcd34d"/>
     </linearGradient>
   </defs>
-  <rect width="256" height="256" rx="20" fill="url(#bg)"/>
-  <text x="174.224" y="206.192" font-size="14" fill="#f472b6" opacity="0.5237" transform="rotate(79.92 174.224 206.192)">★</text>
-<circle cx="58.664" cy="90.632" r="5" fill="#fff" opacity="0.73295"/>
-<text x="223.04" y="39.007999999999996" font-size="16" opacity="0.49219999999999997" transform="rotate(161.28 223.04 39.007999999999996)">♡</text>
-<text x="107.48" y="139.448" font-size="26" fill="#f472b6" opacity="0.38465" transform="rotate(328.68 107.48 139.448)">★</text>
-<text x="128" y="238" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="11" fill="#64748b" opacity="0.85">海星</text>
+  <rect width="256" height="256" fill="url(#bg)"/>
+<circle cx="103.376" cy="103.376" r="3" fill="#fff" opacity="0.35"/>
+<circle cx="203.816" cy="36.632000000000005" r="4" fill="#fff" opacity="0.35"/>
+<circle cx="88.256" cy="185.888" r="5" fill="#fff" opacity="0.35"/>
+<circle cx="36.632000000000005" cy="119.144" r="3" fill="#fff" opacity="0.35"/>
+<circle cx="137.072" cy="52.4" r="4" fill="#fff" opacity="0.35"/>
+  <circle cx="128" cy="52" r="14" fill="#ef4444"/><path d="M128 42 L132 36 L124 36 Z" fill="#22c55e"/>
   
-    <g transform="translate(114.26,125.56) scale(0.9914999999999999)">
-      <ellipse cx="0" cy="18" rx="38" ry="32" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
-      <ellipse cx="-52" cy="-8" rx="22" ry="48" fill="#fff" stroke="#94a3b8" stroke-width="2" transform="rotate(-20.28)"/>
-      <ellipse cx="52" cy="-8" rx="22" ry="48" fill="#fff" stroke="#94a3b8" stroke-width="2" transform="rotate(20.28)"/>
-      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
-      <ellipse cx="14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
-      <ellipse cx="-22" cy="10" rx="9" ry="5" fill="#fda4af" opacity="0.7"/>
-      <ellipse cx="22" cy="10" rx="9" ry="5" fill="#fda4af" opacity="0.7"/>
-      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="0" cy="42" r="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+    <g transform="translate(117.008,128.048) rotate(0) scale(0.9932)">
+      <ellipse cx="0" cy="18" rx="36" ry="30" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+      <ellipse cx="-50" cy="-6" rx="20" ry="46" fill="#ffffff" stroke="#94a3b8" stroke-width="2" transform="rotate(-18.736)"/>
+      <ellipse cx="50" cy="-6" rx="20" ry="46" fill="#ffffff" stroke="#94a3b8" stroke-width="2" transform="rotate(18.736)"/>
+      
+      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#60a5fa"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
+      <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
+      <ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
+      <path d="M-5 14 Q0 19 5 14" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="0" cy="40" r="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
     </g>
-  <rect x="6" y="6" width="244" height="244" rx="16" fill="none" stroke="#c084fc" stroke-width="4" opacity="0.85"/>
+  <rect x="8" y="8" width="240" height="240" rx="14" fill="none" stroke="#60a5fa" stroke-width="3" opacity="0.7"/>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">肉桂狗·草莓版</text>
 </svg>

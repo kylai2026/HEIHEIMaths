@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fed7aa"/>
-      <stop offset="100%" stop-color="#ffedd5"/>
+      <stop offset="0%" stop-color="#fafafa"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -11,25 +11,25 @@
       <stop offset="100%" stop-color="#fcd34d"/>
     </linearGradient>
   </defs>
-  <rect width="256" height="256" rx="20" fill="url(#bg)"/>
-  <text x="89.12" y="194.52800000000002" font-size="14" fill="#f472b6" opacity="0.5192" transform="rotate(267.84 89.12 194.52800000000002)">★</text>
-<circle cx="189.56" cy="78.968" r="5" fill="#fff" opacity="0.72845"/>
-<text x="137.936" y="27.344" font-size="16" opacity="0.6209" transform="rotate(349.2 137.936 27.344)">♡</text>
-<text x="22.376" y="127.784" font-size="26" fill="#f472b6" opacity="0.38015" transform="rotate(263.15999999999997 22.376 127.784)">★</text>
-<circle cx="186.752" cy="228.224" r="8" fill="#fff" opacity="0.7225999999999999"/>
-<text x="71.19200000000001" y="176.6" font-size="16" opacity="0.48185" transform="rotate(237.96 71.19200000000001 176.6)">♡</text>
-<text x="128" y="238" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="11" fill="#64748b" opacity="0.85">茶會</text>
+  <rect width="256" height="256" fill="url(#bg)"/>
+<circle cx="101.216" cy="101.216" r="3" fill="#fff" opacity="0.35"/>
+<circle cx="201.656" cy="34.472" r="4" fill="#fff" opacity="0.35"/>
+<circle cx="150.03199999999998" cy="183.728" r="5" fill="#fff" opacity="0.35"/>
+<circle cx="34.472" cy="116.98400000000001" r="3" fill="#fff" opacity="0.35"/>
+<circle cx="198.84799999999998" cy="114.176" r="4" fill="#fff" opacity="0.35"/>
   
-    <g transform="translate(121.64,127.03999999999999) scale(1.058)">
-      <ellipse cx="0" cy="18" rx="38" ry="32" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
-      <ellipse cx="-52" cy="-8" rx="22" ry="48" fill="#fff" stroke="#94a3b8" stroke-width="2" transform="rotate(-20.48)"/>
-      <ellipse cx="52" cy="-8" rx="22" ry="48" fill="#fff" stroke="#94a3b8" stroke-width="2" transform="rotate(20.48)"/>
-      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
-      <ellipse cx="14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
-      <ellipse cx="-22" cy="10" rx="9" ry="5" fill="#fda4af" opacity="0.7"/>
-      <ellipse cx="22" cy="10" rx="9" ry="5" fill="#fda4af" opacity="0.7"/>
-      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="0" cy="42" r="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+  
+    <g transform="translate(122.912,138) rotate(-12) scale(1.0464)">
+      <ellipse cx="0" cy="18" rx="36" ry="30" fill="#a68a64" stroke="#57534e" stroke-width="2"/>
+      <ellipse cx="-50" cy="-6" rx="20" ry="46" fill="#8b6914" stroke="#57534e" stroke-width="2" transform="rotate(-18.976)"/>
+      <ellipse cx="50" cy="-6" rx="20" ry="46" fill="#8b6914" stroke="#57534e" stroke-width="2" transform="rotate(18.976)"/>
+      <ellipse cx="-48" cy="-12" rx="14" ry="18" fill="#bae6fd" opacity="0.85"/><ellipse cx="48" cy="-12" rx="14" ry="18" fill="#bae6fd" opacity="0.85"/>
+      <path d="M-16 -2 Q-10 4 -4 -2" fill="none" stroke="#475569" stroke-width="2"/><path d="M4 -2 Q10 4 16 -2" fill="none" stroke="#475569" stroke-width="2"/>
+      <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
+      <ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
+      <path d="M-5 14 Q0 19 5 14" fill="none" stroke="#1e3a5f" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="0" cy="40" r="9" fill="#a68a64" stroke="#57534e" stroke-width="1.5"/>
     </g>
-  <rect x="6" y="6" width="244" height="244" rx="16" fill="none" stroke="#c084fc" stroke-width="4" opacity="0.85"/>
+  <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">卡布奇諾·慵懶</text>
 </svg>

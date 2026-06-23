@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#bbf7d0"/>
-      <stop offset="100%" stop-color="#dcfce7"/>
+      <stop offset="0%" stop-color="#f1f5f9"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -11,24 +11,25 @@
       <stop offset="100%" stop-color="#fcd34d"/>
     </linearGradient>
   </defs>
-  <rect width="256" height="256" rx="20" fill="url(#bg)"/>
-  <text x="197.33599999999998" y="84.584" font-size="14" fill="#f472b6" opacity="0.64025" transform="rotate(266.04 197.33599999999998 84.584)">★</text>
-<circle cx="81.776" cy="185.024" r="5" fill="#fff" opacity="0.39949999999999997"/>
-<text x="30.152" y="69.464" font-size="16" opacity="0.6087499999999999" transform="rotate(347.4 30.152 69.464)">♡</text>
-<text x="130.59199999999998" y="233.84" font-size="26" fill="#f472b6" opacity="0.5012" transform="rotate(261.36 130.59199999999998 233.84)">★</text>
-<circle cx="231.03199999999998" cy="118.28" r="8" fill="#fff" opacity="0.71045"/>
-<text x="128" y="238" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="11" fill="#64748b" opacity="0.85">草莓</text>
+  <rect width="256" height="256" fill="url(#bg)"/>
+<circle cx="159.32" cy="159.32" r="3" fill="#fff" opacity="0.35"/>
+<circle cx="43.760000000000005" cy="92.57600000000001" r="4" fill="#fff" opacity="0.35"/>
+<circle cx="144.2" cy="25.832" r="5" fill="#fff" opacity="0.35"/>
+<circle cx="92.57600000000001" cy="175.088" r="3" fill="#fff" opacity="0.35"/>
+<circle cx="193.01600000000002" cy="108.344" r="4" fill="#fff" opacity="0.35"/>
+  <text x="52" y="58" font-size="18" fill="#fff">❄</text><text x="178" y="72" font-size="14" fill="#e0f2fe">❄</text><text x="90" y="210" font-size="16" fill="#fff">❄</text>
   
-    <g transform="translate(114.23,116.62) scale(0.93575)">
-      <ellipse cx="0" cy="18" rx="38" ry="32" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
-      <ellipse cx="-52" cy="-8" rx="22" ry="48" fill="#fff" stroke="#94a3b8" stroke-width="2" transform="rotate(-15.1)"/>
-      <ellipse cx="52" cy="-8" rx="22" ry="48" fill="#fff" stroke="#94a3b8" stroke-width="2" transform="rotate(15.1)"/>
-      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
-      <ellipse cx="14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
-      <ellipse cx="-22" cy="10" rx="9" ry="5" fill="#fda4af" opacity="0.7"/>
-      <ellipse cx="22" cy="10" rx="9" ry="5" fill="#fda4af" opacity="0.7"/>
-      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="0" cy="42" r="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+    <g transform="translate(116.984,120.896) rotate(0) scale(0.9486)">
+      <ellipse cx="0" cy="18" rx="36" ry="30" fill="#fecdd3" stroke="#e11d48" stroke-width="2"/>
+      <ellipse cx="-50" cy="-6" rx="20" ry="46" fill="#fda4af" stroke="#e11d48" stroke-width="2" transform="rotate(-12.52)"/>
+      <ellipse cx="50" cy="-6" rx="20" ry="46" fill="#fda4af" stroke="#e11d48" stroke-width="2" transform="rotate(12.52)"/>
+      <path d="M-8 -42 L0 -52 L8 -42" fill="#fff" opacity="0.8"/><path d="M-30 -20 L-38 -32 L-26 -28 Z" fill="#fff" opacity="0.7"/><path d="M30 -20 L38 -32 L26 -28 Z" fill="#fff" opacity="0.7"/>
+      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#be185d"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#be185d"/>
+      <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fb7185" opacity="0.65"/>
+      <ellipse cx="20" cy="10" rx="8" ry="5" fill="#fb7185" opacity="0.65"/>
+      <path d="M-5 14 Q0 19 5 14" fill="none" stroke="#be185d" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="0" cy="40" r="9" fill="#fecdd3" stroke="#e11d48" stroke-width="1.5"/>
     </g>
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">芙蘭·滑雪</text>
 </svg>

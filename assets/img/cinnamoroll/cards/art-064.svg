@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffd5dc"/>
-      <stop offset="100%" stop-color="#fce7f3"/>
+      <stop offset="0%" stop-color="#fce7f3"/>
+      <stop offset="100%" stop-color="#fbcfe8"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -11,27 +11,25 @@
       <stop offset="100%" stop-color="#fcd34d"/>
     </linearGradient>
   </defs>
-  <rect width="256" height="256" rx="20" fill="url(#bg)"/>
-  <text x="32.096000000000004" y="220.448" font-size="14" fill="#f472b6" opacity="0.422" transform="rotate(83.52000000000001 32.096000000000004 220.448)">★</text>
-<circle cx="132.536" cy="168.82399999999998" r="5" fill="#fff" opacity="0.63125"/>
-<text x="80.91199999999999" y="53.264" font-size="16" opacity="0.5237" transform="rotate(58.32 80.91199999999999 53.264)">♡</text>
-<text x="181.352" y="153.704" font-size="26" fill="#f472b6" opacity="0.73295" transform="rotate(332.28000000000003 181.352 153.704)">★</text>
-<circle cx="129.728" cy="102.08" r="8" fill="#fff" opacity="0.49219999999999997"/>
-<text x="230.168" y="202.51999999999998" font-size="16" opacity="0.38465" transform="rotate(53.64 230.168 202.51999999999998)">♡</text>
-<text x="114.608" y="150.896" font-size="22" fill="#f472b6" opacity="0.5939" transform="rotate(221.04 114.608 150.896)">★</text>
-<circle cx="62.984" cy="35.336" r="6" fill="#fff" opacity="0.48634999999999995"/>
-<text x="128" y="238" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="11" fill="#64748b" opacity="0.85">泡泡</text>
+  <rect width="256" height="256" fill="url(#bg)"/>
+<circle cx="54.56" cy="54.56" r="3" fill="#fff" opacity="0.35"/>
+<circle cx="155" cy="203.816" r="4" fill="#fff" opacity="0.35"/>
+<circle cx="103.376" cy="137.072" r="5" fill="#fff" opacity="0.35"/>
+<circle cx="203.816" cy="70.328" r="3" fill="#fff" opacity="0.35"/>
+<circle cx="88.256" cy="67.52000000000001" r="4" fill="#fff" opacity="0.35"/>
+  <text x="42" y="44" font-size="20" fill="#fef08a">✦</text><text x="198" y="56" font-size="16" fill="#fff">★</text><text x="168" y="198" font-size="18" fill="#bae6fd">✦</text><circle cx="200" cy="180" r="2" fill="#fff"/><circle cx="56" cy="170" r="2" fill="#fff"/>
   
-    <g transform="translate(119.24,127.68) scale(0.896)">
-      <ellipse cx="0" cy="18" rx="38" ry="32" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
-      <ellipse cx="-52" cy="-8" rx="22" ry="48" fill="#fff" stroke="#94a3b8" stroke-width="2" transform="rotate(-24.799999999999997)"/>
-      <ellipse cx="52" cy="-8" rx="22" ry="48" fill="#fff" stroke="#94a3b8" stroke-width="2" transform="rotate(24.799999999999997)"/>
-      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
-      <ellipse cx="14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
-      <ellipse cx="-22" cy="10" rx="9" ry="5" fill="#fda4af" opacity="0.7"/>
-      <ellipse cx="22" cy="10" rx="9" ry="5" fill="#fda4af" opacity="0.7"/>
-      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="0" cy="42" r="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+    <g transform="translate(120.992,129.744) rotate(0) scale(0.9168000000000001)">
+      <ellipse cx="0" cy="18" rx="36" ry="30" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+      <ellipse cx="-50" cy="-6" rx="20" ry="46" fill="#ffffff" stroke="#94a3b8" stroke-width="2" transform="rotate(-24.16)"/>
+      <ellipse cx="50" cy="-6" rx="20" ry="46" fill="#ffffff" stroke="#94a3b8" stroke-width="2" transform="rotate(24.16)"/>
+      
+      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#60a5fa"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
+      <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
+      <ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
+      <path d="M-5 14 Q0 19 5 14" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="0" cy="40" r="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
     </g>
-  <rect x="6" y="6" width="244" height="244" rx="16" fill="none" stroke="#c084fc" stroke-width="4" opacity="0.85"/>
+  <rect x="8" y="8" width="240" height="240" rx="14" fill="none" stroke="#60a5fa" stroke-width="3" opacity="0.7"/>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">肉桂狗·星星版</text>
 </svg>
