@@ -13,9 +13,9 @@ const QuestionBank = {
     return QuestionEngine.toMCQ(q, topicId);
   },
 
-  generateQuiz(count = 20) {
+  generateQuiz(count = 20, grade) {
     QuestionPool.init();
-    return QuestionPool.drawQuizMCQ(count);
+    return QuestionPool.drawQuizMCQ(count, grade);
   },
 
   generateRandomSet(count, tier, topicIds) {
@@ -28,13 +28,17 @@ const QuestionBank = {
     return QuestionPool.drawSet(topicId, count, tier);
   },
 
-  generateDaily(count = 10) {
-    const topics = TOPICS.filter(t => t.exam).map(t => t.id);
+  generateDaily(count = 10, grade) {
+    const topics = grade
+      ? getExamTopicsByGrade(grade)
+      : TOPICS.filter(t => t.exam).map(t => t.id);
     return this.generateRandomSet(count, null, topics);
   },
 
-  generateDailyWithTier(count, tier) {
-    const topics = TOPICS.filter(t => t.exam).map(t => t.id);
+  generateDailyWithTier(count, tier, grade) {
+    const topics = grade
+      ? getExamTopicsByGrade(grade)
+      : TOPICS.filter(t => t.exam).map(t => t.id);
     return this.generateRandomSet(count, tier, topics);
   },
 

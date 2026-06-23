@@ -124,6 +124,20 @@ const App = {
       placeholder.classList.toggle('hidden', !showPlaceholder);
       sections.classList.toggle('hidden', showPlaceholder);
     }
+
+    const dailyDesc = document.getElementById('dailyChallengeDesc');
+    if (dailyDesc) {
+      dailyDesc.textContent = grade
+        ? `10 條${GRADE_LABELS[grade]}隨機題目（初/中/高級混合），按難度賺積分！`
+        : '請先喺上面揀年級，就會出對應年級嘅 10 條隨機題目。';
+    }
+
+    const quizDesc = document.getElementById('quizIntroDesc');
+    if (quizDesc) {
+      quizDesc.innerHTML = grade
+        ? `<strong>20 條選擇題</strong>，只涵蓋${GRADE_LABELS[grade]}課題，難度隨機！`
+        : `<strong>20 條選擇題</strong>。請先喺主頁揀年級，就只會出該年級嘅題目。`;
+    }
   },
 
   async init() {
@@ -508,6 +522,7 @@ const App = {
     if (view === 'rewards') this.renderRewards();
     if (view === 'home') this.renderDailyProgress();
     if (view === 'practice' && !this.getSelectedGrade()) this.showGradeModalIfNeeded();
+    if (view === 'quiz' && !this.getSelectedGrade()) this.showGradeModalIfNeeded();
     this.renderHUD();
   },
 
@@ -1086,18 +1101,23 @@ const App = {
 
   bindDaily() {
     document.getElementById('startDaily').addEventListener('click', () => {
+      const grade = this.getSelectedGrade();
+      if (!grade) {
+        this.showGradeModalIfNeeded();
+        return;
+      }
       AudioManager.playSfx('click');
       this.state.dailyMode = true;
       this.state.randomMode = true;
       this.state.noPointsMode = false;
       this.state.sessionCorrect = [];
-      this.state.randomTopicPool = TOPICS.filter(t => t.exam).map(t => t.id);
+      this.state.randomTopicPool = getExamTopicsByGrade(grade);
       this.state.practiceTopic = 'random';
-      this.state.practiceQuestions = QuestionBank.generateDaily(10);
+      this.state.practiceQuestions = QuestionBank.generateDaily(10, grade);
       this.state.practiceIndex = 0;
 
       document.getElementById('practiceTitle').textContent = '今日挑戰';
-      document.getElementById('practiceTopicBadge').textContent = '隨機難度 · 每題按難度計分';
+      document.getElementById('practiceTopicBadge').textContent = `${GRADE_LABELS[grade]} · 隨機難度 · 每題按難度計分`;
       document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
       document.getElementById('tierSelector').classList.add('hidden');
 
@@ -1111,7 +1131,12 @@ const App = {
   },
 
   startQuiz() {
-    this.state.quizQuestions = QuestionBank.generateQuiz(20);
+    const grade = this.getSelectedGrade();
+    if (!grade) {
+      this.showGradeModalIfNeeded();
+      return;
+    }
+    this.state.quizQuestions = QuestionBank.generateQuiz(20, grade);
     this.state.quizIndex = 0;
     this.state.quizScore = 0;
     this.state.quizWeak = {};

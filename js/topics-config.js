@@ -17,6 +17,10 @@ function getTopicsByGrade(grade) {
   return TOPICS.filter(t => t.grade === grade);
 }
 
+function getExamTopicsByGrade(grade) {
+  return TOPICS.filter(t => t.exam && t.grade === grade).map(t => t.id);
+}
+
 function countTopicsByGrade(grade) {
   return getTopicsByGrade(grade).length;
 }

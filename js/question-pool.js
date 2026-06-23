@@ -102,15 +102,18 @@ const QuestionPool = {
     return MathUtils.shuffle(questions);
   },
 
-  drawQuizMCQ(count) {
-    const topics = TOPICS.filter(t => t.exam).map(t => t.id);
+  drawQuizMCQ(count, grade) {
+    const topics = grade
+      ? TOPICS.filter(t => t.exam && t.grade === grade).map(t => t.id)
+      : TOPICS.filter(t => t.exam).map(t => t.id);
+    if (!topics.length) return [];
     const tiers = ['easy', 'medium', 'hard'];
     const questions = [];
     for (let i = 0; i < count; i++) {
       const topicId = MathUtils.randomChoice(topics);
       const tier = MathUtils.randomChoice(tiers);
       const q = this.draw(topicId, tier);
-      questions.push(P34Questions.toMCQ(q, topicId));
+      questions.push(QuestionEngine.toMCQ(q, topicId));
     }
     return MathUtils.shuffle(questions);
   }
