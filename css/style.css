@@ -1703,6 +1703,34 @@ body.card-viewer-open {
   display: none;
 }
 
+#profileModal {
+  z-index: 2100;
+}
+
+#gradeModal {
+  z-index: 2000;
+}
+
+.btn-login {
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.82rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 99px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-login:hover {
+  background: rgba(255, 255, 255, 0.32);
+}
+
+.btn-login.hidden {
+  display: none;
+}
+
 .btn-logout {
   border: 1px solid rgba(255, 255, 255, 0.45);
   background: rgba(255, 255, 255, 0.12);

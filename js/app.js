@@ -37,6 +37,7 @@ const App = {
   },
 
   showGradeModalIfNeeded() {
+    if (!CloudSync.getProfile()) return;
     if (this.getSelectedGrade()) return;
     const modal = document.getElementById('gradeModal');
     if (!modal) return;
@@ -127,10 +128,6 @@ const App = {
     if (syncResult.needSetup) {
       await this.showProfileSetup();
     }
-    if (!CloudSync.isConfigured()) {
-      document.getElementById('switchProfile')?.remove();
-      document.getElementById('logoutBtn')?.remove();
-    }
     this.updateAuthUI();
     QuestionBank.init();
     this.state.selectedGrade = UserSettings.load().grade || null;
@@ -160,12 +157,14 @@ const App = {
       }
     });
     document.getElementById('logoutBtn')?.addEventListener('click', () => this.logout());
+    document.getElementById('loginBtn')?.addEventListener('click', () => this.showProfileSetup());
     document.getElementById('switchProfile')?.addEventListener('click', () => this.logout());
   },
 
   updateAuthUI() {
     const profile = CloudSync.getProfile();
     const loggedIn = !!profile;
+    document.getElementById('loginBtn')?.classList.toggle('hidden', loggedIn);
     document.getElementById('logoutBtn')?.classList.toggle('hidden', !loggedIn);
     document.getElementById('switchProfile')?.classList.toggle('hidden', !loggedIn);
     const nameEl = document.getElementById('currentUser');

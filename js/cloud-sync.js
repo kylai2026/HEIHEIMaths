@@ -62,6 +62,16 @@ const CloudSync = {
   },
 
   async init() {
+    this.profile = this.getProfile();
+
+    if (!this.profile) {
+      if (this.isConfigured() && typeof supabase !== 'undefined') {
+        this.client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      }
+      this.setStatus('offline');
+      return { ok: false, needSetup: true, mode: this.isConfigured() ? 'cloud' : 'local' };
+    }
+
     if (!this.isConfigured()) {
       this.setStatus('offline');
       return { ok: true, mode: 'local' };
@@ -73,12 +83,6 @@ const CloudSync = {
     }
 
     this.client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    this.profile = this.getProfile();
-
-    if (!this.profile) {
-      this.setStatus('offline');
-      return { ok: false, needSetup: true, mode: 'cloud' };
-    }
 
     try {
       this.setStatus('syncing');
