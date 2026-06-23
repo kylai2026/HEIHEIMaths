@@ -162,20 +162,6 @@ const App = {
     this.bindQuiz();
     this.bindDaily();
     this.bindSessionTracking();
-
-    const resetBtn = document.getElementById('resetProgress');
-    if (resetBtn && !resetBtn.dataset.bound) {
-      resetBtn.dataset.bound = '1';
-      resetBtn.addEventListener('click', async () => {
-        if (confirm('確定要重設所有學習記錄嗎？（雲端記錄都會一併清除）')) {
-          Storage.reset();
-          this.renderHUD();
-          this.renderHome();
-          this.renderProgress();
-          this.renderRewards();
-        }
-      });
-    }
   },
 
   bindAuthButtons() {
