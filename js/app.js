@@ -395,13 +395,22 @@ const App = {
       document.getElementById('rewardModal').classList.add('hidden');
     });
     document.getElementById('gachaModalClose')?.addEventListener('click', () => {
+      if (GachaAnimation._waitingTap) {
+        GachaAnimation.skipToResult();
+        return;
+      }
+      GachaAnimation._clearTimers?.();
+      GachaAnimation._stopParticles();
+      if (typeof AudioManager !== 'undefined') AudioManager.stopGachaLoop();
+      document.getElementById('gachaTapStart')?.classList.add('hidden');
       document.getElementById('gachaModal').classList.add('hidden');
       document.getElementById('gachaAnimStage').innerHTML = '';
       document.getElementById('gachaResultArea').classList.add('hidden');
       document.getElementById('gachaModalClose').classList.add('hidden');
-      document.querySelector('.gacha-modal')?.classList.remove('gacha-modal--results');
+      document.querySelector('.gacha-modal')?.classList.remove('gacha-modal--results', 'is-animating');
       GachaAnimation._running = false;
-      GachaAnimation._stopParticles();
+      GachaAnimation._waitingTap = false;
+      GachaAnimation._pending = null;
     });
     document.getElementById('cardViewerClose')?.addEventListener('click', () => this.closeCardViewer());
     document.getElementById('cardViewerModal')?.addEventListener('click', (e) => {

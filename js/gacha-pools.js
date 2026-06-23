@@ -1,9 +1,9 @@
 const GACHA_RARITIES = {
-  common: { id: 'common', label: '普通', weight: 60, stars: 1, css: 'rarity-common', color: '#64748b' },
+  common: { id: 'common', label: '普通', weight: 50, stars: 1, css: 'rarity-common', color: '#64748b' },
   rare: { id: 'rare', label: '稀有', weight: 25, stars: 2, css: 'rarity-rare', color: '#2563eb' },
-  sr: { id: 'sr', label: '超稀有', weight: 10, stars: 3, css: 'rarity-sr', color: '#9333ea' },
-  ur: { id: 'ur', label: '極稀有', weight: 4, stars: 4, css: 'rarity-ur', color: '#f59e0b' },
-  ssr: { id: 'ssr', label: '傳說', weight: 1, stars: 5, css: 'rarity-ssr', color: '#ef4444' }
+  sr: { id: 'sr', label: '超稀有', weight: 12, stars: 3, css: 'rarity-sr', color: '#9333ea' },
+  ur: { id: 'ur', label: '極稀有', weight: 9, stars: 4, css: 'rarity-ur', color: '#f59e0b' },
+  ssr: { id: 'ssr', label: '傳說', weight: 4, stars: 5, css: 'rarity-ssr', color: '#ef4444' }
 };
 
 const GACHA_PULL_COST = 10;

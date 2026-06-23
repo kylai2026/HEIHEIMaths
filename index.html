@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=34">
+  <link rel="stylesheet" href="css/style.css?v=35">
 </head>
 <body>
   <header class="header">
@@ -295,6 +295,12 @@
     <div class="modal-content gacha-modal">
       <div class="gacha-anim-stage" id="gachaAnimStage" aria-hidden="true"></div>
       <div class="gacha-result-area hidden" id="gachaResultArea"></div>
+      <button type="button" class="gacha-tap-start hidden" id="gachaTapStart" aria-label="按一下開始抽卡">
+        <span class="gacha-tap-pulse"></span>
+        <span class="gacha-tap-icon">👆</span>
+        <span class="gacha-tap-text">按一下開始抽卡！</span>
+        <span class="gacha-tap-hint">🔊 建議開啟音效</span>
+      </button>
       <button class="btn btn-primary hidden" id="gachaModalClose">太好啦！</button>
     </div>
   </div>
@@ -325,7 +331,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js?v=17"></script>
   <script src="js/settings.js?v=24"></script>
-  <script src="js/audio.js?v=20"></script>
+  <script src="js/audio.js?v=21"></script>
   <script src="js/utils.js?v=21"></script>
   <script src="js/cloud-sync.js?v=30"></script>
   <script src="js/scoring.js?v=23"></script>
@@ -337,8 +343,8 @@
   <script src="js/question-pool.js?v=21"></script>
   <script src="js/questions.js?v=21"></script>
   <script src="js/cinnamoroll-deck.js?v=19"></script>
-  <script src="js/gacha-animation.js?v=27"></script>
-  <script src="js/gacha-pools.js?v=19"></script>
-  <script src="js/app.js?v=35"></script>
+  <script src="js/gacha-animation.js?v=28"></script>
+  <script src="js/gacha-pools.js?v=20"></script>
+  <script src="js/app.js?v=36"></script>
 </body>
 </html>

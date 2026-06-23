@@ -30,13 +30,36 @@ const AudioManager = {
   },
 
   ensureContext() {
-    if (this.ctx) return this.ctx;
+    if (this.ctx) {
+      if (this.ctx.state === 'suspended') this.ctx.resume().catch(() => {});
+      return this.ctx;
+    }
     const Ctx = window.AudioContext || window.webkitAudioContext;
     if (!Ctx) return null;
     this.ctx = new Ctx();
     this.unlocked = true;
+    if (this.ctx.state === 'suspended') this.ctx.resume().catch(() => {});
     if (!this.muteMusic) this.startMusic();
     return this.ctx;
+  },
+
+  _gachaLoopTimer: null,
+
+  playGachaLoop(poolId, durationMs) {
+    this.stopGachaLoop();
+    if (this.muteSfx) return;
+    const name = poolId === 'pokemon' ? 'gachaPulsePoke' : 'gachaPulseCinna';
+    const interval = poolId === 'pokemon' ? 360 : 400;
+    this.playSfx(name);
+    this._gachaLoopTimer = setInterval(() => this.playSfx(name), interval);
+    setTimeout(() => this.stopGachaLoop(), durationMs);
+  },
+
+  stopGachaLoop() {
+    if (this._gachaLoopTimer) {
+      clearInterval(this._gachaLoopTimer);
+      this._gachaLoopTimer = null;
+    }
   },
 
   playSfx(name) {
@@ -105,6 +128,38 @@ const AudioManager = {
         o.start(t + i * 0.1);
         o.stop(t + i * 0.1 + 0.24);
       });
+      return;
+    }
+
+    if (name === 'gachaPulsePoke') {
+      const o = ctx.createOscillator();
+      o.type = 'square';
+      o.frequency.setValueAtTime(220, t);
+      o.frequency.exponentialRampToValueAtTime(320, t + 0.12);
+      const gg = ctx.createGain();
+      gg.gain.setValueAtTime(0.0001, t);
+      gg.gain.exponentialRampToValueAtTime(0.05, t + 0.02);
+      gg.gain.exponentialRampToValueAtTime(0.0001, t + 0.14);
+      o.connect(gg);
+      gg.connect(ctx.destination);
+      o.start(t);
+      o.stop(t + 0.15);
+      return;
+    }
+
+    if (name === 'gachaPulseCinna') {
+      const o = ctx.createOscillator();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(660, t);
+      o.frequency.exponentialRampToValueAtTime(880, t + 0.1);
+      const gg = ctx.createGain();
+      gg.gain.setValueAtTime(0.0001, t);
+      gg.gain.exponentialRampToValueAtTime(0.055, t + 0.02);
+      gg.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+      o.connect(gg);
+      gg.connect(ctx.destination);
+      o.start(t);
+      o.stop(t + 0.13);
       return;
     }
 

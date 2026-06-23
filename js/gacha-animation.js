@@ -10,22 +10,99 @@ const GachaAnimation = {
 
   _raf: null,
   _running: false,
+  _waitingTap: false,
+  _pending: null,
+  _timers: [],
 
   play(poolId, items, onDone) {
     if (this._running) return;
     this._running = true;
+    this._waitingTap = true;
+    this._pending = { poolId, items, onDone };
 
     const modal = document.getElementById('gachaModal');
     const stage = document.getElementById('gachaAnimStage');
     const area = document.getElementById('gachaResultArea');
     const closeBtn = document.getElementById('gachaModalClose');
+    const tapBtn = document.getElementById('gachaTapStart');
     const bestRarity = this._bestRarity(items);
 
     area.classList.add('hidden');
     area.innerHTML = '';
     closeBtn.classList.add('hidden');
     modal.classList.remove('hidden');
-    modal.querySelector('.gacha-modal')?.classList.remove('gacha-modal--results');
+    modal.querySelector('.gacha-modal')?.classList.remove('gacha-modal--results', 'is-animating');
+
+    stage.className = `gacha-anim-stage anim-${poolId} gacha-waiting${this._tierClass(bestRarity)}`;
+    stage.innerHTML = this._waitingHtml(poolId, bestRarity);
+
+    if (tapBtn) {
+      tapBtn.classList.remove('hidden');
+      tapBtn.onclick = () => this._startFromTap();
+    }
+  },
+
+  _waitingHtml(poolId, rarity) {
+    const asset = this.ASSETS[poolId];
+    const label = poolId === 'pokemon' ? '⚡ 準備收服…' : '🐶 準備召喚…';
+    return `
+      <div class="gacha-anim-bg gacha-waiting-bg" style="background-image:url('${asset}')"></div>
+      <div class="gacha-anim-vignette"></div>
+      <p class="gacha-anim-text gacha-waiting-text">${label}</p>
+      ${rarity === 'ssr' || rarity === 'ur' || rarity === 'sr' ? `<p class="gacha-anim-sub gacha-waiting-sub">✨ 感應到稀有光芒…</p>` : ''}
+    `;
+  },
+
+  _startFromTap() {
+    if (!this._waitingTap || !this._pending) return;
+    this._waitingTap = false;
+
+    const tapBtn = document.getElementById('gachaTapStart');
+    if (tapBtn) {
+      tapBtn.classList.add('hidden');
+      tapBtn.onclick = null;
+    }
+
+    if (typeof AudioManager !== 'undefined') {
+      AudioManager.ensureContext();
+      AudioManager.playSfx('click');
+    }
+
+    const { poolId, items, onDone } = this._pending;
+    this._runAnimation(poolId, items, onDone);
+  },
+
+  skipToResult() {
+    if (!this._pending) return;
+    this._clearTimers();
+    this._stopParticles();
+    if (typeof AudioManager !== 'undefined') AudioManager.stopGachaLoop();
+
+    const tapBtn = document.getElementById('gachaTapStart');
+    if (tapBtn) {
+      tapBtn.classList.add('hidden');
+      tapBtn.onclick = null;
+    }
+
+    const stage = document.getElementById('gachaAnimStage');
+    const modal = document.querySelector('.gacha-modal');
+    if (stage) {
+      stage.innerHTML = '';
+      stage.className = 'gacha-anim-stage';
+    }
+    modal?.classList.remove('is-animating');
+
+    const onDone = this._pending.onDone;
+    this._pending = null;
+    this._waitingTap = false;
+    this._running = false;
+    onDone?.();
+  },
+
+  _runAnimation(poolId, items, onDone) {
+    const modal = document.getElementById('gachaModal');
+    const stage = document.getElementById('gachaAnimStage');
+    const bestRarity = this._bestRarity(items);
 
     stage.className = `gacha-anim-stage anim-${poolId}${this._tierClass(bestRarity)}`;
     stage.innerHTML = poolId === 'pokemon'
@@ -35,6 +112,7 @@ const GachaAnimation = {
     modal.querySelector('.gacha-modal')?.classList.add('is-animating');
 
     if (typeof AudioManager !== 'undefined') {
+      AudioManager.ensureContext();
       AudioManager.playSfx(poolId === 'pokemon' ? 'gachaPokemon' : 'gachaCinna');
     }
 
@@ -45,22 +123,33 @@ const GachaAnimation = {
     const bonus = bestRarity === 'ssr' ? 1800 : bestRarity === 'ur' ? 1200 : bestRarity === 'sr' ? 700 : 0;
     const ms = base + bonus + (items.length > 1 ? 500 : 0);
 
-    setTimeout(() => {
-      this._triggerFinale(stage, poolId, bestRarity);
-    }, ms - 600);
+    if (typeof AudioManager !== 'undefined') {
+      AudioManager.playGachaLoop(poolId, ms);
+    }
 
-    setTimeout(() => {
+    this._timers.push(setTimeout(() => {
+      this._triggerFinale(stage, poolId, bestRarity);
+    }, ms - 600));
+
+    this._timers.push(setTimeout(() => {
       this._stopParticles();
+      if (typeof AudioManager !== 'undefined') AudioManager.stopGachaLoop();
       stage.classList.add('anim-out');
-      setTimeout(() => {
+      this._timers.push(setTimeout(() => {
         stage.innerHTML = '';
         stage.className = 'gacha-anim-stage';
         modal.querySelector('.gacha-modal')?.classList.remove('is-animating');
         this._running = false;
+        this._pending = null;
         if (typeof AudioManager !== 'undefined') AudioManager.playSfx('gachaReveal');
         onDone();
-      }, 380);
-    }, ms);
+      }, 380));
+    }, ms));
+  },
+
+  _clearTimers() {
+    this._timers.forEach(id => clearTimeout(id));
+    this._timers = [];
   },
 
   _bestRarity(items) {
@@ -126,6 +215,7 @@ const GachaAnimation = {
     if (rarity === 'sr' || rarity === 'ur' || rarity === 'ssr') {
       stage.classList.add(`anim-finale-${rarity}`);
       if (typeof AudioManager !== 'undefined') {
+        AudioManager.ensureContext();
         const sfx = rarity === 'ssr' ? 'gachaSSR' : rarity === 'ur' ? 'gachaUR' : 'gachaSR';
         AudioManager.playSfx(sfx);
       }
