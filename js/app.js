@@ -1298,7 +1298,7 @@ const App = {
   renderGachaPools(data) {
     const points = Storage.getPoints(data);
     const unlimited = getActiveUnlimitedPoints();
-    document.getElementById('gachaPools').innerHTML = CARD_POOLS.map(pool => {
+    document.getElementById('gachaPools').innerHTML = getPullablePools().map(pool => {
       const stats = GachaSystem.getCollectionStats(data, pool.id);
       const pct = Math.round((stats.owned / stats.total) * 100);
       const previews = GachaSystem.getPreviewCards(pool.id);
@@ -1355,8 +1355,13 @@ const App = {
   },
 
   renderGachaCollection(data) {
-    const active = this.state.gachaCollectionPool || 'pokemon';
-    document.getElementById('gachaCollectionTabs').innerHTML = CARD_POOLS.map(pool => {
+    const tabPools = getCollectionTabPools(data);
+    let active = this.state.gachaCollectionPool || 'pokemon';
+    if (!tabPools.some(p => p.id === active)) {
+      active = tabPools[0]?.id || 'pokemon';
+      this.state.gachaCollectionPool = active;
+    }
+    document.getElementById('gachaCollectionTabs').innerHTML = tabPools.map(pool => {
       const stats = GachaSystem.getCollectionStats(data, pool.id);
       return `
         <button class="gacha-tab ${pool.id === active ? 'active' : ''}" data-pool="${pool.id}">

@@ -9,6 +9,29 @@ const GACHA_RARITIES = {
 const GACHA_PULL_COST = 10;
 const GACHA_PULL10_COST = 90;
 
+/** 暫時關閉嘅卡池：設為 false 即可 */
+const GACHA_POOL_ENABLED = {
+  pokemon: true,
+  sanrio: true,
+  pixar: false
+};
+
+function isPoolPullable(poolId) {
+  return GACHA_POOL_ENABLED[poolId] !== false;
+}
+
+function getPullablePools() {
+  return CARD_POOLS.filter(p => isPoolPullable(p.id));
+}
+
+function getCollectionTabPools(data) {
+  return CARD_POOLS.filter(p => {
+    if (isPoolPullable(p.id)) return true;
+    const coll = data?.cardCollection?.[p.id];
+    return coll && Object.keys(coll).length > 0;
+  });
+}
+
 const GACHA_IMAGE = {
   pokemon: {
     banner: 'assets/img/gacha-pool-pokemon.png',
@@ -201,6 +224,9 @@ const GachaSystem = {
   },
 
   pull(data, poolId) {
+    if (!isPoolPullable(poolId)) {
+      return { ok: false, msg: '此卡池暫時關閉，敬請期待！' };
+    }
     this.ensureCollection(data);
     const unlimited = typeof getActiveUnlimitedPoints === 'function' && getActiveUnlimitedPoints();
     if (!unlimited && (data.points || 0) < GACHA_PULL_COST) {
@@ -220,6 +246,9 @@ const GachaSystem = {
   },
 
   pull10(data, poolId) {
+    if (!isPoolPullable(poolId)) {
+      return { ok: false, msg: '此卡池暫時關閉，敬請期待！' };
+    }
     this.ensureCollection(data);
     const unlimited = typeof getActiveUnlimitedPoints === 'function' && getActiveUnlimitedPoints();
     if (!unlimited && (data.points || 0) < GACHA_PULL10_COST) {
