@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f1f5f9"/>
-      <stop offset="100%" stop-color="#e2e8f0"/>
+      <stop offset="0%" stop-color="hsl(149, 55%, 94%)"/>
+      <stop offset="100%" stop-color="hsl(189, 45%, 82%)"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -12,18 +12,18 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
-<circle cx="216.776" cy="216.776" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="101.216" cy="150.03199999999998" r="4" fill="#fff" opacity="0.35"/>
-<circle cx="201.656" cy="83.288" r="5" fill="#fff" opacity="0.35"/>
-<circle cx="150.03199999999998" cy="232.54399999999998" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="34.472" cy="165.8" r="4" fill="#fff" opacity="0.35"/>
-  
+<circle cx="128" cy="150" r="79" fill="none" stroke="#fff" stroke-width="1" opacity="0.1"/>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#f97316" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">小狐狸</text>
+  <circle cx="172.32" cy="83.28" r="5" fill="#fda4af" opacity="0.65"/>
   <g transform="translate(125.42,119.998) rotate(0) scale(0.90538)">
       <ellipse cx="0" cy="14" rx="28" ry="26" fill="#f97316" stroke="#c2410c" stroke-width="2"/>
       <polygon points="-24,-36 -12,-56 0,-38" fill="#f97316"/><polygon points="24,-36 12,-56 0,-38" fill="#f97316"/>
       <ellipse cx="0" cy="4" rx="16" ry="14" fill="#fff"/>
       <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#1e293b"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#1e293b"/>
     </g>
+
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">小狐狸·狐狸尾巴</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">小狐狸·狐狸尾巴</text>
+  <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#079</text>
 </svg>

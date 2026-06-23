@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f1f5f9"/>
-      <stop offset="100%" stop-color="#e2e8f0"/>
+      <stop offset="0%" stop-color="hsl(188, 55%, 94%)"/>
+      <stop offset="100%" stop-color="hsl(228, 45%, 82%)"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -12,11 +12,9 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
-<circle cx="203.816" cy="203.816" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="88.256" cy="137.072" r="4" fill="#fff" opacity="0.35"/>
-<circle cx="36.632000000000005" cy="70.328" r="5" fill="#fff" opacity="0.35"/>
-<circle cx="137.072" cy="67.52000000000001" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="85.448" cy="216.776" r="4" fill="#fff" opacity="0.35"/>
+<ellipse cx="128" cy="220" rx="87" ry="24" fill="#fff" opacity="0.08"/>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#57534e" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">濃縮咖啡</text>
   <rect x="178" y="188" width="28" height="22" rx="4" fill="#fff" stroke="#94a3b8"/><ellipse cx="192" cy="196" rx="10" ry="4" fill="#8b5a2b" opacity="0.5"/>
 <polygon points="108,72 118,52 128,68 138,52 148,72" fill="#fbbf24"/>
   <g transform="translate(131.26,117.478) rotate(0) scale(0.92626)">
@@ -28,6 +26,8 @@
       <path d="M-5 14 Q0 19 5 14" fill="none" stroke="#44403c" stroke-width="2"/>
       <circle cx="0" cy="40" r="9" fill="#e8d4b8" stroke="#94a3b8" stroke-width="1.5"/>
     </g>
+<g transform="translate(-6,4)"><polygon points="108,72 118,52 128,68 138,52 148,72" fill="#fbbf24"/></g>
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">濃縮咖啡·紳士禮帽</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">濃縮咖啡·紳士禮帽</text>
+  <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#067</text>
 </svg>

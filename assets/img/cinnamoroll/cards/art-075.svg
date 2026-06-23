@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f8fafc"/>
-      <stop offset="100%" stop-color="#e2e8f0"/>
+      <stop offset="0%" stop-color="hsl(162, 55%, 94%)"/>
+      <stop offset="100%" stop-color="hsl(202, 45%, 82%)"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -12,17 +12,25 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
-<circle cx="119.144" cy="119.144" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="67.52000000000001" cy="52.4" r="4" fill="#fff" opacity="0.35"/>
-<circle cx="167.96" cy="201.656" r="5" fill="#fff" opacity="0.35"/>
-<circle cx="52.4" cy="198.84799999999998" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="216.776" cy="132.10399999999998" r="4" fill="#fff" opacity="0.35"/>
-  
+<circle cx="117.504" cy="100.98" r="2.877" fill="#fff" opacity="0.15"/>
+<circle cx="154.112" cy="216.48" r="2.16" fill="#fff" opacity="0.34025"/>
+<circle cx="114.944" cy="111.98" r="3.555" fill="#fff" opacity="0.2065"/>
+<circle cx="151.552" cy="7.48" r="1.95" fill="#fff" opacity="0.39675"/>
+<circle cx="188.16" cy="122.98000000000002" r="4.2330000000000005" fill="#fff" opacity="0.263"/>
+<circle cx="224.768" cy="18.48" r="2.628" fill="#fff" opacity="0.37925"/>
+<circle cx="185.6" cy="133.98" r="4.023" fill="#fff" opacity="0.3195"/>
+<circle cx="222.208" cy="29.48" r="3.306" fill="#fff" opacity="0.18575"/>
+<circle cx="2.816" cy="144.98000000000002" r="1.701" fill="#fff" opacity="0.376"/>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#a8a29e" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">小刺蝟</text>
+  <circle cx="61.6" cy="52.88" r="5" fill="#fda4af" opacity="0.65"/>
   <g transform="translate(137.98,117.254) rotate(0) scale(0.89458)"><line x1="0" y1="-20" x2="-26.311393382005434" y2="-29.576564013118727" stroke="#78716c" stroke-width="3"/><line x1="0" y1="-20" x2="-21.449244407331385" y2="-37.9980530712231" stroke="#78716c" stroke-width="3"/><line x1="0" y1="-20" x2="-13.999999999999998" y2="-44.248711305964285" stroke="#78716c" stroke-width="3"/><line x1="0" y1="-20" x2="-4.862148974674049" y2="-47.574617084341824" stroke="#78716c" stroke-width="3"/><line x1="0" y1="-20" x2="4.862148974674049" y2="-47.574617084341824" stroke="#78716c" stroke-width="3"/><line x1="0" y1="-20" x2="13.999999999999998" y2="-44.248711305964285" stroke="#78716c" stroke-width="3"/><line x1="0" y1="-20" x2="21.449244407331385" y2="-37.9980530712231" stroke="#78716c" stroke-width="3"/><line x1="0" y1="-20" x2="26.311393382005434" y2="-29.576564013118727" stroke="#78716c" stroke-width="3"/>
       <ellipse cx="0" cy="14" rx="28" ry="24" fill="#d6d3d1" stroke="#a8a29e" stroke-width="2"/>
       <ellipse cx="-10" cy="8" rx="5" ry="7" fill="#1e293b"/><ellipse cx="10" cy="8" rx="5" ry="7" fill="#1e293b"/>
       <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/><ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
     </g>
+
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">小刺蝟·刺刺果實</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">小刺蝟·刺刺果實</text>
+  <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#075</text>
 </svg>

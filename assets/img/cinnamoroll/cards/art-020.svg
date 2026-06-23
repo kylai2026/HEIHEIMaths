@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#dcfce7"/>
-      <stop offset="100%" stop-color="#bbf7d0"/>
+      <stop offset="0%" stop-color="hsl(355, 55%, 94%)"/>
+      <stop offset="100%" stop-color="hsl(35, 45%, 82%)"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -12,13 +12,19 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
+<ellipse cx="128" cy="220" rx="100" ry="24" fill="#fff" opacity="0.08"/>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#ec4899" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">奇奇</text>
   <path d="M40 170 Q128 90 216 170" fill="none" stroke="#f472b6" stroke-width="5" opacity="0.5"/>
+<circle cx="178.88" cy="55.68" r="5" fill="#fda4af" opacity="0.65"/>
   <g transform="translate(118.88,121.44) rotate(0) scale(1.00744)">
       <polygon points="0,-40 28,20 -28,20" fill="#f472b6" stroke="#db2777" stroke-width="2"/>
       <circle cx="0" cy="8" r="22" fill="#fda4af" stroke="#db2777" stroke-width="2"/>
       <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#1e293b"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#1e293b"/>
       <polygon points="0,-50 -8,-38 8,-38" fill="#fef08a"/>
     </g>
+
   <rect x="6" y="6" width="244" height="244" rx="16" fill="none" stroke="#c084fc" stroke-width="4" opacity="0.85"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">奇奇·彩虹橋</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">奇奇·彩虹橋</text>
+  <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#020</text>
 </svg>

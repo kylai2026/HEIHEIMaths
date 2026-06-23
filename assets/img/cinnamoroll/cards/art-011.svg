@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f3e8ff"/>
-      <stop offset="100%" stop-color="#e9d5ff"/>
+      <stop offset="0%" stop-color="#e0f2fe"/>
+      <stop offset="100%" stop-color="#7dd3fc"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -12,7 +12,17 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
-<circle cx="128" cy="128" r="100" fill="none" stroke="#fbbf24" stroke-width="1" opacity="0.25"/>
+<line x1="16" y1="30" x2="240" y2="34.76" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="58" x2="240" y2="58.48" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="86" x2="240" y2="90.2" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="114" x2="240" y2="116.288" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="142" x2="240" y2="148.008" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="170" x2="240" y2="174.096" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="198" x2="240" y2="205.816" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="226" x2="240" y2="229.536" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<circle cx="128" cy="140" r="88" fill="none" stroke="#fbbf24" stroke-width="1" opacity="0.2"/>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#22c55e" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">大眼蛙</text>
   <path d="M40 200 Q52 180 64 200 Q52 215 40 200" fill="#fda4af"/>
   <g transform="translate(119.74,117.478) rotate(0) scale(0.91474)">
       <ellipse cx="0" cy="16" rx="36" ry="32" fill="#4ade80" stroke="#16a34a" stroke-width="2"/>
@@ -22,6 +32,8 @@
       <circle cx="-14" cy="0" r="4" fill="#fff"/><circle cx="14" cy="0" r="4" fill="#fff"/>
       <path d="M-10 18 Q0 26 10 18" fill="none" stroke="#15803d" stroke-width="2"/>
     </g>
+<g transform="translate(6,-5)"><ellipse cx="128" cy="168" rx="42" ry="14" fill="#4ade80" opacity="0.5"/><ellipse cx="128" cy="164" rx="28" ry="10" fill="#22c55e" opacity="0.35"/></g>
   <rect x="4" y="4" width="248" height="248" rx="18" fill="none" stroke="url(#gold)" stroke-width="5"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">大眼蛙·荷葉泳圈</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">大眼蛙·荷葉泳圈</text>
+  <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#011</text>
 </svg>

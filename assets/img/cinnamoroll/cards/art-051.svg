@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f8fafc"/>
-      <stop offset="100%" stop-color="#e2e8f0"/>
+      <stop offset="0%" stop-color="hsl(27, 55%, 94%)"/>
+      <stop offset="100%" stop-color="hsl(67, 45%, 82%)"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -12,18 +12,23 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
-<circle cx="157.16" cy="157.16" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="41.6" cy="90.416" r="4" fill="#fff" opacity="0.35"/>
-<circle cx="205.976" cy="23.672" r="5" fill="#fff" opacity="0.35"/>
-<circle cx="90.416" cy="172.928" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="38.792" cy="170.11999999999998" r="4" fill="#fff" opacity="0.35"/>
-  
+<line x1="16" y1="30" x2="240" y2="35.08" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="58" x2="240" y2="58.8" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="86" x2="240" y2="92.888" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="114" x2="240" y2="116.608" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="142" x2="240" y2="142.696" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="170" x2="240" y2="174.416" stroke="#fff" stroke-width="1" opacity="0.12"/>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#64748b" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">野狼健</text>
+  <polygon points="188,210 210,170 232,210" fill="#166534"/><rect x="200" y="210" width="20" height="8" fill="#57534e"/>
   <g transform="translate(129.66,122.07) rotate(0) scale(0.9896199999999999)">
       <ellipse cx="0" cy="14" rx="30" ry="28" fill="#94a3b8" stroke="#64748b" stroke-width="2"/>
       <polygon points="-20,-40 -8,-58 4,-42" fill="#94a3b8"/><polygon points="20,-40 8,-58 -4,-42" fill="#94a3b8"/>
       <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#1e293b"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#1e293b"/>
       <ellipse cx="0" cy="10" rx="10" ry="8" fill="#e2e8f0"/>
     </g>
+
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">野狼健·野營帳篷</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">野狼健·野營帳篷</text>
+  <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#051</text>
 </svg>

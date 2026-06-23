@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#4c0519"/>
-      <stop offset="100%" stop-color="#881337"/>
+      <stop offset="0%" stop-color="#fff1f2"/>
+      <stop offset="100%" stop-color="#fecdd3"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -12,38 +12,46 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
-<circle cx="194.816" cy="91.32000000000001" r="1" fill="#fff" opacity="0.6805"/>
-<circle cx="231.424" cy="34.32" r="2.5220000000000002" fill="#fff" opacity="0.413"/>
-<circle cx="192.256" cy="97.32000000000001" r="1.452" fill="#fff" opacity="0.7935"/>
-<circle cx="228.864" cy="40.32" r="2.974" fill="#fff" opacity="0.526"/>
-<circle cx="9.472" cy="103.32" r="1.904" fill="#fff" opacity="0.7585"/>
-<circle cx="226.304" cy="46.32" r="2.834" fill="#fff" opacity="0.639"/>
-<circle cx="6.912" cy="109.32000000000001" r="2.356" fill="#fff" opacity="0.3715"/>
-<circle cx="43.52" cy="52.32" r="1.286" fill="#fff" opacity="0.752"/>
-<circle cx="4.352" cy="115.32" r="2.808" fill="#fff" opacity="0.4845"/>
-<circle cx="40.96" cy="58.32" r="1.738" fill="#fff" opacity="0.717"/>
-<circle cx="77.568" cy="1.3199999999999998" r="2.668" fill="#fff" opacity="0.5974999999999999"/>
-<circle cx="38.4" cy="64.32000000000001" r="2.19" fill="#fff" opacity="0.32999999999999996"/>
-<circle cx="75.008" cy="91.8" r="1.12" fill="#fff" opacity="0.5625"/>
-<circle cx="111.616" cy="34.8" r="2.05" fill="#fff" opacity="0.44299999999999995"/>
-<circle cx="72.448" cy="97.8" r="1.572" fill="#fff" opacity="0.6755"/>
-<circle cx="109.056" cy="40.800000000000004" r="2.502" fill="#fff" opacity="0.556"/>
-<circle cx="145.664" cy="103.8" r="2.024" fill="#fff" opacity="0.7885"/>
-<circle cx="106.496" cy="46.800000000000004" r="2.9539999999999997" fill="#fff" opacity="0.521"/>
+<line x1="16" y1="30" x2="240" y2="36.088" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="58" x2="240" y2="59.808" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="86" x2="240" y2="93.896" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="114" x2="240" y2="117.616" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="142" x2="240" y2="149.336" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<circle cx="194.816" cy="76.1" r="1.5" fill="#fff" opacity="0.5"/>
+<circle cx="15.36" cy="44.2" r="1.5" fill="#fff" opacity="0.5"/>
+<circle cx="91.904" cy="41.9" r="1.5" fill="#fff" opacity="0.5"/>
+<circle cx="168.448" cy="10" r="1.5" fill="#fff" opacity="0.5"/>
+<circle cx="64.768" cy="7.7" r="1.5" fill="#fff" opacity="0.5"/>
+<circle cx="141.312" cy="75.8" r="1.5" fill="#fff" opacity="0.5"/>
+<circle cx="217.856" cy="73.5" r="1.5" fill="#fff" opacity="0.5"/>
+<circle cx="38.4" cy="41.6" r="1.5" fill="#fff" opacity="0.5"/>
+<circle cx="114.944" cy="39.300000000000004" r="1.5" fill="#fff" opacity="0.5"/>
+<circle cx="11.264" cy="7.3999999999999995" r="1.5" fill="#fff" opacity="0.5"/>
+<circle cx="87.808" cy="5.1" r="1.5" fill="#fff" opacity="0.5"/>
+<circle cx="164.352" cy="73.2" r="1.5" fill="#fff" opacity="0.5"/>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#ef4444" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">Hello Kitty</text>
   <circle cx="128" cy="52" r="14" fill="#ef4444"/><path d="M128 42 L132 36 L124 36 Z" fill="#22c55e"/>
 <circle cx="64" cy="50" r="3" fill="#f472b6"/><line x1="64" y1="50" x2="48" y2="34" stroke="#f472b6" stroke-width="1.5"/>
   <g transform="translate(136.34,123.33) rotate(0) scale(1.05766)">
-      <ellipse cx="0" cy="8" rx="34" ry="30" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
-      <ellipse cx="-38" cy="-8" rx="10" ry="12" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
-      <ellipse cx="38" cy="-8" rx="10" ry="12" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
-      <ellipse cx="0" cy="-42" rx="18" ry="12" fill="#fbbf24"/>
-      <ellipse cx="-12" cy="-44" rx="10" ry="8" fill="#fbbf24"/>
-      <ellipse cx="12" cy="-44" rx="10" ry="8" fill="#fbbf24"/>
+      <ellipse cx="0" cy="10" rx="34" ry="30" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+      <ellipse cx="-38" cy="-6" rx="10" ry="12" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+      <ellipse cx="38" cy="-6" rx="10" ry="12" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+      <ellipse cx="-42" cy="-10" rx="9" ry="7" fill="#ef4444"/>
+      <ellipse cx="-52" cy="-10" rx="6" ry="5" fill="#ef4444"/>
+      <ellipse cx="-32" cy="-10" rx="6" ry="5" fill="#ef4444"/>
+      <circle cx="-42" cy="-10" r="3" fill="#dc2626"/>
       <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#1e293b"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#1e293b"/>
       <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/><ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
-      <ellipse cx="-6" cy="-6" r="2.5" fill="#1e293b"/><ellipse cx="6" cy="-6" r="2.5" fill="#1e293b"/>
+      <ellipse cx="0" cy="6" rx="4" ry="3" fill="#fbbf24"/>
+      <line x1="-18" y1="8" x2="-36" y2="4" stroke="#d6d3d1" stroke-width="1.5"/>
+      <line x1="-18" y1="12" x2="-36" y2="14" stroke="#d6d3d1" stroke-width="1.5"/>
+      <line x1="18" y1="8" x2="36" y2="4" stroke="#d6d3d1" stroke-width="1.5"/>
+      <line x1="18" y1="12" x2="36" y2="14" stroke="#d6d3d1" stroke-width="1.5"/>
     </g>
+
   <rect x="3" y="3" width="250" height="250" rx="18" fill="none" stroke="#ef4444" stroke-width="6" opacity="0.9"/>
       <rect x="9" y="9" width="238" height="238" rx="15" fill="none" stroke="url(#gold)" stroke-width="3"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">Hello Kitty·草…</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">Hello Kitty·草莓派對</text>
+  <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#001</text>
 </svg>

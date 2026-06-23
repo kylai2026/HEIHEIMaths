@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fafafa"/>
-      <stop offset="100%" stop-color="#f1f5f9"/>
+      <stop offset="0%" stop-color="hsl(27, 55%, 94%)"/>
+      <stop offset="100%" stop-color="hsl(67, 45%, 82%)"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -12,19 +12,22 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
-<circle cx="139.23200000000003" cy="139.23200000000003" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="23.672" cy="72.488" r="4" fill="#fff" opacity="0.35"/>
-<circle cx="188.048" cy="221.744" r="5" fill="#fff" opacity="0.35"/>
-<circle cx="72.488" cy="155" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="172.928" cy="88.256" r="4" fill="#fff" opacity="0.35"/>
+<text x="138.96" y="140.4" font-size="10" fill="#fff" opacity="0.2">✦</text>
+<text x="15.91" y="185.6" font-size="12" fill="#fff" opacity="0.2">✦</text>
+<text x="190.94" y="171.6" font-size="14" fill="#fff" opacity="0.2">✦</text>
+<text x="67.89" y="216.8" font-size="16" fill="#fff" opacity="0.2">✦</text>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#38bdf8" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">海獅君</text>
   <path d="M40 200 Q52 180 64 200 Q52 215 40 200" fill="#fda4af"/>
   <g transform="translate(135.44,119.144) rotate(0) scale(0.9448)">
-      <ellipse cx="0" cy="20" rx="40" ry="28" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
-      <ellipse cx="0" cy="-18" rx="28" ry="24" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
-      <ellipse cx="-12" cy="-20" rx="8" ry="10" fill="#fff"/><ellipse cx="12" cy="-20" rx="8" ry="10" fill="#fff"/>
-      <circle cx="-12" cy="-18" r="4" fill="#1e293b"/><circle cx="12" cy="-18" r="4" fill="#1e293b"/>
-      <ellipse cx="0" cy="36" rx="8" ry="5" fill="#f472b6"/>
+      <ellipse cx="0" cy="18" rx="38" ry="30" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+      <ellipse cx="0" cy="-16" rx="26" ry="22" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+      <ellipse cx="-10" cy="-14" rx="5" ry="7" fill="#1e293b"/><ellipse cx="10" cy="-14" rx="5" ry="7" fill="#1e293b"/>
+      <ellipse cx="0" cy="8" rx="10" ry="7" fill="#fff"/>
+      <circle cx="0" cy="-42" r="12" fill="#f97316" stroke="#ea580c" stroke-width="2"/>
     </g>
+
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">海獅君·球技表演</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">海獅君·球技表演</text>
+  <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#056</text>
 </svg>

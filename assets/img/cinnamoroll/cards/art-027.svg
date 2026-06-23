@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#e0f2fe"/>
-      <stop offset="100%" stop-color="#bae6fd"/>
+      <stop offset="0%" stop-color="hsl(251, 55%, 94%)"/>
+      <stop offset="100%" stop-color="hsl(291, 45%, 82%)"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -12,18 +12,27 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
-<circle cx="195.17600000000002" cy="195.17600000000002" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="79.61600000000001" cy="128.43200000000002" r="4" fill="#fff" opacity="0.35"/>
-<circle cx="27.992" cy="61.688" r="5" fill="#fff" opacity="0.35"/>
-<circle cx="128.43200000000002" cy="210.944" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="228.87199999999999" cy="144.2" r="4" fill="#fff" opacity="0.35"/>
-  
+<line x1="16" y1="30" x2="240" y2="36.488" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="58" x2="240" y2="60.208" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="86" x2="240" y2="86.296" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="114" x2="240" y2="118.016" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="142" x2="240" y2="149.736" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="170" x2="240" y2="175.824" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="198" x2="240" y2="199.544" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="226" x2="240" y2="231.264" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="254" x2="240" y2="257.352" stroke="#fff" stroke-width="1" opacity="0.12"/>
+<line x1="16" y1="282" x2="240" y2="289.072" stroke="#fff" stroke-width="1" opacity="0.12"/>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#44403c" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">巧克貓</text>
+  <circle cx="137.12" cy="40.72" r="5" fill="#fda4af" opacity="0.65"/>
   <g transform="translate(121.34,126.886) rotate(0) scale(1.03138)">
       <ellipse cx="0" cy="10" rx="32" ry="28" fill="#1e293b" stroke="#0f172a" stroke-width="2"/>
       <ellipse cx="-36" cy="-14" rx="12" ry="18" fill="#1e293b"/><ellipse cx="36" cy="-14" rx="12" ry="18" fill="#1e293b"/>
       <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#fbbf24"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#fbbf24"/>
       <ellipse cx="0" cy="6" rx="6" ry="4" fill="#f472b6"/>
     </g>
+
   <rect x="8" y="8" width="240" height="240" rx="14" fill="none" stroke="#60a5fa" stroke-width="3" opacity="0.7"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">巧克貓·巧克力豆</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">巧克貓·巧克力豆</text>
+  <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#027</text>
 </svg>

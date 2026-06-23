@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fafafa"/>
-      <stop offset="100%" stop-color="#f1f5f9"/>
+      <stop offset="0%" stop-color="hsl(30, 55%, 94%)"/>
+      <stop offset="100%" stop-color="hsl(70, 45%, 82%)"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -12,12 +12,11 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
-<circle cx="196.688" cy="196.688" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="81.12799999999999" cy="129.94400000000002" r="4" fill="#fff" opacity="0.35"/>
-<circle cx="29.503999999999998" cy="63.2" r="5" fill="#fff" opacity="0.35"/>
-<circle cx="129.94400000000002" cy="212.45600000000002" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="230.384" cy="209.648" r="4" fill="#fff" opacity="0.35"/>
+<ellipse cx="128" cy="220" rx="88" ry="24" fill="#fff" opacity="0.08"/>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#65a30d" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">小恐龍</text>
   <path d="M60 200 Q90 150 120 180 Q150 210 180 170 Q200 150 210 200" fill="#65a30d" opacity="0.6"/>
+<circle cx="95.36" cy="79.52" r="5" fill="#fda4af" opacity="0.65"/>
   <g transform="translate(127.96,118.108) rotate(0) scale(0.90844)">
       <ellipse cx="0" cy="18" rx="32" ry="28" fill="#65a30d" stroke="#4d7c0f" stroke-width="2"/>
       <ellipse cx="0" cy="-24" rx="24" ry="20" fill="#65a30d" stroke="#4d7c0f" stroke-width="2"/>
@@ -25,6 +24,8 @@
       <path d="M28 10 Q50 -10 56 20" fill="none" stroke="#65a30d" stroke-width="10" stroke-linecap="round"/>
       <ellipse cx="-10" cy="-8" rx="5" ry="7" fill="#1e293b"/><ellipse cx="10" cy="-8" rx="5" ry="7" fill="#1e293b"/>
     </g>
+
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">小恐龍·恐龍蛋蛋</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">小恐龍·恐龍蛋蛋</text>
+  <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#098</text>
 </svg>

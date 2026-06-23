@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fef3c7"/>
-      <stop offset="100%" stop-color="#fde68a"/>
+      <stop offset="0%" stop-color="hsl(129, 55%, 94%)"/>
+      <stop offset="100%" stop-color="hsl(169, 45%, 82%)"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -12,17 +12,28 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
-<circle cx="128" cy="128" r="100" fill="none" stroke="#fbbf24" stroke-width="1" opacity="0.25"/>
-  
+<text x="115.96000000000001" y="120.4" font-size="10" fill="#fff" opacity="0.2">✦</text>
+<text x="222.91" y="165.60000000000002" font-size="12" fill="#fff" opacity="0.2">✦</text>
+<text x="167.94" y="210.8" font-size="14" fill="#fff" opacity="0.2">✦</text>
+<text x="44.89" y="196.79999999999998" font-size="16" fill="#fff" opacity="0.2">✦</text>
+<text x="219.92000000000002" y="42" font-size="10" fill="#fff" opacity="0.2">✦</text>
+<text x="96.87" y="87.19999999999999" font-size="12" fill="#fff" opacity="0.2">✦</text>
+<text x="203.82" y="132.4" font-size="14" fill="#fff" opacity="0.2">✦</text>
+<text x="148.85" y="118.4" font-size="16" fill="#fff" opacity="0.2">✦</text>
+<circle cx="128" cy="140" r="88" fill="none" stroke="#fbbf24" stroke-width="1" opacity="0.2"/>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#f472b6" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">美樂蒂</text>
+  <rect x="170" y="188" width="36" height="24" rx="4" fill="#d97706"/><path d="M178 188 Q188 170 198 188" fill="none" stroke="#92400e" stroke-width="2"/>
   <g transform="translate(131.36,121.888) rotate(0) scale(0.8908)">
-      <ellipse cx="0" cy="12" rx="30" ry="28" fill="#fff" stroke="#fbcfe8" stroke-width="2"/>
-      <ellipse cx="-8" cy="-52" rx="14" ry="42" fill="#fff" stroke="#fbcfe8" stroke-width="2"/>
-      <ellipse cx="22" cy="-52" rx="14" ry="42" fill="#fff" stroke="#fbcfe8" stroke-width="2"/>
-      <ellipse cx="0" cy="-58" rx="14" ry="10" fill="#f472b6"/>
+      <ellipse cx="0" cy="16" rx="30" ry="28" fill="#fff" stroke="#fbcfe8" stroke-width="2"/>
+      <path d="M-32 -4 Q0 -78 32 -4 L28 18 Q0 32 -28 18 Z" fill="#f472b6" stroke="#ec4899" stroke-width="2"/>
+      <ellipse cx="0" cy="-62" rx="10" ry="8" fill="#f472b6"/>
       <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#1e293b"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#1e293b"/>
       <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/><ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
-      <path d="M-5 14 Q0 18 5 14" fill="none" stroke="#f472b6" stroke-width="2"/>
+      <path d="M-5 22 Q0 26 5 22" fill="none" stroke="#f472b6" stroke-width="2"/>
     </g>
+
   <rect x="4" y="4" width="248" height="248" rx="18" fill="none" stroke="url(#gold)" stroke-width="5"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">美樂蒂·野餐籃子</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">美樂蒂·野餐籃子</text>
+  <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#004</text>
 </svg>

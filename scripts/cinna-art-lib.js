@@ -14,15 +14,19 @@ const CHAR_FROM_NAME = [
   { keys: ['布丁狗'], id: 'pompom' },
   { keys: ['大眼蛙', '跳跳蛙'], id: 'keroppi' },
   { keys: ['蛋黃哥'], id: 'gudetama' },
-  { keys: ['酷企鵝', '唐企鵝', '小企鵝'], id: 'badtz' },
+  { keys: ['酷企鵝', '唐企鵝'], id: 'badtz' },
+  { keys: ['小企鵝'], id: 'penguin' },
   { keys: ['帕恰狗'], id: 'pochacco' },
   { keys: ['奇奇'], id: 'kiki' },
   { keys: ['拉拉'], id: 'lala' },
   { keys: ['燕尾服山姆'], id: 'sam' },
-  { keys: ['漢頓', '海獅君', '小海豹'], id: 'hangyodon' },
+  { keys: ['漢頓'], id: 'hangyodon' },
+  { keys: ['海獅君', '小海豹'], id: 'seal' },
   { keys: ['巧克貓'], id: 'chococat' },
   { keys: ['毛毯熊'], id: 'corocorokuririn' },
-  { keys: ['邦邦兔', '許願兔', '蜜糖邦妮'], id: 'bunny' },
+  { keys: ['邦邦兔'], id: 'bonbon' },
+  { keys: ['許願兔'], id: 'wish' },
+  { keys: ['蜜糖邦妮'], id: 'honey' },
   { keys: ['可可豆'], id: 'pochi' },
   { keys: ['必愛諾'], id: 'piano' },
   { keys: ['淘氣猴'], id: 'monkichi' },
@@ -85,7 +89,19 @@ const PROP_FROM_NAME = [
   { keys: ['雲朵', '飛行'], svg: '<ellipse cx="56" cy="200" rx="28" ry="14" fill="#fff" opacity="0.85"/><ellipse cx="200" cy="188" rx="24" ry="12" fill="#fff" opacity="0.75"/>' },
   { keys: ['足球', '滑板', '滑冰'], svg: '<circle cx="56" cy="196" r="14" fill="#fff" stroke="#1e293b" stroke-width="2"/><path d="M56 182 L56 210 M42 196 L70 196" stroke="#1e293b" stroke-width="1.5"/>' },
   { keys: ['煎蛋', '醬油'], svg: '<ellipse cx="128" cy="200" rx="28" ry="16" fill="#fff" stroke="#d6d3d1"/><ellipse cx="128" cy="196" rx="14" ry="10" fill="#fbbf24"/>' },
-  { keys: ['恐龍', '化石'], svg: '<path d="M60 200 Q90 150 120 180 Q150 210 180 170 Q200 150 210 200" fill="#65a30d" opacity="0.6"/>' }
+  { keys: ['恐龍', '化石', '蛋蛋'], svg: '<path d="M60 200 Q90 150 120 180 Q150 210 180 170 Q200 150 210 200" fill="#65a30d" opacity="0.6"/>' },
+  { keys: ['野餐', '籃子'], svg: '<rect x="170" y="188" width="36" height="24" rx="4" fill="#d97706"/><path d="M178 188 Q188 170 198 188" fill="none" stroke="#92400e" stroke-width="2"/>' },
+  { keys: ['帳篷', '露營'], svg: '<polygon points="188,210 210,170 232,210" fill="#166534"/><rect x="200" y="210" width="20" height="8" fill="#57534e"/>' },
+  { keys: ['香蕉'], svg: '<path d="M170 200 Q190 170 210 195" fill="none" stroke="#fbbf24" stroke-width="8" stroke-linecap="round"/>' },
+  { keys: ['奶嘴', '搖籃'], svg: '<ellipse cx="188" cy="200" rx="20" ry="12" fill="#bae6fd" stroke="#60a5fa"/><circle cx="188" cy="188" r="6" fill="#fda4af"/>' },
+  { keys: ['瓜子', '堅果', '松果'], svg: '<ellipse cx="56" cy="196" rx="10" ry="6" fill="#d97706"/><ellipse cx="72" cy="192" rx="8" ry="5" fill="#92400e"/>' },
+  { keys: ['冰山', '南極', '冰屋'], svg: '<polygon points="40,210 60,170 80,210" fill="#e0f2fe"/><polygon points="180,210 210,160 240,210" fill="#bae6fd" opacity="0.8"/>' },
+  { keys: ['百合', '香水'], svg: '<ellipse cx="188" cy="196" rx="8" ry="14" fill="#fff" stroke="#fda4af"/><circle cx="188" cy="186" r="6" fill="#f472b6"/>' },
+  { keys: ['藤蔓', '叢林'], svg: '<path d="M40 210 Q60 150 50 180 Q70 120 60 160" fill="none" stroke="#22c55e" stroke-width="4"/>' },
+  { keys: ['地圖'], svg: '<rect x="42" y="188" width="34" height="24" rx="2" fill="#fef3c7" stroke="#d97706"/><path d="M48 194 L62 188 L72 198" fill="none" stroke="#ca8a04"/>' },
+  { keys: ['跑輪'], svg: '<circle cx="56" cy="196" r="18" fill="none" stroke="#94a3b8" stroke-width="3"/><line x1="56" y1="178" x2="56" y2="214" stroke="#94a3b8" stroke-width="2"/>' },
+  { keys: ['芒果'], svg: '<ellipse cx="188" cy="196" rx="14" ry="18" fill="#fb923c" transform="rotate(-20 188 196)"/>' },
+  { keys: ['貝殼', '石頭'], svg: '<ellipse cx="188" cy="200" rx="12" ry="8" fill="#fda4af"/><ellipse cx="200" cy="194" rx="9" ry="6" fill="#e2e8f0"/>' }
 ];
 
 const BG_BY_RARITY = {
@@ -95,6 +111,121 @@ const BG_BY_RARITY = {
   rare: [['#e0f2fe', '#bae6fd'], ['#fce7f3', '#fbcfe8'], ['#ffedd5', '#fed7aa']],
   common: [['#f8fafc', '#e2e8f0'], ['#f1f5f9', '#e2e8f0'], ['#fafafa', '#f1f5f9']]
 };
+
+const CHAR_BRAND = {
+  kitty: '#ef4444', melody: '#f472b6', kuromi: '#a855f7', cinna: '#7dd3fc', pompom: '#eab308',
+  keroppi: '#22c55e', gudetama: '#fbbf24', badtz: '#1e293b', pochacco: '#60a5fa', kiki: '#ec4899',
+  lala: '#3b82f6', sam: '#1e293b', hangyodon: '#0ea5e9', seal: '#38bdf8', chococat: '#44403c',
+  corocorokuririn: '#d97706', bonbon: '#f9a8d4', wish: '#c084fc', honey: '#fcd34d', pochi: '#92400e',
+  piano: '#e2e8f0', monkichi: '#ea580c', deardaniel: '#fda4af', duck: '#facc15', beaver: '#78350f',
+  wolf: '#64748b', raccoon: '#78716c', mocha: '#a68a64', milk: '#fef3c7', chiffon: '#fda4af',
+  cappuccino: '#8b6914', espresso: '#57534e', hamster: '#f59e0b', sheep: '#f8fafc', hedgehog: '#a8a29e',
+  fox: '#f97316', deer: '#b45309', squirrel: '#d97706', puffer: '#fde047', koala: '#94a3b8',
+  sloth: '#a8a29e', parrot: '#22c55e', otter: '#78716c', dino: '#65a30d', penguin: '#38bdf8'
+};
+
+const THEME_TINTS = [
+  { keys: ['草莓', '櫻花', '粉'], colors: ['#fff1f2', '#fecdd3'] },
+  { keys: ['海洋', '游泳', '荷葉', '企鵝', '冰山', '南極'], colors: ['#e0f2fe', '#7dd3fc'] },
+  { keys: ['森林', '浣洗', '藤蔓', '叢林'], colors: ['#dcfce7', '#86efac'] },
+  { keys: ['夜空', '月亮', '星星', '流星', '數星'], colors: ['#1e1b4b', '#4338ca'] },
+  { keys: ['咖啡', '可可', '摩卡', '濃縮'], colors: ['#fef3c7', '#d6d3d1'] },
+  { keys: ['冬日', '雪花', '圍巾', '耳罩', '冰'], colors: ['#f0f9ff', '#bae6fd'] },
+  { keys: ['蜜糖', '香蕉', '芒果'], colors: ['#fffbeb', '#fde68a'] },
+  { keys: ['惡魔', '骷髏', '庫洛'], colors: ['#1e1b4b', '#581c87'] },
+  { keys: ['花', '花園', '百合'], colors: ['#fdf2f8', '#fbcfe8'] }
+];
+
+function parseCard(name) {
+  const [char, variant] = name.split('·');
+  return { char: char || name, variant: variant || '' };
+}
+
+function uniqueBackground(name, rarity, idx) {
+  const { variant } = parseCard(name);
+  const baseList = BG_BY_RARITY[rarity] || BG_BY_RARITY.common;
+  const base = baseList[idx % baseList.length];
+  for (const t of THEME_TINTS) {
+    if (t.keys.some(k => variant.includes(k))) return t.colors;
+  }
+  const hue = Math.floor(hash(idx * 29 + variant.length * 13) * 360);
+  return [`hsl(${hue}, 55%, 94%)`, `hsl(${(hue + 40) % 360}, 45%, 82%)`];
+}
+
+function charBadge(name, charId) {
+  const { char, variant } = parseCard(name);
+  const brand = CHAR_BRAND[charId] || '#94a3b8';
+  const label = variant ? `${char}` : char;
+  return `<rect x="12" y="10" width="232" height="28" rx="14" fill="${brand}" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">${label}</text>`;
+}
+
+function variantWearable(name, idx) {
+  const { variant } = parseCard(name);
+  const ox = Math.floor((hash(idx * 41) - 0.5) * 16);
+  const oy = Math.floor((hash(idx * 53) - 0.5) * 12);
+  const g = `transform="translate(${ox},${oy})"`;
+  const items = [];
+  if (/墨鏡|搖滾/.test(variant)) items.push(`<g ${g}><rect x="108" y="98" width="40" height="10" rx="3" fill="#1e293b"/><rect x="108" y="98" width="16" height="10" fill="#334155" opacity="0.6"/><rect x="132" y="98" width="16" height="10" fill="#334155" opacity="0.6"/></g>`);
+  if (/圍巾|雪花|冬日|耳罩/.test(variant)) items.push(`<g ${g}><path d="M98 118 Q128 138 158 118 L152 132 Q128 148 104 132 Z" fill="#fda4af"/></g>`);
+  if (/蝴蝶結|緞帶|頭巾/.test(variant)) items.push(`<g ${g}><ellipse cx="108" cy="88" rx="10" ry="7" fill="#f472b6"/><ellipse cx="148" cy="88" rx="10" ry="7" fill="#f472b6"/><circle cx="128" cy="88" r="5" fill="#ec4899"/></g>`);
+  if (/皇冠|皇家|紳士|禮帽/.test(variant)) items.push(`<g ${g}><polygon points="108,72 118,52 128,68 138,52 148,72" fill="#fbbf24"/></g>`);
+  if (/荷葉|泳圈|游泳/.test(variant)) items.push(`<g ${g}><ellipse cx="128" cy="168" rx="42" ry="14" fill="#4ade80" opacity="0.5"/><ellipse cx="128" cy="164" rx="28" ry="10" fill="#22c55e" opacity="0.35"/></g>`);
+  if (/貝雷|帽子|雷蒙|鴨帽/.test(variant)) items.push(`<g ${g}><ellipse cx="128" cy="72" rx="26" ry="12" fill="#854d0e"/></g>`);
+  if (/奶嘴/.test(variant)) items.push(`<g ${g}><circle cx="128" cy="108" r="8" fill="#fda4af"/><circle cx="128" cy="118" r="4" fill="#fff"/></g>`);
+  if (/牙套|鋼牙/.test(variant)) items.push(`<g ${g}><rect x="112" y="118" width="32" height="8" rx="3" fill="#e2e8f0" stroke="#94a3b8"/></g>`);
+  if (/翅膀|飛行|飄飄|大耳/.test(variant)) items.push(`<g ${g}><ellipse cx="60" cy="110" rx="22" ry="10" fill="#fff" opacity="0.7" transform="rotate(-25 60 110)"/><ellipse cx="196" cy="110" rx="22" ry="10" fill="#fff" opacity="0.7" transform="rotate(25 196 110)"/></g>`);
+  return items.slice(0, 2).join('\n');
+}
+
+function cardSceneSvg(name, rarity, idx) {
+  const tier = rarityTier(rarity);
+  const parts = ['<rect width="256" height="256" fill="url(#bg)"/>'];
+  const pat = Math.floor(hash(idx * 23) * 5);
+  const n = 4 + (idx % 7);
+  if (pat === 0) {
+    for (let i = 0; i < n; i++) {
+      parts.push(`<circle cx="${hash(idx + i * 7) * 256}" cy="${hash(idx + i * 13) * 220}" r="${1.5 + hash(i + idx) * 3}" fill="#fff" opacity="${0.15 + hash(i) * 0.25}"/>`);
+    }
+  } else if (pat === 1) {
+    for (let i = 0; i < n; i++) {
+      const y = 30 + i * 28;
+      parts.push(`<line x1="16" y1="${y}" x2="240" y2="${y + hash(i + idx) * 8}" stroke="#fff" stroke-width="1" opacity="0.12"/>`);
+    }
+  } else if (pat === 2) {
+    for (let i = 0; i < n; i++) {
+      parts.push(`<text x="${hash(idx + i) * 230 + 12}" y="${hash(idx + i * 2) * 200 + 30}" font-size="${10 + (i % 4) * 2}" fill="#fff" opacity="0.2">✦</text>`);
+    }
+  } else if (pat === 3) {
+    parts.push(`<circle cx="128" cy="150" r="${60 + (idx % 20)}" fill="none" stroke="#fff" stroke-width="1" opacity="0.1"/>`);
+  } else {
+    parts.push(`<ellipse cx="128" cy="220" rx="${80 + idx % 30}" ry="24" fill="#fff" opacity="0.08"/>`);
+  }
+  if (tier >= 5) {
+    for (let i = 0; i < 12; i++) {
+      parts.push(`<circle cx="${hash(idx + i * 11) * 256}" cy="${hash(idx + i * 17) * 100}" r="1.5" fill="#fff" opacity="0.5"/>`);
+    }
+  } else if (tier >= 4) {
+    parts.push('<circle cx="128" cy="140" r="88" fill="none" stroke="#fbbf24" stroke-width="1" opacity="0.2"/>');
+  }
+  return parts.join('\n');
+}
+
+function uniqueProps(name, idx) {
+  const props = detectProps(name);
+  if (props.length >= 2) return props;
+  const { variant } = parseCard(name);
+  const extra = [];
+  const px = 40 + hash(idx * 37) * 160;
+  const py = 40 + hash(idx * 59) * 80;
+  if (hash(idx * 67) > 0.55) {
+    extra.push(`<circle cx="${px}" cy="${py}" r="5" fill="#fda4af" opacity="0.65"/>`);
+  }
+  if (/派對|慶典|閃亮/.test(variant)) {
+    extra.push(`<text x="${px}" y="${py}" font-size="16" fill="#fef08a" opacity="0.8">✨</text>`);
+  }
+  return [...props, ...extra].slice(0, 3);
+}
 
 function detectChar(name) {
   for (const c of CHAR_FROM_NAME) {
@@ -149,28 +280,32 @@ const BODY_DRAW = {
     const { tx, ty, rot, scale } = poseTransform(pose, idx);
     const sleep = pose === 'sleep';
     return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
-      <ellipse cx="0" cy="8" rx="34" ry="30" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
-      <ellipse cx="-38" cy="-8" rx="10" ry="12" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
-      <ellipse cx="38" cy="-8" rx="10" ry="12" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
-      <ellipse cx="0" cy="-42" rx="18" ry="12" fill="#fbbf24"/>
-      <ellipse cx="-12" cy="-44" rx="10" ry="8" fill="#fbbf24"/>
-      <ellipse cx="12" cy="-44" rx="10" ry="8" fill="#fbbf24"/>
+      <ellipse cx="0" cy="10" rx="34" ry="30" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+      <ellipse cx="-38" cy="-6" rx="10" ry="12" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+      <ellipse cx="38" cy="-6" rx="10" ry="12" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+      <ellipse cx="-42" cy="-10" rx="9" ry="7" fill="#ef4444"/>
+      <ellipse cx="-52" cy="-10" rx="6" ry="5" fill="#ef4444"/>
+      <ellipse cx="-32" cy="-10" rx="6" ry="5" fill="#ef4444"/>
+      <circle cx="-42" cy="-10" r="3" fill="#dc2626"/>
       ${eyesOpen('#1e293b', sleep)}
       ${cheeks()}
-      <ellipse cx="-6" cy="-6" r="2.5" fill="#1e293b"/><ellipse cx="6" cy="-6" r="2.5" fill="#1e293b"/>
+      <ellipse cx="0" cy="6" rx="4" ry="3" fill="#fbbf24"/>
+      <line x1="-18" y1="8" x2="-36" y2="4" stroke="#d6d3d1" stroke-width="1.5"/>
+      <line x1="-18" y1="12" x2="-36" y2="14" stroke="#d6d3d1" stroke-width="1.5"/>
+      <line x1="18" y1="8" x2="36" y2="4" stroke="#d6d3d1" stroke-width="1.5"/>
+      <line x1="18" y1="12" x2="36" y2="14" stroke="#d6d3d1" stroke-width="1.5"/>
     </g>`;
   },
   melody(pose, idx) {
     const { tx, ty, rot, scale } = poseTransform(pose, idx);
     const sleep = pose === 'sleep';
     return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
-      <ellipse cx="0" cy="12" rx="30" ry="28" fill="#fff" stroke="#fbcfe8" stroke-width="2"/>
-      <ellipse cx="-8" cy="-52" rx="14" ry="42" fill="#fff" stroke="#fbcfe8" stroke-width="2"/>
-      <ellipse cx="22" cy="-52" rx="14" ry="42" fill="#fff" stroke="#fbcfe8" stroke-width="2"/>
-      <ellipse cx="0" cy="-58" rx="14" ry="10" fill="#f472b6"/>
+      <ellipse cx="0" cy="16" rx="30" ry="28" fill="#fff" stroke="#fbcfe8" stroke-width="2"/>
+      <path d="M-32 -4 Q0 -78 32 -4 L28 18 Q0 32 -28 18 Z" fill="#f472b6" stroke="#ec4899" stroke-width="2"/>
+      <ellipse cx="0" cy="-62" rx="10" ry="8" fill="#f472b6"/>
       ${eyesOpen('#1e293b', sleep)}
       ${cheeks()}
-      <path d="M-5 14 Q0 18 5 14" fill="none" stroke="#f472b6" stroke-width="2"/>
+      <path d="M-5 22 Q0 26 5 22" fill="none" stroke="#f472b6" stroke-width="2"/>
     </g>`;
   },
   kuromi(pose, idx) {
@@ -291,6 +426,26 @@ const BODY_DRAW = {
       <ellipse cx="0" cy="36" rx="8" ry="5" fill="#f472b6"/>
     </g>`;
   },
+  seal(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="18" rx="38" ry="30" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+      <ellipse cx="0" cy="-16" rx="26" ry="22" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+      <ellipse cx="-10" cy="-14" rx="5" ry="7" fill="#1e293b"/><ellipse cx="10" cy="-14" rx="5" ry="7" fill="#1e293b"/>
+      <ellipse cx="0" cy="8" rx="10" ry="7" fill="#fff"/>
+      <circle cx="0" cy="-42" r="12" fill="#f97316" stroke="#ea580c" stroke-width="2"/>
+    </g>`;
+  },
+  penguin(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="16" rx="28" ry="32" fill="#1e293b" stroke="#0f172a" stroke-width="2"/>
+      <ellipse cx="0" cy="20" rx="18" ry="22" fill="#fff"/>
+      <ellipse cx="0" cy="-24" rx="22" ry="20" fill="#1e293b"/>
+      <ellipse cx="-8" cy="-22" rx="4" ry="6" fill="#1e293b"/><ellipse cx="8" cy="-22" rx="4" ry="6" fill="#1e293b"/>
+      <ellipse cx="0" cy="-10" rx="8" ry="5" fill="#f97316"/>
+    </g>`;
+  },
   chococat(pose, idx) {
     const { tx, ty, rot, scale } = poseTransform(pose, idx);
     return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
@@ -310,13 +465,35 @@ const BODY_DRAW = {
       ${cheeks()}
     </g>`;
   },
-  bunny(pose, idx) {
+  bonbon(pose, idx) {
     const { tx, ty, rot, scale } = poseTransform(pose, idx);
-    const color = hash(idx) > 0.5 ? '#fff' : '#fecdd3';
     return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
-      <ellipse cx="0" cy="14" rx="28" ry="26" fill="${color}" stroke="#f9a8d4" stroke-width="2"/>
-      <ellipse cx="-10" cy="-48" rx="10" ry="36" fill="${color}" stroke="#f9a8d4" stroke-width="2"/>
-      <ellipse cx="14" cy="-48" rx="10" ry="36" fill="${color}" stroke="#f9a8d4" stroke-width="2"/>
+      <ellipse cx="0" cy="14" rx="28" ry="26" fill="#fff" stroke="#f9a8d4" stroke-width="2"/>
+      <ellipse cx="-10" cy="-48" rx="10" ry="36" fill="#fff" stroke="#f9a8d4" stroke-width="2"/>
+      <ellipse cx="14" cy="-48" rx="10" ry="36" fill="#fff" stroke="#f9a8d4" stroke-width="2"/>
+      <ellipse cx="0" cy="-52" rx="14" ry="8" fill="#f472b6"/>
+      ${eyesOpen('#1e293b', pose === 'sleep')}
+      ${cheeks()}
+    </g>`;
+  },
+  wish(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="14" rx="28" ry="26" fill="#faf5ff" stroke="#c084fc" stroke-width="2"/>
+      <ellipse cx="-10" cy="-48" rx="10" ry="36" fill="#faf5ff" stroke="#c084fc" stroke-width="2"/>
+      <ellipse cx="14" cy="-48" rx="10" ry="36" fill="#faf5ff" stroke="#c084fc" stroke-width="2"/>
+      <text x="0" y="-38" text-anchor="middle" font-size="14" fill="#a78bfa">✦</text>
+      ${eyesOpen('#1e293b', pose === 'sleep')}
+      ${cheeks()}
+    </g>`;
+  },
+  honey(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="14" rx="28" ry="26" fill="#fef9c3" stroke="#facc15" stroke-width="2"/>
+      <ellipse cx="-10" cy="-48" rx="10" ry="36" fill="#fef9c3" stroke="#facc15" stroke-width="2"/>
+      <ellipse cx="14" cy="-48" rx="10" ry="36" fill="#fef9c3" stroke="#facc15" stroke-width="2"/>
+      <ellipse cx="0" cy="-50" rx="12" ry="8" fill="#fbbf24"/>
       ${eyesOpen('#1e293b', pose === 'sleep')}
       ${cheeks()}
     </g>`;
@@ -517,34 +694,6 @@ const BODY_DRAW = {
   }
 };
 
-function characterSvg(charId, pose, idx) {
-  const draw = BODY_DRAW[charId] || BODY_DRAW.cinna;
-  return draw(pose, idx);
-}
-
-function sceneSvg(rarity, idx) {
-  const tier = rarityTier(rarity);
-  const h = hash(idx * 13);
-  const parts = [];
-  if (tier >= 5) {
-    parts.push('<rect width="256" height="256" fill="url(#bg)"/>');
-    for (let i = 0; i < 18; i++) {
-      parts.push(`<circle cx="${hash(idx + i * 7) * 256}" cy="${hash(idx + i * 13) * 120}" r="${1 + hash(i) * 2}" fill="#fff" opacity="${0.3 + hash(i + idx) * 0.5}"/>`);
-    }
-  } else if (tier >= 4) {
-    parts.push('<rect width="256" height="256" fill="url(#bg)"/>');
-    parts.push('<circle cx="128" cy="128" r="100" fill="none" stroke="#fbbf24" stroke-width="1" opacity="0.25"/>');
-  } else if (tier >= 3) {
-    parts.push('<rect width="256" height="256" fill="url(#bg)"/>');
-  } else {
-    parts.push('<rect width="256" height="256" fill="url(#bg)"/>');
-    for (let i = 0; i < 5; i++) {
-      parts.push(`<circle cx="${20 + hash(idx + i) * 216}" cy="${20 + hash(idx + i * 3) * 216}" r="${3 + i % 3}" fill="#fff" opacity="0.35"/>`);
-    }
-  }
-  return parts.join('\n');
-}
-
 function borderSvg(tier) {
   if (tier >= 5) {
     return `<rect x="3" y="3" width="250" height="250" rx="18" fill="none" stroke="#ef4444" stroke-width="6" opacity="0.9"/>
@@ -562,14 +711,19 @@ function borderSvg(tier) {
   return `<rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>`;
 }
 
+function characterSvg(charId, pose, idx, name) {
+  const draw = BODY_DRAW[charId] || BODY_DRAW.cinna;
+  return `${draw(pose, idx)}\n${variantWearable(name, idx)}`;
+}
+
 function buildCardSvg(idx, name, rarity) {
   const tier = rarityTier(rarity);
-  const palettes = BG_BY_RARITY[rarity] || BG_BY_RARITY.common;
-  const [c1, c2] = palettes[idx % palettes.length];
+  const [c1, c2] = uniqueBackground(name, rarity, idx);
   const charId = detectChar(name);
   const pose = detectPose(name);
-  const props = detectProps(name);
-  const shortName = name.length > 14 ? name.slice(0, 13) + '…' : name;
+  const props = uniqueProps(name, idx);
+  const { variant } = parseCard(name);
+  const shortName = name.length > 16 ? name.slice(0, 15) + '…' : name;
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
@@ -584,11 +738,13 @@ function buildCardSvg(idx, name, rarity) {
       <stop offset="100%" stop-color="#fcd34d"/>
     </linearGradient>
   </defs>
-  ${sceneSvg(rarity, idx)}
+  ${cardSceneSvg(name, rarity, idx)}
+  ${charBadge(name, charId)}
   ${props.join('\n')}
-  ${characterSvg(charId, pose, idx)}
+  ${characterSvg(charId, pose, idx, name)}
   ${borderSvg(tier)}
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">${shortName}</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">${shortName}</text>
+  <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#${String(idx).padStart(3, '0')}</text>
 </svg>`;
 }
 

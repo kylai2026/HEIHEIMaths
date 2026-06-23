@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f8fafc"/>
-      <stop offset="100%" stop-color="#e2e8f0"/>
+      <stop offset="0%" stop-color="hsl(230, 55%, 94%)"/>
+      <stop offset="100%" stop-color="hsl(270, 45%, 82%)"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -12,12 +12,10 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
-<circle cx="132.10399999999998" cy="132.10399999999998" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="232.54399999999998" cy="65.36" r="4" fill="#fff" opacity="0.35"/>
-<circle cx="116.98400000000001" cy="214.616" r="5" fill="#fff" opacity="0.35"/>
-<circle cx="65.36" cy="147.872" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="165.8" cy="81.12799999999999" r="4" fill="#fff" opacity="0.35"/>
-  
+<ellipse cx="128" cy="220" rx="107" ry="24" fill="#fff" opacity="0.08"/>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#94a3b8" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">小無尾熊</text>
+  <circle cx="186.4" cy="64.08" r="5" fill="#fda4af" opacity="0.65"/>
   <g transform="translate(132.14,119.774) rotate(0) scale(1.0537)">
       <ellipse cx="0" cy="14" rx="30" ry="28" fill="#94a3b8" stroke="#64748b" stroke-width="2"/>
       <circle cx="-28" cy="-10" r="16" fill="#94a3b8" stroke="#64748b" stroke-width="2"/>
@@ -25,6 +23,8 @@
       <ellipse cx="0" cy="6" rx="18" ry="16" fill="#e2e8f0"/>
       <ellipse cx="-8" cy="4" rx="5" ry="7" fill="#1e293b"/><ellipse cx="8" cy="4" rx="5" ry="7" fill="#1e293b"/>
     </g>
+
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">小無尾熊·無尾桉樹</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">小無尾熊·無尾桉樹</text>
+  <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#087</text>
 </svg>

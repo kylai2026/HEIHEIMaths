@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f1f5f9"/>
-      <stop offset="100%" stop-color="#e2e8f0"/>
+      <stop offset="0%" stop-color="hsl(56, 55%, 94%)"/>
+      <stop offset="100%" stop-color="hsl(96, 45%, 82%)"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -12,11 +12,13 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
-<circle cx="83.288" cy="83.288" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="183.728" cy="232.54399999999998" r="4" fill="#fff" opacity="0.35"/>
-<circle cx="132.10399999999998" cy="165.8" r="5" fill="#fff" opacity="0.35"/>
-<circle cx="232.54399999999998" cy="99.056" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="116.98400000000001" cy="96.24799999999999" r="4" fill="#fff" opacity="0.35"/>
+<circle cx="75.008" cy="64.46" r="2.379" fill="#fff" opacity="0.15"/>
+<circle cx="111.616" cy="179.95999999999998" r="3.774" fill="#fff" opacity="0.34025"/>
+<circle cx="72.448" cy="75.46000000000001" r="3.057" fill="#fff" opacity="0.2065"/>
+<circle cx="109.056" cy="190.96" r="4.452" fill="#fff" opacity="0.39675"/>
+<circle cx="145.664" cy="86.46000000000001" r="2.847" fill="#fff" opacity="0.263"/>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#fde047" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">小刺豚</text>
   <circle cx="100" cy="58" r="12" fill="#f472b6"/><circle cx="128" cy="48" r="14" fill="#60a5fa"/><circle cx="156" cy="58" r="11" fill="#fbbf24"/><line x1="128" y1="62" x2="128" y2="88" stroke="#94a3b8" stroke-width="2"/>
   <g transform="translate(135.46,125.402) rotate(0) scale(0.98494)">
       <circle cx="0" cy="10" r="36" fill="#fef08a" stroke="#eab308" stroke-width="2"/>
@@ -24,6 +26,8 @@
       <ellipse cx="-12" cy="6" rx="6" ry="8" fill="#1e293b"/><ellipse cx="12" cy="6" rx="6" ry="8" fill="#1e293b"/>
       <path d="M-8 20 Q0 28 8 20" fill="none" stroke="#ca8a04" stroke-width="2"/>
     </g>
+
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">小刺豚·刺豚氣球</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">小刺豚·刺豚氣球</text>
+  <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#085</text>
 </svg>

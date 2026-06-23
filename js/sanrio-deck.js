@@ -1,5 +1,5 @@
 /* SANRIO_DECK 卡池：100 張獨立卡片，每角色最多 2 張 */
-const SANRIO_ART_VER = 3;
+const SANRIO_ART_VER = 4;
 const SANRIO_IMG = {
   art: (n) => `assets/img/cinnamoroll/cards/art-${String(n).padStart(3, '0')}.svg?v=${SANRIO_ART_VER}`
 };

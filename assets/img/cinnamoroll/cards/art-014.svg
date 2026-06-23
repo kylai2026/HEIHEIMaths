@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#dcfce7"/>
-      <stop offset="100%" stop-color="#bbf7d0"/>
+      <stop offset="0%" stop-color="hsl(277, 55%, 94%)"/>
+      <stop offset="100%" stop-color="hsl(317, 45%, 82%)"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -12,6 +12,12 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
+<circle cx="73.216" cy="62.919999999999995" r="2.3579999999999997" fill="#fff" opacity="0.15"/>
+<circle cx="109.824" cy="178.42000000000002" r="3.753" fill="#fff" opacity="0.34025"/>
+<circle cx="70.656" cy="73.92" r="3.036" fill="#fff" opacity="0.2065"/>
+<circle cx="107.264" cy="189.42" r="4.431" fill="#fff" opacity="0.39675"/>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#fbbf24" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">蛋黃哥</text>
   <ellipse cx="128" cy="200" rx="28" ry="16" fill="#fff" stroke="#d6d3d1"/><ellipse cx="128" cy="196" rx="14" ry="10" fill="#fbbf24"/>
   <g transform="translate(128.84,116.036) rotate(0) scale(0.98116)">
       <ellipse cx="0" cy="20" rx="48" ry="38" fill="#fef08a" stroke="#eab308" stroke-width="2"/>
@@ -22,6 +28,8 @@
       <line x1="-20" y1="42" x2="-8" y2="36" stroke="#ca8a04" stroke-width="2"/>
       <line x1="20" y1="42" x2="8" y2="36" stroke="#ca8a04" stroke-width="2"/>
     </g>
+
   <rect x="6" y="6" width="244" height="244" rx="16" fill="none" stroke="#c084fc" stroke-width="4" opacity="0.85"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">蛋黃哥·醬油碟子</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">蛋黃哥·醬油碟子</text>
+  <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#014</text>
 </svg>

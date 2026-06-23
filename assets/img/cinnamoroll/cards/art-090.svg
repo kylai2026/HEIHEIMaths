@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f8fafc"/>
-      <stop offset="100%" stop-color="#e2e8f0"/>
+      <stop offset="0%" stop-color="#fffbeb"/>
+      <stop offset="100%" stop-color="#fde68a"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -12,12 +12,11 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
-<circle cx="65.36" cy="65.36" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="165.8" cy="214.616" r="4" fill="#fff" opacity="0.35"/>
-<circle cx="114.176" cy="147.872" r="5" fill="#fff" opacity="0.35"/>
-<circle cx="214.616" cy="81.12799999999999" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="99.056" cy="230.384" r="4" fill="#fff" opacity="0.35"/>
-  
+<circle cx="128" cy="150" r="70" fill="none" stroke="#fff" stroke-width="1" opacity="0.1"/>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#a8a29e" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">小樹懶</text>
+  <ellipse cx="188" cy="196" rx="14" ry="18" fill="#fb923c" transform="rotate(-20 188 196)"/>
+<circle cx="193.92" cy="98.72" r="5" fill="#fda4af" opacity="0.65"/>
   <g transform="translate(121.24,122.476) rotate(0) scale(0.94012)">
       <ellipse cx="0" cy="18" rx="32" ry="28" fill="#a8a29e" stroke="#78716c" stroke-width="2"/>
       <ellipse cx="0" cy="-20" rx="26" ry="22" fill="#a8a29e" stroke="#78716c" stroke-width="2"/>
@@ -25,6 +24,8 @@
       <path d="M30 -10 Q50 20 20 30" fill="none" stroke="#78716c" stroke-width="6" stroke-linecap="round"/>
       <path d="M-16 -2 Q-10 4 -4 -2" fill="none" stroke="#475569" stroke-width="2"/><path d="M4 -2 Q10 4 16 -2" fill="none" stroke="#475569" stroke-width="2"/>
     </g>
+
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">小樹懶·樹懶芒果</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">小樹懶·樹懶芒果</text>
+  <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#090</text>
 </svg>

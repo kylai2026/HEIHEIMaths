@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f8fafc"/>
-      <stop offset="100%" stop-color="#e2e8f0"/>
+      <stop offset="0%" stop-color="#fff1f2"/>
+      <stop offset="100%" stop-color="#fecdd3"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -12,11 +12,9 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
-<circle cx="172.928" cy="172.928" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="121.30399999999999" cy="170.11999999999998" r="4" fill="#fff" opacity="0.35"/>
-<circle cx="221.744" cy="103.376" r="5" fill="#fff" opacity="0.35"/>
-<circle cx="170.11999999999998" cy="36.632000000000005" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="54.56" cy="185.888" r="4" fill="#fff" opacity="0.35"/>
+<ellipse cx="128" cy="220" rx="80" ry="24" fill="#fff" opacity="0.08"/>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#a68a64" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">摩卡</text>
   <text x="48" y="52" font-size="22" fill="#fda4af">🌸</text><text x="188" y="68" font-size="18" fill="#fda4af">🌸</text>
 <rect x="178" y="188" width="28" height="22" rx="4" fill="#fff" stroke="#94a3b8"/><ellipse cx="192" cy="196" rx="10" ry="4" fill="#8b5a2b" opacity="0.5"/>
   <g transform="translate(128.8,126.032) rotate(0) scale(0.90232)">
@@ -28,6 +26,8 @@
       <path d="M-5 14 Q0 19 5 14" fill="none" stroke="#78350f" stroke-width="2"/>
       <circle cx="0" cy="40" r="9" fill="#d4b896" stroke="#94a3b8" stroke-width="1.5"/>
     </g>
+
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">摩卡·櫻花摩卡</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">摩卡·櫻花摩卡</text>
+  <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#060</text>
 </svg>
