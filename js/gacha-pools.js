@@ -15,10 +15,15 @@ const GACHA_IMAGE = {
     style: 'bottts-neutral',
     bg: 'b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf'
   },
-  cinnamoroll: {
-    banner: 'assets/img/cinnamoroll/cinnamoroll-solo.png',
+  sanrio: {
+    banner: 'assets/img/cinnamoroll/cinnamoroll-party.png',
     style: 'lorelei',
     bg: 'b6e3f4,ffd5dc,fecaca,fde68a,e9d5ff'
+  },
+  pixar: {
+    banner: 'assets/img/pixar/cards/art-001.svg',
+    style: 'adventurer',
+    bg: 'fde68a,bae6fd,fecaca,e9d5ff,bbf7d0'
   }
 };
 
@@ -39,13 +44,22 @@ const CARD_POOLS = [
     desc: '比卡超、水箭龜、小火龍、傑尼龜…經典寶可夢等你收服'
   },
   {
-    id: 'cinnamoroll',
-    name: '肉桂狗',
-    icon: '🐶',
-    theme: 'cinnamoroll',
-    bannerImage: GACHA_IMAGE.cinnamoroll.banner,
-    banner: '肉桂狗同朋友仔，一齊慶祝！',
-    desc: '肉桂狗、摩卡、牛奶、芙蘭…百款可愛卡片'
+    id: 'sanrio',
+    name: 'Sanrio',
+    icon: '🎀',
+    theme: 'sanrio',
+    bannerImage: GACHA_IMAGE.sanrio.banner,
+    banner: 'Hello Kitty、美樂蒂、庫洛米…百款 Sanrio 角色！',
+    desc: 'Hello Kitty、美樂蒂、庫洛米、布丁狗、肉桂狗…'
+  },
+  {
+    id: 'pixar',
+    name: 'PIXAR',
+    icon: '🎬',
+    theme: 'pixar',
+    bannerImage: GACHA_IMAGE.pixar.banner,
+    banner: '玩具總動員、海底總動員、玩轉腦朋友…',
+    desc: 'PIXAR 動畫電影角色同場景，百張收藏卡'
   }
 ];
 
@@ -57,9 +71,8 @@ function pokemonFallbackUrl(dexId) {
   return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${dexId}.png`;
 }
 
-/* 第一世代 #1–#100 香港常用譯名 */
 const POKEMON_NAMES = {
-  1: '妙蛙種子', 2: '妙蛙草', 3: '妙蛙花', 4: '小火龍', 5: '火恐龍', 6: '噴火龍',
+  1: '妙蛙種子', 2: '妙蛙草', 3: '妙蛙花', 4: '小火龍', 5: '火恐龍', 6: '噴火龜',
   7: '傑尼龜', 8: '卡咪龜', 9: '水箭龜', 10: '綠毛蟲', 11: '鐵甲蛹', 12: '巴大蝶',
   13: '獨角蟲', 14: '鐵殼蛹', 15: '大針蜂', 16: '波波', 17: '比比鳥', 18: '大比鳥',
   19: '小拉達', 20: '拉達', 21: '烈雀', 22: '大嘴雀', 23: '阿柏蛇', 24: '阿柏怪',
@@ -84,7 +97,7 @@ const POKEMON_TYPES = {
   59: '火', 38: '火', 18: '一般', 52: '一般', 53: '一般', 100: '電'
 };
 
-const POKEMON_SSR = new Set([6, 9, 25]); /* 噴火龜、水箭龜、比卡超 */
+const POKEMON_SSR = new Set([6, 9, 25]);
 const POKEMON_UR = new Set([3, 18, 38, 59, 65, 68, 76, 87, 91, 94]);
 const POKEMON_SR = new Set([2, 5, 8, 26, 36, 62, 71, 82, 89, 95, 99, 100]);
 
@@ -116,19 +129,35 @@ function buildPokemonCards() {
   return cards;
 }
 
-function buildCinnamorollCards() {
-  return CINNAMOROLL_DECK.map((entry, i) => ({
-    id: `cinna-${String(i + 1).padStart(3, '0')}`,
-    poolId: 'cinnamoroll',
+function buildSanrioCards() {
+  return SANRIO_DECK.map((entry, i) => ({
+    id: `sanrio-${String(i + 1).padStart(3, '0')}`,
+    poolId: 'sanrio',
     name: entry.name,
     rarity: entry.rarity,
-    emoji: '🐶',
+    emoji: '🎀',
     desc: entry.desc,
     imageUrl: entry.img
   }));
 }
 
-const ALL_GACHA_CARDS = [...buildPokemonCards(), ...buildCinnamorollCards()].map(card => ({
+function buildPixarCards() {
+  return PIXAR_DECK.map((entry, i) => ({
+    id: `pixar-${String(i + 1).padStart(3, '0')}`,
+    poolId: 'pixar',
+    name: entry.name,
+    rarity: entry.rarity,
+    emoji: '🎬',
+    desc: entry.desc,
+    imageUrl: entry.img
+  }));
+}
+
+const ALL_GACHA_CARDS = [
+  ...buildPokemonCards(),
+  ...buildSanrioCards(),
+  ...buildPixarCards()
+].map(card => ({
   ...card,
   imageUrl: card.imageUrl || getCardImageUrl(card.poolId, card.id)
 }));
@@ -147,10 +176,11 @@ const GachaSystem = {
   },
 
   ensureCollection(data) {
-    if (!data.cardCollection) data.cardCollection = { pokemon: {}, cinnamoroll: {} };
+    if (!data.cardCollection) data.cardCollection = { pokemon: {}, sanrio: {}, pixar: {} };
     if (!data.cardCollection.pokemon) data.cardCollection.pokemon = {};
-    if (!data.cardCollection.cinnamoroll) data.cardCollection.cinnamoroll = {};
-    if (!data.gachaStats) data.gachaStats = { totalPulls: 0, pokemon: 0, cinnamoroll: 0 };
+    if (!data.cardCollection.sanrio) data.cardCollection.sanrio = {};
+    if (!data.cardCollection.pixar) data.cardCollection.pixar = {};
+    if (!data.gachaStats) data.gachaStats = { totalPulls: 0, pokemon: 0, sanrio: 0, pixar: 0 };
     return data.cardCollection;
   },
 
@@ -230,8 +260,13 @@ const GachaSystem = {
       const pool = this.getCardsByPool(poolId);
       return featured.map(dex => pool.find(c => c.dexId === dex)).filter(Boolean);
     }
-    if (poolId === 'cinnamoroll') {
-      const featured = ['cinna-001', 'cinna-002', 'cinna-003', 'cinna-004', 'cinna-013', 'cinna-014'];
+    if (poolId === 'sanrio') {
+      const featured = ['sanrio-001', 'sanrio-002', 'sanrio-003', 'sanrio-013', 'sanrio-014', 'sanrio-020'];
+      const pool = this.getCardsByPool(poolId);
+      return featured.map(id => pool.find(c => c.id === id)).filter(Boolean);
+    }
+    if (poolId === 'pixar') {
+      const featured = ['pixar-001', 'pixar-002', 'pixar-003', 'pixar-007', 'pixar-016', 'pixar-025'];
       const pool = this.getCardsByPool(poolId);
       return featured.map(id => pool.find(c => c.id === id)).filter(Boolean);
     }
@@ -244,8 +279,11 @@ const GachaSystem = {
       return `<div class="card-art locked-art${sizeClass}"><div class="card-art-mystery">?</div></div>`;
     }
     const fallback = card.fallbackUrl || card.imageUrl;
+    const poolClass = card.poolId === 'pokemon' ? 'card-art-pokemon'
+      : card.poolId === 'sanrio' ? 'card-art-sanrio'
+      : card.poolId === 'pixar' ? 'card-art-pixar' : '';
     return `
-      <div class="card-art${sizeClass} ${card.poolId === 'pokemon' ? 'card-art-pokemon' : ''} ${card.poolId === 'cinnamoroll' ? 'card-art-cinna' : ''}">
+      <div class="card-art${sizeClass} ${poolClass}">
         <img src="${card.imageUrl}" alt="${card.name}" class="card-img" loading="lazy"
           onerror="this.onerror=null;this.src='${fallback}'">
         <div class="card-art-fallback" style="display:none">${card.emoji}</div>

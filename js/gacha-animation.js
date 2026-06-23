@@ -1,11 +1,12 @@
-/* 抽卡動畫：寶可夢同肉桂狗兩套完全不同風格 */
+/* 抽卡動畫：寶可夢、Sanrio、PIXAR */
 const GachaAnimation = {
   ASSETS: {
     pokemon: 'assets/img/gacha-anim-pokemon-v2.png',
-    cinnamoroll: 'assets/img/gacha-anim-cinnamoroll-v2.png'
+    sanrio: 'assets/img/gacha-anim-cinnamoroll-v2.png',
+    pixar: 'assets/img/gacha-anim-pokemon-v2.png'
   },
 
-  DURATION: { pokemon: 3400, cinnamoroll: 3600 },
+  DURATION: { pokemon: 3400, sanrio: 3600, pixar: 3400 },
   REVEAL_STAGGER: 120,
 
   _raf: null,
@@ -42,9 +43,17 @@ const GachaAnimation = {
     }
   },
 
+  _animFamily(poolId) {
+    if (poolId === 'sanrio' || poolId === 'cinnamoroll') return 'sanrio';
+    return 'pokemon';
+  },
+
   _waitingHtml(poolId, rarity) {
-    const asset = this.ASSETS[poolId];
-    const label = poolId === 'pokemon' ? '⚡ 準備收服…' : '🐶 準備召喚…';
+    const family = this._animFamily(poolId);
+    const asset = this.ASSETS[poolId] || this.ASSETS[family];
+    const label = family === 'pokemon'
+      ? (poolId === 'pixar' ? '🎬 準備開演…' : '⚡ 準備收服…')
+      : '🎀 準備召喚…';
     return `
       <div class="gacha-anim-bg gacha-waiting-bg" style="background-image:url('${asset}')"></div>
       <div class="gacha-anim-vignette"></div>
@@ -105,7 +114,7 @@ const GachaAnimation = {
     const bestRarity = this._bestRarity(items);
 
     stage.className = `gacha-anim-stage anim-${poolId}${this._tierClass(bestRarity)}`;
-    stage.innerHTML = poolId === 'pokemon'
+    stage.innerHTML = this._animFamily(poolId) === 'pokemon'
       ? this._pokemonHtml(bestRarity)
       : this._cinnaHtml(bestRarity);
 
@@ -113,7 +122,8 @@ const GachaAnimation = {
 
     if (typeof AudioManager !== 'undefined') {
       AudioManager.ensureContext();
-      AudioManager.playSfx(poolId === 'pokemon' ? 'gachaPokemon' : 'gachaCinna');
+      const family = this._animFamily(poolId);
+      AudioManager.playSfx(family === 'pokemon' ? 'gachaPokemon' : 'gachaCinna');
     }
 
     const canvas = stage.querySelector('canvas');
@@ -170,7 +180,7 @@ const GachaAnimation = {
   },
 
   _rarityOverlay(rarity, poolId) {
-    const sub = poolId === 'pokemon' ? 'poke' : 'cinna';
+    const sub = this._animFamily(poolId) === 'pokemon' ? 'poke' : 'cinna';
     if (rarity === 'sr') {
       return `
         <div class="gacha-sr-overlay" aria-hidden="true">
@@ -262,7 +272,7 @@ const GachaAnimation = {
   _cinnaHtml(rarity) {
     const burst = rarity === 'ssr' ? 'burst-ssr' : rarity === 'ur' ? 'burst-ur' : rarity === 'sr' ? 'burst-sr' : '';
     return `
-      <div class="gacha-anim-bg" style="background-image:url('${this.ASSETS.cinnamoroll}')"></div>
+      <div class="gacha-anim-bg" style="background-image:url('${this.ASSETS.sanrio}')"></div>
       <div class="gacha-anim-aurora cinna-aurora"></div>
       <div class="gacha-anim-rays cinna-rays"></div>
       <div class="gacha-anim-vignette cinna-vignette"></div>
@@ -287,15 +297,16 @@ const GachaAnimation = {
       </div>
       <div class="gacha-anim-flash cinna-flash"></div>
       <div class="gacha-anim-sparkles cinna-sparkles"></div>
-      ${this._rarityOverlay(rarity, 'cinnamoroll')}
-      <p class="gacha-anim-text cinna-text">🐶 召喚中…</p>
+      ${this._rarityOverlay(rarity, 'sanrio')}
+      <p class="gacha-anim-text cinna-text">🎀 召喚中…</p>
     `;
   },
 
   _startParticles(canvas, poolId, rarity) {
     const ctx = canvas.getContext('2d');
     const particles = [];
-    const count = poolId === 'pokemon' ? 90 : 80;
+    const family = this._animFamily(poolId);
+    const count = family === 'pokemon' ? 90 : 80;
     const W = () => canvas.width;
     const H = () => canvas.height;
 
@@ -306,7 +317,7 @@ const GachaAnimation = {
     };
     resize();
 
-    const palette = poolId === 'pokemon'
+    const palette = family === 'pokemon'
       ? ['#fbbf24', '#38bdf8', '#a78bfa', '#fef08a', '#ffffff']
       : ['#fda4af', '#bae6fd', '#fef08a', '#e9d5ff', '#ffffff'];
 
@@ -314,9 +325,9 @@ const GachaAnimation = {
       particles.push({
         x: Math.random() * 300,
         y: Math.random() * 300,
-        vx: (Math.random() - 0.5) * (poolId === 'pokemon' ? 4 : 2.2),
-        vy: (Math.random() - 0.5) * (poolId === 'pokemon' ? 4 : 2.2),
-        size: 2 + Math.random() * (poolId === 'pokemon' ? 4 : 5),
+        vx: (Math.random() - 0.5) * (family === 'pokemon' ? 4 : 2.2),
+        vy: (Math.random() - 0.5) * (family === 'pokemon' ? 4 : 2.2),
+        size: 2 + Math.random() * (family === 'pokemon' ? 4 : 5),
         color: palette[Math.floor(Math.random() * palette.length)],
         life: Math.random(),
         shape: poolId === 'pokemon' ? (Math.random() > 0.6 ? 'bolt' : 'dot') : (Math.random() > 0.5 ? 'heart' : 'star')

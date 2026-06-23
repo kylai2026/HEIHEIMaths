@@ -11,6 +11,18 @@ const USER_ACCOUNTS = [
   { username: 'chunchun', password: '2026' }
 ];
 
+const PARENT_ACCOUNTS = new Set(['mother', 'father']);
+const WATCH_CHILDREN = ['heihei', 'chunchun'];
+
+function isParentAccount(studentName) {
+  if (!studentName) return false;
+  return PARENT_ACCOUNTS.has(studentName.trim().toLowerCase());
+}
+
+function getWatchChildren() {
+  return [...WATCH_CHILDREN];
+}
+
 function validateAccount(username, password) {
   const name = username.trim().toLowerCase();
   const code = password.trim();

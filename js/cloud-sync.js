@@ -184,5 +184,17 @@ const CloudSync = {
     const empty = Storage.defaultData();
     Storage.saveLocal(empty);
     await this.push();
+  },
+
+  async fetchStudentData(studentName) {
+    if (!this.client || !this.profile) return null;
+    const profileKey = this.makeProfileKey(this.profile.familyCode, studentName);
+    const { data, error } = await this.client
+      .from('progress')
+      .select('data')
+      .eq('profile_key', profileKey)
+      .maybeSingle();
+    if (error) throw error;
+    return data?.data ? Storage.migrate(data.data) : null;
   }
 };

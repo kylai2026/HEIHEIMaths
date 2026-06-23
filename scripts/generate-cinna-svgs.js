@@ -7,8 +7,8 @@ const path = require('path');
 const { buildCardSvg } = require('./cinna-art-lib');
 
 const OUT = path.join(__dirname, '../assets/img/cinnamoroll/cards');
-const deckCode = fs.readFileSync(path.join(__dirname, '../js/cinnamoroll-deck.js'), 'utf8');
-const deck = new Function(`${deckCode}\nreturn CINNAMOROLL_DECK;`)();
+const deckCode = fs.readFileSync(path.join(__dirname, '../js/sanrio-deck.js'), 'utf8');
+const deck = new Function(`${deckCode}\nreturn SANRIO_DECK;`)();
 
 if (!fs.existsSync(OUT)) fs.mkdirSync(OUT, { recursive: true });
 

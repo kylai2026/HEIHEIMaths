@@ -168,8 +168,21 @@ const Storage = {
       data.redeemedGifts = data.unlockedRewards;
     }
     if (!data.dailyLog) data.dailyLog = {};
-    if (!data.cardCollection) data.cardCollection = { pokemon: {}, cinnamoroll: {} };
-    if (!data.gachaStats) data.gachaStats = { totalPulls: 0, pokemon: 0, cinnamoroll: 0 };
+    if (!data.wrongLog) data.wrongLog = {};
+    if (!data.cardCollection) data.cardCollection = { pokemon: {}, sanrio: {}, pixar: {} };
+    if (!data.gachaStats) data.gachaStats = { totalPulls: 0, pokemon: 0, sanrio: 0, pixar: 0 };
+    if (data.cardCollection.cinnamoroll && !data.cardCollection.sanrio) {
+      data.cardCollection.sanrio = {};
+      Object.entries(data.cardCollection.cinnamoroll).forEach(([id, count]) => {
+        const newId = id.replace(/^cinna-/, 'sanrio-');
+        data.cardCollection.sanrio[newId] = (data.cardCollection.sanrio[newId] || 0) + count;
+      });
+      delete data.cardCollection.cinnamoroll;
+    }
+    if (data.gachaStats.cinnamoroll && !data.gachaStats.sanrio) {
+      data.gachaStats.sanrio = data.gachaStats.cinnamoroll;
+      delete data.gachaStats.cinnamoroll;
+    }
     if (!data.tierCompleted) data.tierCompleted = { easy: [], medium: [], hard: [] };
     if (!data.correctBank) data.correctBank = {};
     return data;
@@ -251,8 +264,9 @@ const Storage = {
       dailyCompleted: 0,
       lastDailyDate: null,
       dailyLog: {},
-      cardCollection: { pokemon: {}, cinnamoroll: {} },
-      gachaStats: { totalPulls: 0, pokemon: 0, cinnamoroll: 0 },
+      wrongLog: {},
+      cardCollection: { pokemon: {}, sanrio: {}, pixar: {} },
+      gachaStats: { totalPulls: 0, pokemon: 0, sanrio: 0, pixar: 0 },
       tierCompleted: { easy: [], medium: [], hard: [] },
       correctBank: {}
     };
@@ -343,6 +357,43 @@ const Storage = {
   getCorrectBankList(data) {
     const bank = data.correctBank || {};
     return Object.values(bank).sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0));
+  },
+
+  recordWrongAnswer(data, q, userAnswer, mode = 'practice') {
+    if (!q) return;
+    const key = this.getDateKey();
+    if (!data.wrongLog) data.wrongLog = {};
+    if (!data.wrongLog[key]) data.wrongLog[key] = [];
+
+    const topic = typeof TOPICS !== 'undefined' ? TOPICS.find(t => t.id === q.topicId) : null;
+    const tierCfg = typeof DIFFICULTY_TIERS !== 'undefined' ? DIFFICULTY_TIERS[q.tier] : null;
+    const correctAnswer = q.answerDisplay
+      || (q.options && q.correctIndex != null ? q.options[q.correctIndex] : String(q.answer ?? ''));
+
+    data.wrongLog[key].push({
+      time: Date.now(),
+      mode,
+      topicId: q.topicId,
+      topicName: q.topicName || topic?.name || q.topicId || '練習',
+      tier: q.tier,
+      tierLabel: tierCfg?.name || q.tier,
+      question: String(q.question || '').replace(/<[^>]+>/g, ' ').trim().slice(0, 300),
+      userAnswer: String(userAnswer ?? ''),
+      correctAnswer: String(correctAnswer),
+      poolKey: q.poolKey || null
+    });
+
+    if (data.wrongLog[key].length > 50) {
+      data.wrongLog[key] = data.wrongLog[key].slice(-50);
+    }
+    const keys = Object.keys(data.wrongLog).sort();
+    if (keys.length > 30) {
+      keys.slice(0, keys.length - 30).forEach(k => delete data.wrongLog[k]);
+    }
+  },
+
+  getWrongLogForDate(data, dateKey = this.getDateKey()) {
+    return (data.wrongLog && data.wrongLog[dateKey]) ? data.wrongLog[dateKey] : [];
   },
 
   recordQuiz(score, total, weakTopics) {

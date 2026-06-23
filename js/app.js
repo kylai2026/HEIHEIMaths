@@ -866,7 +866,7 @@ const App = {
     });
   },
 
-  processAnswer(correct, topicId, tier) {
+  processAnswer(correct, topicId, tier, userAnswer = '') {
     this.trackSessionTime();
     AudioManager.playSfx(correct ? 'correct' : 'wrong');
 
@@ -875,6 +875,10 @@ const App = {
     const alreadyMastered = !!(q?.poolKey && data.correctBank?.[q.poolKey]);
     const noPoints = this.state.noPointsMode || q?.isRedo || (correct && alreadyMastered);
     const scoreResult = Scoring.awardAnswer(data, correct, tier, { noPoints });
+
+    if (!correct && q) {
+      Storage.recordWrongAnswer(data, q, userAnswer, this.state.dailyMode ? 'daily' : 'practice');
+    }
 
     if (q?.poolKey) Scoring.markQuestionCompleted(data, tier, q.poolKey);
     if (correct && !noPoints && q) Storage.saveCorrectQuestion(data, q);
@@ -975,7 +979,7 @@ const App = {
     const correct = MathUtils.answersEqual(input, q.answer);
     const topicId = q.topicId || this.state.practiceTopic;
     const tier = q.tier || this.state.practiceTier;
-    const rewardMsg = this.processAnswer(correct, topicId, tier);
+    const rewardMsg = this.processAnswer(correct, topicId, tier, input);
     document.getElementById('answerInput').disabled = true;
     document.getElementById('submitAnswer').disabled = true;
     this.showFeedback(correct, q, rewardMsg);
@@ -993,8 +997,9 @@ const App = {
       else if (i === selectedIndex) btn.classList.add('wrong');
     });
 
+    const userAnswer = q.options?.[selectedIndex] ?? String(selectedIndex);
     const tier = q.tier || this.state.practiceTier;
-    const rewardMsg = this.processAnswer(correct, topicId, tier);
+    const rewardMsg = this.processAnswer(correct, topicId, tier, userAnswer);
     this.showFeedback(correct, q, rewardMsg);
   },
 
@@ -1036,7 +1041,7 @@ const App = {
     document.getElementById('questionCard').innerHTML = `
       <h3>🎊 完成晒所有題目！</h3>
       <p>總正確率：${rate}% · 積分：${data.points || 0} 分</p>
-      <p>繼續練習，抽卡收集小精靈同肉桂狗！</p>
+      <p>繼續練習，抽卡收集小精靈、Sanrio 同 PIXAR！</p>
       ${redoHtml}
     `;
     document.getElementById('answerArea').classList.add('hidden');
@@ -1155,6 +1160,9 @@ const App = {
       this.state.quizScore++;
     } else {
       this.state.quizWeak[q.topicName] = (this.state.quizWeak[q.topicName] || 0) + 1;
+      const qData = Storage.load();
+      Storage.recordWrongAnswer(qData, q, q.options?.[selectedIndex] ?? '', 'quiz');
+      Storage.save(qData);
     }
 
     this.trackSessionTime();
@@ -1483,6 +1491,7 @@ const App = {
   renderProgress() {
     const data = Storage.load();
     this.renderDailyProgress();
+    this.renderParentWrongPanel();
     const rate = data.totalAnswered > 0
       ? Math.round((data.totalCorrect / data.totalAnswered) * 100) : 0;
     document.getElementById('progressSummary').innerHTML = `
@@ -1531,6 +1540,84 @@ const App = {
           <span><strong>${h.score}/${h.total}</strong>（${h.percentage}%）</span>
         </div>
       `).join('');
+    }
+  },
+
+  async renderParentWrongPanel() {
+    const panel = document.getElementById('parentWrongPanel');
+    if (!panel) return;
+
+    const profile = CloudSync.getProfile();
+    const isParent = profile && typeof isParentAccount === 'function' && isParentAccount(profile.studentName);
+
+    if (!isParent) {
+      panel.classList.add('hidden');
+      panel.innerHTML = '';
+      return;
+    }
+
+    panel.classList.remove('hidden');
+    const dateKey = Storage.getDateKey();
+    const childNames = typeof getWatchChildren === 'function' ? getWatchChildren() : ['heihei', 'chunchun'];
+    const labels = { heihei: '晞晞 (heihei)', chunchun: '雋雋 (chunchun)' };
+
+    panel.innerHTML = `
+      <h3>👨‍👩‍👧 子女今日答錯題目</h3>
+      <p class="parent-wrong-intro muted-text">查看 ${childNames.map(n => labels[n] || n).join('、')} 今日做錯嘅題目，方便跟進溫習。</p>
+      <div class="parent-wrong-loading">載入中…</div>
+    `;
+
+    const loadingEl = panel.querySelector('.parent-wrong-loading');
+    const sections = [];
+
+    for (const child of childNames) {
+      let childData = null;
+      try {
+        if (CloudSync.isConfigured() && CloudSync.client) {
+          childData = await CloudSync.fetchStudentData(child);
+        }
+      } catch (err) {
+        console.warn('fetch child data failed:', child, err);
+      }
+
+      const wrongs = childData ? Storage.getWrongLogForDate(childData, dateKey) : [];
+      const displayName = labels[child] || child;
+
+      if (!wrongs.length) {
+        sections.push(`
+          <div class="parent-child-section">
+            <h4>${displayName}</h4>
+            <p class="muted-text">今日暫時冇答錯記錄 🎉</p>
+          </div>
+        `);
+        continue;
+      }
+
+      sections.push(`
+        <div class="parent-child-section">
+          <h4>${displayName} <span class="parent-wrong-count">${wrongs.length} 題</span></h4>
+          <div class="parent-wrong-list">
+            ${wrongs.slice().reverse().map(w => `
+              <div class="parent-wrong-item">
+                <div class="parent-wrong-meta">
+                  <span class="badge">${w.tierLabel || w.tier || '練習'}</span>
+                  <span>${w.topicName || ''}</span>
+                  <span class="muted-text">${w.mode === 'quiz' ? '小測' : '練習'}</span>
+                </div>
+                <div class="parent-wrong-q">${w.question || '（題目）'}</div>
+                <div class="parent-wrong-ans">
+                  <span class="wrong-user">答：${w.userAnswer || '—'}</span>
+                  <span class="wrong-correct">正確：${w.correctAnswer || '—'}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `);
+    }
+
+    if (loadingEl) {
+      loadingEl.outerHTML = sections.join('') || '<p class="muted-text">暫時冇資料</p>';
     }
   }
 };

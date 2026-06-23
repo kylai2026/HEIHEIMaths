@@ -4,7 +4,7 @@ const DIFFICULTY_TIERS = {
     name: '初級',
     icon: '🌱',
     image: 'assets/img/tier-easy.png',
-    points: 1,
+    points: 2,
     cssClass: 'tier-easy'
   },
   medium: {
@@ -12,7 +12,7 @@ const DIFFICULTY_TIERS = {
     name: '中級',
     icon: '⭐',
     image: 'assets/img/tier-medium.png',
-    points: 2,
+    points: 4,
     cssClass: 'tier-medium'
   },
   hard: {
@@ -20,7 +20,7 @@ const DIFFICULTY_TIERS = {
     name: '高級',
     icon: '🔥',
     image: 'assets/img/tier-hard.png',
-    points: 3,
+    points: 6,
     cssClass: 'tier-hard'
   }
 };

@@ -2511,8 +2511,13 @@ html[data-theme="dark"] .stat-card {
   border-color: #fbbf24;
 }
 
-.gacha-pool-card.pool-cinnamoroll {
+.gacha-pool-card.pool-cinnamoroll,
+.gacha-pool-card.pool-sanrio {
   border-color: #f9a8d4;
+}
+
+.gacha-pool-card.pool-pixar {
+  border-color: #60a5fa;
 }
 
 .gacha-pool-banner {
@@ -4133,4 +4138,96 @@ html[data-theme="dark"] .card-art-cinna .card-img {
   .gacha-collection {
     grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
   }
+}
+
+.parent-wrong-panel {
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.1rem;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #fff7ed, #fef3c7);
+  border: 1px solid #fed7aa;
+}
+
+.parent-wrong-panel h3 {
+  margin: 0 0 0.35rem;
+}
+
+.parent-wrong-intro {
+  margin: 0 0 0.85rem;
+  font-size: 0.92rem;
+}
+
+.parent-child-section {
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px dashed #fdba74;
+}
+
+.parent-child-section:first-of-type {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.parent-child-section h4 {
+  margin: 0 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.parent-wrong-count {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #c2410c;
+  background: #ffedd5;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+}
+
+.parent-wrong-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.parent-wrong-item {
+  background: #fff;
+  border: 1px solid #fed7aa;
+  border-radius: 10px;
+  padding: 0.55rem 0.7rem;
+}
+
+.parent-wrong-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.6rem;
+  font-size: 0.82rem;
+  margin-bottom: 0.35rem;
+}
+
+.parent-wrong-q {
+  font-size: 0.95rem;
+  line-height: 1.45;
+  margin-bottom: 0.35rem;
+}
+
+.parent-wrong-ans {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  font-size: 0.85rem;
+}
+
+.parent-wrong-ans .wrong-user {
+  color: #dc2626;
+}
+
+.parent-wrong-ans .wrong-correct {
+  color: #15803d;
+}
+
+.card-art-pixar .card-img {
+  object-fit: cover;
+  background: #1e293b;
 }
