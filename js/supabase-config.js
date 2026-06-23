@@ -12,11 +12,17 @@ const USER_ACCOUNTS = [
 ];
 
 const PARENT_ACCOUNTS = new Set(['mother', 'father']);
+const CHILD_WATCH_ACCOUNTS = new Set(['mother', 'father', 'test']);
 const WATCH_CHILDREN = ['heihei', 'chunchun'];
 
 function isParentAccount(studentName) {
   if (!studentName) return false;
   return PARENT_ACCOUNTS.has(studentName.trim().toLowerCase());
+}
+
+function canWatchChildren(studentName) {
+  if (!studentName) return false;
+  return CHILD_WATCH_ACCOUNTS.has(studentName.trim().toLowerCase());
 }
 
 function getWatchChildren() {

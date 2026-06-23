@@ -17,11 +17,35 @@ const App = {
     sessionCorrect: [],
     sessionLastTick: Date.now(),
     gachaCollectionPool: 'pokemon',
-    selectedGrade: null
+    selectedGrade: null,
+    dailyGrade: null,
+    quizGrade: null
   },
 
   getSelectedGrade() {
     return this.state.selectedGrade || UserSettings.load().grade || null;
+  },
+
+  getDailyGrade() {
+    return this.state.dailyGrade || this.getSelectedGrade() || null;
+  },
+
+  getQuizGrade() {
+    return this.state.quizGrade || this.getSelectedGrade() || null;
+  },
+
+  setDailyGrade(grade) {
+    if (!GRADE_ORDER.includes(grade)) return;
+    this.state.dailyGrade = grade;
+    this.renderActivityGradePickers();
+    if (typeof AudioManager !== 'undefined') AudioManager.playSfx('click');
+  },
+
+  setQuizGrade(grade) {
+    if (!GRADE_ORDER.includes(grade)) return;
+    this.state.quizGrade = grade;
+    this.renderActivityGradePickers();
+    if (typeof AudioManager !== 'undefined') AudioManager.playSfx('click');
   },
 
   setSelectedGrade(grade) {
@@ -32,7 +56,7 @@ const App = {
     this.renderGradePicker();
     this.renderTierSections();
     this.renderSidebar();
-    this.updateGradeLabels();
+    this.renderActivityGradePickers();
     if (typeof AudioManager !== 'undefined') AudioManager.playSfx('click');
     if (!CloudSync.getProfile()) {
       this.showProfileSetup();
@@ -52,10 +76,19 @@ const App = {
     if (this._gradeBound) return;
     this._gradeBound = true;
     document.addEventListener('click', (e) => {
-      const btn = e.target.closest('.grade-btn, .practice-grade-tab');
+      const btn = e.target.closest('.grade-btn, .practice-grade-tab, .activity-grade-btn, .header-grade-tab');
       if (!btn?.dataset.grade) return;
       e.preventDefault();
       e.stopPropagation();
+      const context = btn.dataset.gradeContext;
+      if (context === 'daily') {
+        this.setDailyGrade(btn.dataset.grade);
+        return;
+      }
+      if (context === 'quiz') {
+        this.setQuizGrade(btn.dataset.grade);
+        return;
+      }
       this.setSelectedGrade(btn.dataset.grade);
     });
   },
@@ -64,6 +97,61 @@ const App = {
     const grid = document.getElementById('gradeModalGrid');
     if (!grid) return;
     grid.innerHTML = GRADE_ORDER.map(grade => this.gradeButtonHtml(grade, true)).join('');
+  },
+
+  activityGradeButtonHtml(grade, selectedGrade, context) {
+    const active = selectedGrade === grade;
+    return `
+      <button type="button" class="activity-grade-btn ${active ? 'active' : ''}" data-grade="${grade}" data-grade-context="${context}">
+        <span class="activity-grade-icon">${GRADE_ICONS[grade]}</span>
+        <span>${GRADE_LABELS[grade]}</span>
+      </button>
+    `;
+  },
+
+  renderActivityGradePickers() {
+    const dailyGrade = this.getDailyGrade();
+    const quizGrade = this.getQuizGrade();
+
+    const dailyEl = document.getElementById('dailyGradePicker');
+    if (dailyEl) {
+      dailyEl.innerHTML = `
+        <p class="activity-grade-label">選擇年級</p>
+        <div class="activity-grade-grid">
+          ${GRADE_ORDER.map(g => this.activityGradeButtonHtml(g, dailyGrade, 'daily')).join('')}
+        </div>
+      `;
+    }
+
+    const quizEl = document.getElementById('quizGradePicker');
+    if (quizEl) {
+      quizEl.innerHTML = `
+        <p class="activity-grade-label">選擇年級</p>
+        <div class="activity-grade-grid">
+          ${GRADE_ORDER.map(g => this.activityGradeButtonHtml(g, quizGrade, 'quiz')).join('')}
+        </div>
+      `;
+    }
+
+    const dailyDesc = document.getElementById('dailyChallengeDesc');
+    if (dailyDesc) {
+      dailyDesc.textContent = dailyGrade
+        ? `10 條${GRADE_LABELS[dailyGrade]}隨機題目（初/中/高級混合），按難度賺積分！`
+        : '請先揀年級，就會出對應年級嘅 10 條隨機題目。';
+    }
+
+    const quizDesc = document.getElementById('quizIntroDesc');
+    if (quizDesc) {
+      quizDesc.innerHTML = quizGrade
+        ? `<strong>20 條選擇題</strong>，只涵蓋${GRADE_LABELS[quizGrade]}課題，難度隨機！`
+        : `<strong>20 條選擇題</strong>。請先揀年級，就只會出該年級嘅題目。`;
+    }
+
+    const startDaily = document.getElementById('startDaily');
+    if (startDaily) startDaily.disabled = !dailyGrade;
+
+    const startQuiz = document.getElementById('startQuiz');
+    if (startQuiz) startQuiz.disabled = !quizGrade;
   },
 
   gradeButtonHtml(grade, large = false) {
@@ -79,17 +167,25 @@ const App = {
   },
 
   renderGradePicker() {
-    const grid = document.getElementById('gradePickerGrid');
+    const topTabs = document.getElementById('gradeTopTabs');
     const bar = document.getElementById('practiceGradeBar');
-    if (grid) {
-      grid.innerHTML = GRADE_ORDER.map(grade => this.gradeButtonHtml(grade)).join('');
+    const selected = this.getSelectedGrade();
+
+    if (topTabs) {
+      topTabs.innerHTML = GRADE_ORDER.map(grade => `
+        <button type="button" class="header-grade-tab ${selected === grade ? 'active' : ''}" data-grade="${grade}" title="${GRADE_LABELS[grade]}">
+          <span class="header-grade-icon">${GRADE_ICONS[grade]}</span>
+          <span>${GRADE_LABELS[grade]}</span>
+        </button>
+      `).join('');
     }
+
     if (bar) {
       bar.innerHTML = `
         <div class="practice-grade-label">年級</div>
         <div class="practice-grade-tabs">
           ${GRADE_ORDER.map(grade => `
-            <button type="button" class="practice-grade-tab ${this.getSelectedGrade() === grade ? 'active' : ''}" data-grade="${grade}">
+            <button type="button" class="practice-grade-tab ${selected === grade ? 'active' : ''}" data-grade="${grade}">
               ${GRADE_LABELS[grade]}
             </button>
           `).join('')}
@@ -101,18 +197,16 @@ const App = {
 
   updateGradeLabels() {
     const grade = this.getSelectedGrade();
-    const badge = document.getElementById('gradeCurrentBadge');
+    const topCurrent = document.getElementById('gradeTopCurrent');
     const title = document.getElementById('homeTopicsTitle');
     const placeholder = document.getElementById('gradeTopicsPlaceholder');
     const sections = document.getElementById('tierSections');
 
-    if (badge) {
-      if (grade) {
-        badge.textContent = `而家：${GRADE_LABELS[grade]}`;
-        badge.classList.remove('hidden');
-      } else {
-        badge.classList.add('hidden');
-      }
+    if (topCurrent) {
+      topCurrent.textContent = grade
+        ? `${GRADE_LABELS[grade]}（${countTopicsByGrade(grade)} 個課題）`
+        : '請選擇年級';
+      topCurrent.classList.toggle('is-set', !!grade);
     }
     if (title) {
       title.textContent = grade
@@ -123,20 +217,6 @@ const App = {
       const showPlaceholder = !grade;
       placeholder.classList.toggle('hidden', !showPlaceholder);
       sections.classList.toggle('hidden', showPlaceholder);
-    }
-
-    const dailyDesc = document.getElementById('dailyChallengeDesc');
-    if (dailyDesc) {
-      dailyDesc.textContent = grade
-        ? `10 條${GRADE_LABELS[grade]}隨機題目（初/中/高級混合），按難度賺積分！`
-        : '請先喺上面揀年級，就會出對應年級嘅 10 條隨機題目。';
-    }
-
-    const quizDesc = document.getElementById('quizIntroDesc');
-    if (quizDesc) {
-      quizDesc.innerHTML = grade
-        ? `<strong>20 條選擇題</strong>，只涵蓋${GRADE_LABELS[grade]}課題，難度隨機！`
-        : `<strong>20 條選擇題</strong>。請先喺主頁揀年級，就只會出該年級嘅題目。`;
     }
   },
 
@@ -168,6 +248,7 @@ const App = {
     this.renderHUD();
     this.renderGradePicker();
     this.renderHome();
+    this.renderActivityGradePickers();
     this.renderSidebar();
     this.renderTips();
     this.renderRewards();
@@ -521,8 +602,8 @@ const App = {
     if (view === 'progress') this.renderProgress();
     if (view === 'rewards') this.renderRewards();
     if (view === 'home') this.renderDailyProgress();
+    if (view === 'quiz') this.renderActivityGradePickers();
     if (view === 'practice' && !this.getSelectedGrade()) this.showGradeModalIfNeeded();
-    if (view === 'quiz' && !this.getSelectedGrade()) this.showGradeModalIfNeeded();
     this.renderHUD();
   },
 
@@ -694,6 +775,7 @@ const App = {
     this.renderDailyProgress();
     this.renderHUD();
     this.updateGradeLabels();
+    this.renderActivityGradePickers();
   },
 
   renderSidebar() {
@@ -1101,11 +1183,8 @@ const App = {
 
   bindDaily() {
     document.getElementById('startDaily').addEventListener('click', () => {
-      const grade = this.getSelectedGrade();
-      if (!grade) {
-        this.showGradeModalIfNeeded();
-        return;
-      }
+      const grade = this.getDailyGrade();
+      if (!grade) return;
       AudioManager.playSfx('click');
       this.state.dailyMode = true;
       this.state.randomMode = true;
@@ -1131,11 +1210,8 @@ const App = {
   },
 
   startQuiz() {
-    const grade = this.getSelectedGrade();
-    if (!grade) {
-      this.showGradeModalIfNeeded();
-      return;
-    }
+    const grade = this.getQuizGrade();
+    if (!grade) return;
     this.state.quizQuestions = QuestionBank.generateQuiz(20, grade);
     this.state.quizIndex = 0;
     this.state.quizScore = 0;
@@ -1578,9 +1654,9 @@ const App = {
     if (!panel) return;
 
     const profile = CloudSync.getProfile();
-    const isParent = profile && typeof isParentAccount === 'function' && isParentAccount(profile.studentName);
+    const canWatch = profile && typeof canWatchChildren === 'function' && canWatchChildren(profile.studentName);
 
-    if (!isParent) {
+    if (!canWatch) {
       panel.classList.add('hidden');
       panel.innerHTML = '';
       return;

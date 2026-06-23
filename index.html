@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=37">
+  <link rel="stylesheet" href="css/style.css?v=39">
 </head>
 <body>
   <header class="header">
@@ -75,6 +75,16 @@
     <button class="nav-tab" data-view="progress"><img src="assets/img/tier-hard.png" alt="" class="nav-icon">學習記錄</button>
   </nav>
 
+  <div class="grade-top-bar" id="gradeTopBar">
+    <div class="grade-top-inner">
+      <div class="grade-top-info">
+        <span class="grade-top-label">🎒 就讀年級</span>
+        <span class="grade-top-current" id="gradeTopCurrent">請選擇年級</span>
+      </div>
+      <div class="grade-top-tabs" id="gradeTopTabs"></div>
+    </div>
+  </div>
+
   <main class="main">
     <section class="view active" id="view-home">
       <div class="hero-banner">
@@ -118,24 +128,17 @@
         <button type="button" class="btn btn-secondary hidden" id="startBankRedo">重做已選題目</button>
       </div>
 
-      <div class="grade-picker-panel" id="gradePickerPanel">
-        <div class="grade-picker-header">
-          <h3 class="section-title">🎒 選擇年級</h3>
-          <span class="grade-current-badge hidden" id="gradeCurrentBadge"></span>
-        </div>
-        <div class="grade-picker-grid" id="gradePickerGrid"></div>
-      </div>
-
       <h3 class="section-title" id="homeTopicsTitle">📚 課題練習</h3>
-      <p class="grade-topics-placeholder hidden" id="gradeTopicsPlaceholder">👆 請先喺上面揀一個年級，就會顯示對應課題</p>
+      <p class="grade-topics-placeholder hidden" id="gradeTopicsPlaceholder">👆 請先喺頂部揀就讀年級，就會顯示對應課題</p>
       <div id="tierSections"></div>
 
       <div class="daily-challenge">
         <img src="assets/img/hero-banner.png" alt="" class="daily-bg">
         <div class="daily-content">
           <h3>🎯 今日挑戰</h3>
-          <p id="dailyChallengeDesc">請先喺上面揀年級，就會出對應年級嘅 10 條隨機題目。</p>
-          <button class="btn btn-primary btn-lg" id="startDaily">開始今日挑戰</button>
+          <p id="dailyChallengeDesc">請先揀年級，就會出對應年級嘅 10 條隨機題目。</p>
+          <div class="activity-grade-picker" id="dailyGradePicker"></div>
+          <button class="btn btn-primary btn-lg" id="startDaily" disabled>開始今日挑戰</button>
         </div>
       </div>
     </section>
@@ -191,7 +194,8 @@
       <div class="quiz-intro" id="quizIntro">
         <img src="assets/img/bg-pattern.png" alt="" class="quiz-hero-img">
         <h2>📝 模擬小測</h2>
-        <p id="quizIntroDesc"><strong>20 條選擇題</strong>。請先喺主頁揀年級，就只會出該年級嘅題目。</p>
+        <p id="quizIntroDesc"><strong>20 條選擇題</strong>。請先揀年級，就只會出該年級嘅題目。</p>
+        <div class="activity-grade-picker" id="quizGradePicker"></div>
         <ul class="quiz-rules">
           <li>每題只有一個正確答案</li>
           <li>唔使計時，慢慢諗清楚先答</li>
@@ -200,7 +204,7 @@
           <li><strong>80% 或以上</strong>可獲 <strong>30 積分</strong></li>
           <li><strong>全對 100%</strong>可獲 <strong>40 積分</strong></li>
         </ul>
-        <button class="btn btn-primary btn-lg" id="startQuiz">開始模擬小測</button>
+        <button class="btn btn-primary btn-lg" id="startQuiz" disabled>開始模擬小測</button>
       </div>
       <div class="quiz-active hidden" id="quizActive">
         <div class="quiz-progress">
@@ -329,7 +333,7 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js?v=17"></script>
+  <script src="js/supabase-config.js?v=18"></script>
   <script src="js/settings.js?v=24"></script>
   <script src="js/audio.js?v=22"></script>
   <script src="js/utils.js?v=22"></script>
@@ -346,6 +350,6 @@
   <script src="js/pixar-deck.js?v=2"></script>
   <script src="js/gacha-animation.js?v=30"></script>
   <script src="js/gacha-pools.js?v=23"></script>
-  <script src="js/app.js?v=39"></script>
+  <script src="js/app.js?v=42"></script>
 </body>
 </html>
