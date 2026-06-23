@@ -44,6 +44,8 @@ const AudioManager = {
   },
 
   _gachaLoopTimer: null,
+  _bossMusicTimer: null,
+  _bossMusicStep: 0,
 
   playGachaLoop(poolId, durationMs) {
     this.stopGachaLoop();
@@ -365,6 +367,87 @@ const AudioManager = {
         o.start(t + i * 0.09);
         o.stop(t + i * 0.09 + 0.22);
       });
+      return;
+    }
+
+    if (name === 'bossHit') {
+      [220, 330, 440].forEach((freq, i) => {
+        const o = ctx.createOscillator();
+        o.type = 'square';
+        o.frequency.setValueAtTime(freq, t + i * 0.04);
+        const gg = ctx.createGain();
+        gg.gain.setValueAtTime(0.0001, t + i * 0.04);
+        gg.gain.exponentialRampToValueAtTime(0.07, t + i * 0.04 + 0.01);
+        gg.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.04 + 0.12);
+        o.connect(gg);
+        gg.connect(ctx.destination);
+        o.start(t + i * 0.04);
+        o.stop(t + i * 0.04 + 0.14);
+      });
+      return;
+    }
+
+    if (name === 'bossHurt') {
+      const o = ctx.createOscillator();
+      o.type = 'sawtooth';
+      o.frequency.setValueAtTime(160, t);
+      o.frequency.exponentialRampToValueAtTime(90, t + 0.25);
+      g.gain.exponentialRampToValueAtTime(0.09, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.28);
+      o.connect(g);
+      o.start(t);
+      o.stop(t + 0.3);
+      return;
+    }
+
+    if (name === 'bossUltimate') {
+      [110, 165, 220, 330, 440, 660, 880].forEach((freq, i) => {
+        const o = ctx.createOscillator();
+        o.type = i < 3 ? 'sawtooth' : 'triangle';
+        o.frequency.setValueAtTime(freq, t + i * 0.05);
+        const gg = ctx.createGain();
+        gg.gain.setValueAtTime(0.0001, t + i * 0.05);
+        gg.gain.exponentialRampToValueAtTime(0.11, t + i * 0.05 + 0.02);
+        gg.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.05 + 0.35);
+        o.connect(gg);
+        gg.connect(ctx.destination);
+        o.start(t + i * 0.05);
+        o.stop(t + i * 0.05 + 0.38);
+      });
+      return;
+    }
+
+    if (name === 'bossWin') {
+      [523, 659, 784, 1047].forEach((freq, i) => {
+        const o = ctx.createOscillator();
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(freq, t + i * 0.1);
+        const gg = ctx.createGain();
+        gg.gain.setValueAtTime(0.0001, t + i * 0.1);
+        gg.gain.exponentialRampToValueAtTime(0.12, t + i * 0.1 + 0.03);
+        gg.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.1 + 0.35);
+        o.connect(gg);
+        gg.connect(ctx.destination);
+        o.start(t + i * 0.1);
+        o.stop(t + i * 0.1 + 0.38);
+      });
+      return;
+    }
+
+    if (name === 'bossLose') {
+      [392, 330, 262, 196].forEach((freq, i) => {
+        const o = ctx.createOscillator();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(freq, t + i * 0.15);
+        const gg = ctx.createGain();
+        gg.gain.setValueAtTime(0.0001, t + i * 0.15);
+        gg.gain.exponentialRampToValueAtTime(0.08, t + i * 0.15 + 0.04);
+        gg.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.15 + 0.4);
+        o.connect(gg);
+        gg.connect(ctx.destination);
+        o.start(t + i * 0.15);
+        o.stop(t + i * 0.15 + 0.42);
+      });
     }
   },
 
@@ -447,5 +530,62 @@ const AudioManager = {
 
     this.usingFallback = false;
     this.musicGain = null;
+  },
+
+  startBossMusic() {
+    if (this.muteMusic) return;
+    if (this._bossMusicTimer) {
+      clearInterval(this._bossMusicTimer);
+      this._bossMusicTimer = null;
+    }
+    this.stopMusic();
+
+    const ctx = this.ensureContext();
+    if (!ctx) return;
+
+    this.musicGain = ctx.createGain();
+    this.musicGain.gain.value = 0.09;
+    this.musicGain.connect(ctx.destination);
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 2200;
+    filter.connect(this.musicGain);
+
+    this._bossMusicStep = 0;
+    const battleNotes = [110, 131, 165, 196, 220, 262, 294, 330];
+    const playBattleNote = () => {
+      if (!this._bossMusicTimer) return;
+      const t = ctx.currentTime;
+      const freq = battleNotes[this._bossMusicStep % battleNotes.length];
+      const o = ctx.createOscillator();
+      o.type = 'square';
+      o.frequency.setValueAtTime(freq, t);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.045, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.14);
+      o.connect(g);
+      g.connect(filter);
+      o.start(t);
+      o.stop(t + 0.16);
+      this._bossMusicStep++;
+    };
+
+    playBattleNote();
+    this._bossMusicTimer = setInterval(playBattleNote, 280);
+  },
+
+  stopBossMusic() {
+    if (this._bossMusicTimer) {
+      clearInterval(this._bossMusicTimer);
+      this._bossMusicTimer = null;
+    }
+    this._bossMusicStep = 0;
+    if (this.musicGain) {
+      this.musicGain.disconnect();
+      this.musicGain = null;
+    }
+    if (!this.muteMusic) this.startMusic();
   }
 };

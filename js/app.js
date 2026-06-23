@@ -19,7 +19,10 @@ const App = {
     gachaCollectionPool: 'pokemon',
     selectedGrade: null,
     dailyGrade: null,
-    quizGrade: null
+    quizGrade: null,
+    bossMode: false,
+    bossQuestionQueue: [],
+    bossPendingResult: null
   },
 
   getSelectedGrade() {
@@ -256,6 +259,7 @@ const App = {
     this.bindPractice();
     this.bindQuiz();
     this.bindDaily();
+    this.bindBossBattle();
     this.bindSessionTracking();
   },
 
@@ -592,6 +596,9 @@ const App = {
   },
 
   switchView(view) {
+    if (this.state.bossMode && view !== 'practice') {
+      this.endBossBattle(false);
+    }
     this.state.currentView = view;
     document.querySelectorAll('.nav-tab').forEach(t => {
       t.classList.toggle('active', t.dataset.view === view);
@@ -605,6 +612,114 @@ const App = {
     if (view === 'quiz') this.renderActivityGradePickers();
     if (view === 'practice' && !this.getSelectedGrade()) this.showGradeModalIfNeeded();
     this.renderHUD();
+  },
+
+  bindBossBattle() {
+    document.getElementById('startBossBattle')?.addEventListener('click', () => {
+      AudioManager.playSfx('click');
+      this.startBossBattle();
+    });
+  },
+
+  startBossBattle() {
+    const grade = this.getSelectedGrade();
+    if (!grade) {
+      this.showGradeModalIfNeeded();
+      return;
+    }
+
+    BossBattle.reset();
+    BossBattle.showPanel(true);
+    BossBattle.renderArena();
+    AudioManager.startBossMusic();
+
+    this.state.bossMode = true;
+    this.state.bossQuestionQueue = [];
+    this.state.bossPendingResult = null;
+    this.state.dailyMode = false;
+    this.state.randomMode = false;
+    this.state.noPointsMode = false;
+    this.state.sessionCorrect = [];
+    this.state.practiceTopic = 'boss';
+    this.state.practiceQuestions = BossBattle.pullQuestions(30, grade);
+    this.state.practiceIndex = 0;
+    this.state.practiceAnswered = false;
+
+    document.getElementById('practiceTitle').textContent = `⚡ BOSS 關卡 · 打倒 ${BossBattle.boss.name}！`;
+    document.getElementById('practiceTopicBadge').textContent = '答題攻擊 · 連續 3 題十萬伏特';
+    document.getElementById('tierSelector').classList.add('hidden');
+    document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
+
+    this.switchView('practice');
+    this.showPracticeQuestion();
+  },
+
+  endBossBattle(restoreLayout = true) {
+    if (!this.state.bossMode) return;
+    this.state.bossMode = false;
+    this.state.bossPendingResult = null;
+    AudioManager.stopBossMusic();
+    if (restoreLayout) {
+      BossBattle.showPanel(false);
+      document.getElementById('tierSelector')?.classList.remove('hidden');
+      document.querySelector('.topic-sidebar')?.classList.remove('hidden');
+      document.querySelector('.practice-layout')?.classList.remove('boss-mode');
+    }
+  },
+
+  showBossEndScreen(won) {
+    AudioManager.playSfx(won ? 'bossWin' : 'bossLose');
+    const data = Storage.load();
+    const bonus = won ? 15 : 0;
+    if (bonus) {
+      data.points = (data.points || 0) + bonus;
+      Storage.save(data);
+      this.renderHUD();
+    }
+
+    document.getElementById('questionCard').innerHTML = `
+      <h3>${won ? '🏆 打敗 BOSS！' : '😵 皮卡丘倒下了…'}</h3>
+      <p>${won
+        ? `你擊敗了 ${BossBattle.boss.emoji} ${BossBattle.boss.name}！獎勵 +${bonus} 積分`
+        : '再練習多啲，下次一定可以！'}</p>
+      <button type="button" class="btn btn-boss" id="bossRetryBtn">再戰 BOSS</button>
+      <button type="button" class="btn btn-secondary" id="bossHomeBtn">返回首頁</button>
+    `;
+    document.getElementById('answerArea').classList.add('hidden');
+    document.getElementById('practiceMcqArea')?.classList.add('hidden');
+    document.getElementById('actionRow').classList.add('hidden');
+    document.getElementById('feedback').classList.add('hidden');
+    document.getElementById('bossRetryBtn')?.addEventListener('click', () => {
+      this.endBossBattle();
+      this.startBossBattle();
+    });
+    document.getElementById('bossHomeBtn')?.addEventListener('click', () => {
+      this.endBossBattle();
+      this.switchView('home');
+    });
+  },
+
+  finishBossAnswerFlow(correct, q, rewardMsg) {
+    const br = this.state.bossPendingResult;
+    const afterEffects = () => {
+      BossBattle.renderArena();
+      if (br?.bossDefeated) {
+        setTimeout(() => this.showBossEndScreen(true), 600);
+        return;
+      }
+      if (br?.playerDefeated) {
+        setTimeout(() => this.showBossEndScreen(false), 600);
+        return;
+      }
+      this.showFeedback(correct, q, rewardMsg, br);
+    };
+
+    if (br?.ultimate) {
+      BossBattle.playUltimate(afterEffects);
+    } else {
+      BossBattle.onHitEffects(br);
+      afterEffects();
+    }
   },
 
   renderTierRules() {
@@ -899,9 +1014,12 @@ const App = {
     const total = this.state.practiceQuestions.length;
     const current = this.state.practiceIndex + 1;
     const tierInfo = DIFFICULTY_TIERS[q.tier || this.state.practiceTier];
-    const pointsBadge = this.state.noPointsMode
-      ? '<span class="badge badge-redo">重做 · 唔計分</span>'
-      : `<span class="badge ${tierInfo.cssClass}">${tierInfo.icon} ${tierInfo.name} +${tierInfo.points}分</span>`;
+    const bossDmg = this.state.bossMode ? BossBattle.getDamage(q.tier || 'medium') : 0;
+    const pointsBadge = this.state.bossMode
+      ? `<span class="badge ${tierInfo.cssClass}">${tierInfo.icon} ${tierInfo.name} -${bossDmg} BOSS HP</span>`
+      : this.state.noPointsMode
+        ? '<span class="badge badge-redo">重做 · 唔計分</span>'
+        : `<span class="badge ${tierInfo.cssClass}">${tierInfo.icon} ${tierInfo.name} +${tierInfo.points}分</span>`;
 
     document.getElementById('practiceCount').textContent = `${current} / ${total}`;
     const topicName = q.topicId ? (TOPICS.find(t => t.id === q.topicId)?.name || '') : '';
@@ -1016,6 +1134,14 @@ const App = {
       setTimeout(() => this.showModal('🏅', '獲得新徽章！', badges), scoreResult.levelUp ? 800 : 0);
     }
 
+    if (this.state.bossMode && correct) {
+      const br = BossBattle.resolveAnswer(true, tier);
+      this.state.bossPendingResult = br;
+    } else if (this.state.bossMode && !correct) {
+      const br = BossBattle.resolveAnswer(false, tier);
+      this.state.bossPendingResult = br;
+    }
+
     return rewardMsg;
   },
 
@@ -1038,17 +1164,22 @@ const App = {
     box.classList.add('teach-box');
   },
 
-  showFeedback(correct, q, rewardMsg) {
+  showFeedback(correct, q, rewardMsg, battleResult = null) {
     const feedback = document.getElementById('feedback');
     const solutionBox = document.getElementById('solutionBox');
     const showSolutionBtn = document.getElementById('showSolution');
-    feedback.classList.remove('hidden', 'correct', 'wrong');
+    feedback.classList.remove('hidden', 'correct', 'wrong', 'boss-hit');
     solutionBox.classList.remove('teach-box');
     solutionBox.classList.add('hidden');
 
+    const br = battleResult || this.state.bossPendingResult;
+
     if (correct) {
       feedback.classList.add('correct');
-      if (this.state.noPointsMode) {
+      if (this.state.bossMode && br) {
+        feedback.classList.add('boss-hit');
+        feedback.innerHTML = `🎉 答對了！<br><strong>${br.message}</strong>${rewardMsg ? '<br><small>' + rewardMsg + '</small>' : ''}`;
+      } else if (this.state.noPointsMode) {
         feedback.innerHTML = '🎉 答對了！<br><small>重做 · 唔計分</small>';
       } else {
         feedback.innerHTML = `🎉 答對了！${rewardMsg ? '<br><small>' + rewardMsg + '</small>' : ''}`;
@@ -1056,12 +1187,17 @@ const App = {
       showSolutionBtn.classList.remove('hidden');
     } else {
       feedback.classList.add('wrong');
-      feedback.innerHTML = `❌ 答錯了，今次冇積分。睇下面學返點做！`;
+      if (this.state.bossMode && br) {
+        feedback.innerHTML = `❌ 答錯了<br><strong>${br.message}</strong>`;
+      } else {
+        feedback.innerHTML = `❌ 答錯了，今次冇積分。睇下面學返點做！`;
+      }
       showSolutionBtn.classList.add('hidden');
       this.showTeachingSolution(q);
     }
     document.getElementById('actionRow').classList.remove('hidden');
     this.state.practiceAnswered = true;
+    this.state.bossPendingResult = null;
   },
 
   checkAnswer() {
@@ -1079,7 +1215,11 @@ const App = {
     const rewardMsg = this.processAnswer(correct, topicId, tier, input);
     document.getElementById('answerInput').disabled = true;
     document.getElementById('submitAnswer').disabled = true;
-    this.showFeedback(correct, q, rewardMsg);
+    if (this.state.bossMode) {
+      this.finishBossAnswerFlow(correct, q, rewardMsg);
+    } else {
+      this.showFeedback(correct, q, rewardMsg);
+    }
   },
 
   checkMcqAnswer(selectedIndex) {
@@ -1097,7 +1237,11 @@ const App = {
     const userAnswer = q.options?.[selectedIndex] ?? String(selectedIndex);
     const tier = q.tier || this.state.practiceTier;
     const rewardMsg = this.processAnswer(correct, topicId, tier, userAnswer);
-    this.showFeedback(correct, q, rewardMsg);
+    if (this.state.bossMode) {
+      this.finishBossAnswerFlow(correct, q, rewardMsg);
+    } else {
+      this.showFeedback(correct, q, rewardMsg);
+    }
   },
 
   showPracticeComplete() {
@@ -1163,20 +1307,31 @@ const App = {
   },
 
   nextPracticeQuestion() {
+    if (this.state.bossMode) {
+      const br = BossBattle.lastResult;
+      if (br?.bossDefeated || br?.playerDefeated) return;
+    }
+
     this.state.practiceIndex++;
     if (this.state.practiceIndex >= this.state.practiceQuestions.length) {
-      if (this.state.dailyMode) {
-        const dailyReward = Scoring.awardDaily(Storage.load());
-        if (dailyReward) {
-          Storage.save(Storage.load());
-          Storage.markDailyChallengeDone();
-          this.renderDailyProgress();
-          AudioManager.playSfx('levelUp');
-          this.showModal('🎯', '今日挑戰完成！', `+${dailyReward.xp} XP`);
+      if (this.state.bossMode) {
+        const grade = this.getSelectedGrade();
+        this.state.practiceQuestions.push(...BossBattle.pullQuestions(10, grade));
+        if (this.state.practiceIndex >= this.state.practiceQuestions.length) return;
+      } else {
+        if (this.state.dailyMode) {
+          const dailyReward = Scoring.awardDaily(Storage.load());
+          if (dailyReward) {
+            Storage.save(Storage.load());
+            Storage.markDailyChallengeDone();
+            this.renderDailyProgress();
+            AudioManager.playSfx('levelUp');
+            this.showModal('🎯', '今日挑戰完成！', `+${dailyReward.xp} XP`);
+          }
         }
+        this.showPracticeComplete();
+        return;
       }
-      this.showPracticeComplete();
-      return;
     }
     this.showPracticeQuestion();
   },
