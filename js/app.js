@@ -910,7 +910,7 @@ const App = {
     document.getElementById('gachaPools').innerHTML = CARD_POOLS.map(pool => {
       const stats = GachaSystem.getCollectionStats(data, pool.id);
       const pct = Math.round((stats.owned / stats.total) * 100);
-      const previews = GachaSystem.getCardsByPool(pool.id).slice(0, 6);
+      const previews = GachaSystem.getPreviewCards(pool.id);
       return `
         <div class="gacha-pool-card pool-${pool.id}">
           <div class="gacha-pool-banner">
