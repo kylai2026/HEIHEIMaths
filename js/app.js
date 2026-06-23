@@ -174,9 +174,25 @@ const App = {
   bindAuthButtons() {
     if (this._authBound) return;
     this._authBound = true;
-    document.getElementById('logoutBtn')?.addEventListener('click', () => this.logout());
-    document.getElementById('loginBtn')?.addEventListener('click', () => this.showProfileSetup());
-    document.getElementById('switchProfile')?.addEventListener('click', () => this.logout());
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('#loginBtn, #gradeModalLogin')) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.showProfileSetup();
+        return;
+      }
+      if (e.target.closest('#logoutBtn')) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.logout();
+        return;
+      }
+      if (e.target.closest('#switchProfile')) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.logout();
+      }
+    });
   },
 
   updateAuthUI() {
@@ -214,6 +230,8 @@ const App = {
     form.reset();
     errEl?.classList.add('hidden');
     modal.classList.remove('hidden');
+    modal.scrollIntoView({ block: 'nearest' });
+    setTimeout(() => document.getElementById('studentName')?.focus(), 50);
 
     return new Promise((resolve) => {
       this._profileSetupResolve = resolve;
@@ -1503,6 +1521,9 @@ const App = {
   }
 };
 
-document.addEventListener('DOMContentLoaded', async () => {
-  await App.init();
+document.addEventListener('DOMContentLoaded', () => {
+  App.init().catch((err) => {
+    console.error('App init failed:', err);
+    alert('網站載入出錯，請重新整理頁面再試。');
+  });
 });

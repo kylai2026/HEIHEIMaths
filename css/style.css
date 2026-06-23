@@ -63,7 +63,9 @@ body {
 
 /* Header */
 .header {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 2310;
   background: var(--header-grad);
   color: white;
   padding: 1.25rem 1.5rem 1rem;
@@ -620,6 +622,28 @@ body {
   color: var(--text-muted);
   margin-bottom: 1.25rem;
   line-height: 1.6;
+}
+
+.grade-modal-login-hint {
+  margin: 1rem 0 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.grade-modal-login-btn {
+  border: none;
+  background: none;
+  color: var(--primary);
+  font-weight: 800;
+  font-size: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.grade-modal-login-btn:hover {
+  color: #1d4ed8;
 }
 
 .grade-topics-placeholder {
@@ -1584,7 +1608,7 @@ html[data-theme="dark"] .teach-hint {
 }
 
 #cardViewerModal {
-  z-index: 2000;
+  z-index: 2500;
   background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(8px);
 }
@@ -1709,10 +1733,12 @@ body.card-viewer-open {
 }
 
 #profileModal {
-  z-index: 2100;
+  z-index: 2400;
 }
 
 .btn-login {
+  position: relative;
+  z-index: 2;
   border: 2px solid rgba(255, 255, 255, 0.85);
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
