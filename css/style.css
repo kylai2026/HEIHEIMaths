@@ -1314,6 +1314,32 @@ body {
   margin: 0.75rem 0;
 }
 
+.pos-between-row {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.pos-between-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3rem;
+  padding: 0.65rem 1.1rem;
+  border: 2px solid var(--primary);
+  border-radius: 10px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  background: #fff;
+}
+
+.pos-between-mid {
+  border-color: #f59e0b;
+  background: #fffbeb;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15);
+}
+
 .placeholder-text {
   color: var(--text-muted);
   text-align: center;
@@ -2696,40 +2722,121 @@ html[data-theme="dark"] .stat-card {
   border-color: #60a5fa;
 }
 
+.gacha-pool-card.pool-disney {
+  border-color: #a78bfa;
+}
+
+.gacha-pool-card.pool-marvel {
+  border-color: #dc2626;
+}
+
 .gacha-pool-banner {
   position: relative;
-  height: 140px;
+  height: 156px;
   overflow: hidden;
+  background: #0f172a;
+}
+
+.pool-pokemon .gacha-pool-banner,
+.gacha-banner-pokemon {
+  background: linear-gradient(125deg, #1e3a8a 0%, #f59e0b 45%, #fbbf24 75%, #fef08a 100%);
+}
+
+.pool-disney .gacha-pool-banner,
+.gacha-banner-disney {
+  background: linear-gradient(125deg, #312e81 0%, #7c3aed 45%, #c084fc 78%, #fbcfe8 100%);
+}
+
+.pool-marvel .gacha-pool-banner,
+.gacha-banner-marvel {
+  background: linear-gradient(125deg, #0f172a 0%, #991b1b 40%, #dc2626 70%, #2563eb 100%);
+}
+
+.gacha-pool-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 78% 42%, rgba(255,255,255,0.28) 0%, transparent 52%),
+    radial-gradient(circle at 18% 22%, rgba(255,255,255,0.12) 0%, transparent 35%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.gacha-pool-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.16) 50%, transparent 65%);
+  transform: translateX(-120%);
+  animation: gacha-banner-shine 4.5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes gacha-banner-shine {
+  0%, 100% { transform: translateX(-120%); }
+  45%, 55% { transform: translateX(120%); }
+}
+
+.gacha-banner-hero {
+  position: absolute;
+  right: -4%;
+  bottom: -8%;
+  height: 118%;
+  width: auto;
+  max-width: 58%;
+  object-fit: contain;
+  object-position: bottom right;
+  filter: drop-shadow(0 10px 24px rgba(0,0,0,0.45));
+  z-index: 1;
+  pointer-events: none;
 }
 
 .gacha-banner-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center right;
   display: block;
 }
 
 .gacha-pool-banner-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.55) 100%);
+  background: linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.15) 45%, rgba(0,0,0,0.72) 100%);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 1rem;
+  padding: 1rem 1.1rem;
   color: #fff;
+  z-index: 1;
 }
 
 .gacha-pool-badge {
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   font-weight: 900;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.55), 0 0 18px rgba(255,255,255,0.15);
 }
 
 .gacha-pool-banner-overlay p {
-  font-size: 0.8rem;
-  opacity: 0.95;
-  margin-top: 0.2rem;
+  font-size: 0.82rem;
+  opacity: 0.96;
+  margin-top: 0.25rem;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+}
+
+.pool-pokemon .gacha-pool-banner {
+  box-shadow: inset 0 -3px 0 #fbbf24;
+}
+
+.pool-disney .gacha-pool-banner {
+  box-shadow: inset 0 -3px 0 #c084fc;
+}
+
+.pool-marvel .gacha-pool-banner {
+  box-shadow: inset 0 -3px 0 #ef4444;
 }
 
 .gacha-pool-body {
@@ -4608,4 +4715,540 @@ html[data-theme="dark"] .card-art-cinna .card-img {
 .card-art-pixar .card-img {
   object-fit: cover;
   background: #1e293b;
+}
+
+.card-art-disney .card-img {
+  object-fit: contain;
+  background: linear-gradient(160deg, #1e1b4b 0%, #312e81 45%, #4c1d95 100%);
+  padding: 6px;
+}
+
+/* ── DISNEY 抽卡動畫：童話城堡 · 魔法棒 · 煙火 ── */
+.disney-kingdom-bg {
+  background: radial-gradient(ellipse at 50% 80%, #312e81 0%, #1e1b4b 40%, #0f172a 100%);
+}
+
+.disney-aurora {
+  background: conic-gradient(from 0deg, transparent, #c4b5fd44, transparent, #f472b644, transparent, #38bdf844, transparent);
+  animation: disney-aurora-spin 7s linear infinite;
+}
+
+@keyframes disney-aurora-spin {
+  to { transform: rotate(360deg); }
+}
+
+.disney-rays {
+  background: repeating-conic-gradient(from 0deg, #fef08a11 0deg 8deg, transparent 8deg 18deg);
+  animation: disney-rays-spin 12s linear infinite;
+}
+
+@keyframes disney-rays-spin {
+  to { transform: rotate(360deg); }
+}
+
+.disney-vignette {
+  box-shadow: inset 0 0 120px 40px #0f172a88;
+}
+
+.anim-disney .disney-text {
+  text-shadow: 0 0 20px #c4b5fd, 0 0 40px #f472b6;
+  animation: disney-text-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes disney-text-glow {
+  from { opacity: 0.85; }
+  to { opacity: 1; }
+}
+
+.anim-disney .disney-flash {
+  animation: disney-flash 3.2s ease forwards;
+}
+
+@keyframes disney-flash {
+  0%, 70% { opacity: 0; }
+  78% { opacity: 0.7; background: radial-gradient(circle, #fef08a88, transparent 70%); }
+  100% { opacity: 0; }
+}
+
+.disney-castle {
+  position: relative;
+  width: 120px;
+  height: 90px;
+  margin: 0 auto;
+  animation: disney-castle-rise 2.5s ease-out forwards;
+}
+
+@keyframes disney-castle-rise {
+  from { transform: translateY(30px); opacity: 0.3; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.disney-castle-base {
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  width: 80%;
+  height: 40px;
+  background: linear-gradient(180deg, #a78bfa, #7c3aed);
+  border-radius: 4px 4px 0 0;
+}
+
+.disney-castle-gate {
+  position: absolute;
+  bottom: 0;
+  left: 38%;
+  width: 24%;
+  height: 22px;
+  background: #4c1d95;
+  border-radius: 12px 12px 0 0;
+}
+
+.disney-castle-tower {
+  position: absolute;
+  bottom: 30px;
+  width: 22px;
+  height: 50px;
+  background: linear-gradient(180deg, #c4b5fd, #8b5cf6);
+  border-radius: 4px 4px 0 0;
+}
+
+.disney-castle-tower::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 12px solid #f472b6;
+}
+
+.disney-castle-tower.t1 { left: 0; }
+.disney-castle-tower.t2 { left: 50%; transform: translateX(-50%); height: 60px; bottom: 35px; }
+.disney-castle-tower.t3 { right: 0; }
+
+.disney-wand {
+  position: absolute;
+  top: 10%;
+  right: 18%;
+  width: 60px;
+  height: 60px;
+  animation: disney-wand-wave 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes disney-wand-wave {
+  from { transform: rotate(-15deg); }
+  to { transform: rotate(25deg); }
+}
+
+.disney-wand-stick {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 4px;
+  height: 36px;
+  background: linear-gradient(180deg, #fde68a, #d97706);
+  transform: translateX(-50%) rotate(30deg);
+  border-radius: 2px;
+}
+
+.disney-wand-star {
+  position: absolute;
+  top: 0;
+  left: 60%;
+  font-size: 18px;
+  color: #fef08a;
+  text-shadow: 0 0 12px #fbbf24;
+  animation: disney-star-spin 1.2s linear infinite;
+}
+
+.disney-wand-star::before { content: '★'; }
+
+@keyframes disney-star-spin {
+  to { transform: rotate(360deg); }
+}
+
+.disney-wand-trail {
+  position: absolute;
+  top: 8px;
+  left: 20%;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #fef08a, #f472b6, transparent);
+  animation: disney-trail-pulse 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes disney-trail-pulse {
+  from { opacity: 0.4; transform: scaleX(0.8); }
+  to { opacity: 1; transform: scaleX(1.2); }
+}
+
+.disney-firework {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: disney-firework-burst 2s ease-out infinite;
+}
+
+.disney-firework.fw1 { top: 12%; left: 20%; background: #f472b6; animation-delay: 0s; }
+.disney-firework.fw2 { top: 8%; right: 22%; background: #38bdf8; animation-delay: 0.7s; }
+.disney-firework.fw3 { top: 18%; left: 45%; background: #fef08a; animation-delay: 1.3s; }
+
+.disney-firework::before,
+.disney-firework::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  color: inherit;
+  opacity: 0;
+  animation: disney-fw-ring 2s ease-out infinite;
+}
+
+.disney-firework::after { animation-delay: 0.15s; }
+
+@keyframes disney-firework-burst {
+  0%, 40% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1); opacity: 1; box-shadow: 0 0 20px 6px currentColor; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+@keyframes disney-fw-ring {
+  0%, 45% { transform: scale(0); opacity: 0; }
+  55% { opacity: 0.8; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+.disney-storybook {
+  position: absolute;
+  bottom: 8%;
+  left: 12%;
+  width: 48px;
+  height: 36px;
+  animation: disney-book-open 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes disney-book-open {
+  from { transform: perspective(200px) rotateY(0deg); }
+  to { transform: perspective(200px) rotateY(-25deg); }
+}
+
+.disney-book-cover {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #7c3aed, #4c1d95);
+  border-radius: 2px 6px 6px 2px;
+  border: 2px solid #fde68a;
+}
+
+.disney-book-pages {
+  position: absolute;
+  top: 3px;
+  right: -4px;
+  width: 6px;
+  height: 30px;
+  background: #fef9c3;
+  border-radius: 0 2px 2px 0;
+}
+
+.disney-book-glow {
+  position: absolute;
+  inset: -8px;
+  background: radial-gradient(circle, #fef08a44, transparent 70%);
+  animation: disney-book-glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes disney-book-glow {
+  from { opacity: 0.3; }
+  to { opacity: 0.9; }
+}
+
+.disney-ears {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: 5px solid #1e1b4b;
+  border-radius: 50%;
+  background: transparent;
+  opacity: 0.35;
+  animation: disney-ears-float 2s ease-in-out infinite alternate;
+}
+
+.disney-ears::after {
+  content: '';
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: 5px solid #1e1b4b;
+  border-radius: 50%;
+  top: -18px;
+  left: 14px;
+}
+
+.disney-ears.e1 { top: 6%; left: 8%; animation-delay: 0s; }
+.disney-ears.e2 { top: 10%; right: 6%; animation-delay: 0.8s; transform: scale(0.7); }
+
+@keyframes disney-ears-float {
+  from { transform: translateY(0) rotate(-5deg); opacity: 0.2; }
+  to { transform: translateY(-8px) rotate(5deg); opacity: 0.45; }
+}
+
+.disney-float-star {
+  position: absolute;
+  font-size: 16px;
+  animation: disney-star-float 1.8s ease-in-out infinite;
+}
+
+.disney-float-star.fs1 { left: 14%; top: 22%; color: #c4b5fd; }
+.disney-float-star.fs2 { right: 16%; top: 28%; animation-delay: 0.5s; }
+.disney-float-star.fs3 { left: 24%; bottom: 24%; color: #fef08a; animation-delay: 1s; }
+
+@keyframes disney-star-float {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
+  50% { transform: translateY(-12px) scale(1.2); opacity: 1; }
+}
+
+.disney-sub.ur-hint,
+.disney-sub.sr-hint {
+  color: #e9d5ff;
+}
+
+.disney-sub.ssr-hint {
+  color: #fef08a;
+  text-shadow: 0 0 16px #fbbf24;
+}
+
+.disney-core.burst-sr .disney-wand-star {
+  font-size: 22px;
+}
+
+.disney-core.burst-ur .disney-castle {
+  filter: drop-shadow(0 0 12px #fbbf24);
+}
+
+.disney-core.burst-ssr .disney-firework {
+  animation-duration: 1.2s;
+}
+
+.gacha-anim-stage.anim-tier-ssr .disney-float-star {
+  font-size: 22px;
+}
+
+.card-art-marvel .card-img {
+  object-fit: cover;
+  background: linear-gradient(160deg, #0f172a 0%, #1e293b 45%, #7f1d1d 100%);
+}
+
+/* ── MARVEL 抽卡動畫：漫畫分鏡 · 盾牌 · 蛛網 · 閃電 ── */
+.marvel-comic-bg {
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 28px, #dc262622 28px, #dc262622 29px),
+    repeating-linear-gradient(90deg, transparent, transparent 28px, #2563eb22 28px, #2563eb22 29px),
+    radial-gradient(ellipse at 50% 30%, #1e3a8a 0%, #0f172a 55%, #000 100%);
+}
+
+.marvel-aurora {
+  background: conic-gradient(from 0deg, transparent, #dc262644, transparent, #2563eb44, transparent, #fbbf2444, transparent);
+  animation: marvel-aurora-spin 6s linear infinite;
+}
+
+@keyframes marvel-aurora-spin {
+  to { transform: rotate(360deg); }
+}
+
+.marvel-rays {
+  background: repeating-conic-gradient(from 0deg, #dc262611 0deg 6deg, transparent 6deg 14deg);
+  animation: marvel-rays-spin 9s linear infinite;
+}
+
+@keyframes marvel-rays-spin {
+  to { transform: rotate(-360deg); }
+}
+
+.marvel-vignette {
+  box-shadow: inset 0 0 100px 30px #00000099;
+}
+
+.anim-marvel .marvel-text {
+  text-shadow: 0 0 16px #dc2626, 0 0 32px #2563eb;
+  animation: marvel-text-pulse 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes marvel-text-pulse {
+  from { opacity: 0.85; transform: scale(1); }
+  to { opacity: 1; transform: scale(1.03); }
+}
+
+.anim-marvel .marvel-flash {
+  animation: marvel-flash 3s ease forwards;
+}
+
+@keyframes marvel-flash {
+  0%, 72% { opacity: 0; }
+  80% { opacity: 0.85; background: radial-gradient(circle, #ffffffcc, #dc262644 50%, transparent 75%); }
+  100% { opacity: 0; }
+}
+
+.marvel-shield {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin: 0 auto;
+  animation: marvel-shield-spin 3s ease-in-out infinite alternate;
+}
+
+@keyframes marvel-shield-spin {
+  from { transform: rotate(-8deg) scale(0.95); }
+  to { transform: rotate(8deg) scale(1.05); }
+}
+
+.marvel-shield-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(#dc2626 0deg 120deg, #2563eb 120deg 240deg, #dc2626 240deg 360deg);
+  border: 4px solid #fbbf24;
+  box-shadow: 0 0 24px #dc262688, inset 0 0 20px #00000066;
+}
+
+.marvel-shield-star {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: #fbbf24;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+.marvel-shield-star.s1 { top: 18%; left: 50%; transform: translateX(-50%); }
+.marvel-shield-star.s2 { bottom: 22%; left: 22%; }
+.marvel-shield-star.s3 { bottom: 22%; right: 22%; }
+
+.marvel-web {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border: 2px solid #ffffff55;
+  border-radius: 50%;
+  animation: marvel-web-pulse 1.5s ease-in-out infinite alternate;
+}
+
+.marvel-web::before,
+.marvel-web::after {
+  content: '';
+  position: absolute;
+  inset: 20%;
+  border: 1px solid #ffffff44;
+  border-radius: 50%;
+}
+
+.marvel-web.w1 { top: 8%; left: 10%; animation-delay: 0s; }
+.marvel-web.w2 { bottom: 10%; right: 8%; width: 60px; height: 60px; animation-delay: 0.6s; }
+
+@keyframes marvel-web-pulse {
+  from { opacity: 0.3; transform: scale(0.9); }
+  to { opacity: 0.8; transform: scale(1.1); }
+}
+
+.marvel-lightning {
+  position: absolute;
+  width: 4px;
+  height: 50px;
+  background: linear-gradient(180deg, #fef08a, #fbbf24);
+  box-shadow: 0 0 12px #fbbf24;
+  animation: marvel-bolt-flash 0.6s ease-in-out infinite alternate;
+}
+
+.marvel-lightning.bolt1 {
+  top: 15%;
+  right: 25%;
+  transform: rotate(25deg);
+}
+
+.marvel-lightning.bolt2 {
+  bottom: 20%;
+  left: 20%;
+  transform: rotate(-30deg);
+  animation-delay: 0.3s;
+}
+
+@keyframes marvel-bolt-flash {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}
+
+.marvel-comic-panel {
+  position: absolute;
+  border: 3px solid #000;
+  background: #fff;
+  box-shadow: 4px 4px 0 #dc2626;
+  animation: marvel-panel-pop 2s ease-in-out infinite alternate;
+}
+
+.marvel-comic-panel.p1 { width: 36px; height: 48px; top: 12%; left: 6%; background: #fecaca; }
+.marvel-comic-panel.p2 { width: 42px; height: 32px; top: 8%; right: 10%; background: #bfdbfe; animation-delay: 0.4s; }
+.marvel-comic-panel.p3 { width: 30px; height: 40px; bottom: 14%; left: 14%; background: #fef08a; animation-delay: 0.8s; }
+
+@keyframes marvel-panel-pop {
+  from { transform: rotate(-3deg) scale(0.95); }
+  to { transform: rotate(3deg) scale(1.05); }
+}
+
+.marvel-hex {
+  position: absolute;
+  width: 24px;
+  height: 28px;
+  background: #38bdf866;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  animation: marvel-hex-float 2s ease-in-out infinite alternate;
+}
+
+.marvel-hex.h1 { top: 20%; right: 18%; }
+.marvel-hex.h2 { bottom: 18%; right: 22%; animation-delay: 0.7s; }
+
+@keyframes marvel-hex-float {
+  from { opacity: 0.4; transform: translateY(0); }
+  to { opacity: 0.9; transform: translateY(-10px); }
+}
+
+.marvel-float-icon {
+  position: absolute;
+  font-size: 18px;
+  animation: marvel-icon-float 1.7s ease-in-out infinite;
+}
+
+.marvel-float-icon.fi1 { left: 12%; top: 28%; }
+.marvel-float-icon.fi2 { right: 14%; top: 32%; animation-delay: 0.5s; }
+.marvel-float-icon.fi3 { left: 20%; bottom: 22%; animation-delay: 1s; }
+
+@keyframes marvel-icon-float {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.7; }
+  50% { transform: translateY(-14px) scale(1.15); opacity: 1; }
+}
+
+.marvel-sub.ur-hint,
+.marvel-sub.sr-hint {
+  color: #93c5fd;
+}
+
+.marvel-sub.ssr-hint {
+  color: #fef08a;
+  text-shadow: 0 0 16px #dc2626;
+}
+
+.marvel-core.burst-sr .marvel-shield-ring {
+  box-shadow: 0 0 30px #9333ea88;
+}
+
+.marvel-core.burst-ur .marvel-lightning {
+  height: 60px;
+}
+
+.marvel-core.burst-ssr .marvel-comic-panel {
+  animation-duration: 0.8s;
+}
+
+.gacha-anim-stage.anim-tier-ssr .marvel-float-icon {
+  font-size: 24px;
 }

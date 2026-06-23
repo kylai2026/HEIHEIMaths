@@ -48,8 +48,16 @@ const AudioManager = {
   playGachaLoop(poolId, durationMs) {
     this.stopGachaLoop();
     if (this.muteSfx) return;
-    const name = poolId === 'pokemon' ? 'gachaPulsePoke' : poolId === 'pixar' ? 'gachaPulsePixar' : 'gachaPulseCinna';
-    const interval = poolId === 'pokemon' ? 360 : poolId === 'pixar' ? 380 : 400;
+    const name = poolId === 'pokemon' ? 'gachaPulsePoke'
+      : poolId === 'pixar' ? 'gachaPulsePixar'
+      : poolId === 'disney' ? 'gachaPulseDisney'
+      : poolId === 'marvel' ? 'gachaPulseMarvel'
+      : 'gachaPulseCinna';
+    const interval = poolId === 'pokemon' ? 360
+      : poolId === 'pixar' ? 380
+      : poolId === 'disney' ? 370
+      : poolId === 'marvel' ? 350
+      : 400;
     this.playSfx(name);
     this._gachaLoopTimer = setInterval(() => this.playSfx(name), interval);
     setTimeout(() => this.stopGachaLoop(), durationMs);
@@ -179,6 +187,38 @@ const AudioManager = {
       return;
     }
 
+    if (name === 'gachaPulseDisney') {
+      const o = ctx.createOscillator();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(523, t);
+      o.frequency.exponentialRampToValueAtTime(784, t + 0.11);
+      const gg = ctx.createGain();
+      gg.gain.setValueAtTime(0.0001, t);
+      gg.gain.exponentialRampToValueAtTime(0.055, t + 0.02);
+      gg.gain.exponentialRampToValueAtTime(0.0001, t + 0.13);
+      o.connect(gg);
+      gg.connect(ctx.destination);
+      o.start(t);
+      o.stop(t + 0.14);
+      return;
+    }
+
+    if (name === 'gachaPulseMarvel') {
+      const o = ctx.createOscillator();
+      o.type = 'square';
+      o.frequency.setValueAtTime(165, t);
+      o.frequency.exponentialRampToValueAtTime(330, t + 0.1);
+      const gg = ctx.createGain();
+      gg.gain.setValueAtTime(0.0001, t);
+      gg.gain.exponentialRampToValueAtTime(0.05, t + 0.02);
+      gg.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+      o.connect(gg);
+      gg.connect(ctx.destination);
+      o.start(t);
+      o.stop(t + 0.13);
+      return;
+    }
+
     if (name === 'gachaPokemon') {
       for (let i = 0; i < 8; i++) {
         const o = ctx.createOscillator();
@@ -226,6 +266,40 @@ const AudioManager = {
         gg.connect(ctx.destination);
         o.start(t + i * 0.12);
         o.stop(t + i * 0.12 + 0.18);
+      });
+      return;
+    }
+
+    if (name === 'gachaDisney') {
+      [392, 494, 587, 740, 988].forEach((freq, i) => {
+        const o = ctx.createOscillator();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(freq, t + i * 0.14);
+        const gg = ctx.createGain();
+        gg.gain.setValueAtTime(0.0001, t + i * 0.14);
+        gg.gain.exponentialRampToValueAtTime(0.07, t + i * 0.14 + 0.04);
+        gg.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.14 + 0.2);
+        o.connect(gg);
+        gg.connect(ctx.destination);
+        o.start(t + i * 0.14);
+        o.stop(t + i * 0.14 + 0.22);
+      });
+      return;
+    }
+
+    if (name === 'gachaMarvel') {
+      [220, 277, 330, 440, 554, 659].forEach((freq, i) => {
+        const o = ctx.createOscillator();
+        o.type = 'square';
+        o.frequency.setValueAtTime(freq, t + i * 0.1);
+        const gg = ctx.createGain();
+        gg.gain.setValueAtTime(0.0001, t + i * 0.1);
+        gg.gain.exponentialRampToValueAtTime(0.06, t + i * 0.1 + 0.03);
+        gg.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.1 + 0.14);
+        o.connect(gg);
+        gg.connect(ctx.destination);
+        o.start(t + i * 0.1);
+        o.stop(t + i * 0.1 + 0.15);
       });
       return;
     }

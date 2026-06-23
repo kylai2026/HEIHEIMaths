@@ -94,11 +94,43 @@ function validateDeck(cards) {
   }
 }
 
+/** API 卡池：100 張全唔同（角色、圖片各一） */
+function validateUniqueDeck(cards, { total = 100 } = {}) {
+  const charCount = {};
+  const names = new Set();
+  const images = new Set();
+  for (const c of cards) {
+    if (names.has(c.name)) throw new Error(`Duplicate card name: ${c.name}`);
+    names.add(c.name);
+    charCount[c.char] = (charCount[c.char] || 0) + 1;
+    if (charCount[c.char] > 1) throw new Error(`Duplicate character: ${c.char}`);
+    if (c.imageUrl) {
+      if (images.has(c.imageUrl)) throw new Error(`Duplicate image for ${c.char}`);
+      images.add(c.imageUrl);
+    }
+  }
+  if (cards.length !== total) throw new Error(`Expected ${total} cards, got ${cards.length}`);
+}
+
+function ensureUniqueImage(imageUrl, seed, used) {
+  let url = imageUrl;
+  if (!url || used.has(url)) {
+    url = `https://api.dicebear.com/9.x/fun-emoji/webp?seed=${encodeURIComponent(seed)}&size=256&backgroundColor=b6e3f4,c0aede`;
+  }
+  if (used.has(url)) {
+    url = `https://api.dicebear.com/9.x/fun-emoji/webp?seed=${encodeURIComponent(seed + '-alt')}&size=256&backgroundColor=ffd5dc,e9d5ff`;
+  }
+  used.add(url);
+  return url;
+}
+
 module.exports = {
   SANRIO_CHARACTERS,
   SANRIO_VARIANTS,
   PIXAR_CHARACTERS,
   PIXAR_VARIANTS,
   buildUniqueDeck,
-  validateDeck
+  validateDeck,
+  validateUniqueDeck,
+  ensureUniqueImage
 };

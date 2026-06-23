@@ -169,8 +169,10 @@ const Storage = {
     }
     if (!data.dailyLog) data.dailyLog = {};
     if (!data.wrongLog) data.wrongLog = {};
-    if (!data.cardCollection) data.cardCollection = { pokemon: {}, sanrio: {}, pixar: {} };
-    if (!data.gachaStats) data.gachaStats = { totalPulls: 0, pokemon: 0, sanrio: 0, pixar: 0 };
+    if (!data.cardCollection) data.cardCollection = { pokemon: {}, sanrio: {}, pixar: {}, disney: {}, marvel: {} };
+    if (!data.gachaStats) data.gachaStats = { totalPulls: 0, pokemon: 0, sanrio: 0, pixar: 0, disney: 0, marvel: 0 };
+    if (!data.cardCollection.disney) data.cardCollection.disney = {};
+    if (!data.cardCollection.marvel) data.cardCollection.marvel = {};
     if (data.cardCollection.cinnamoroll && !data.cardCollection.sanrio) {
       data.cardCollection.sanrio = {};
       Object.entries(data.cardCollection.cinnamoroll).forEach(([id, count]) => {
@@ -265,8 +267,8 @@ const Storage = {
       lastDailyDate: null,
       dailyLog: {},
       wrongLog: {},
-      cardCollection: { pokemon: {}, sanrio: {}, pixar: {} },
-      gachaStats: { totalPulls: 0, pokemon: 0, sanrio: 0, pixar: 0 },
+      cardCollection: { pokemon: {}, sanrio: {}, pixar: {}, disney: {}, marvel: {} },
+      gachaStats: { totalPulls: 0, pokemon: 0, sanrio: 0, pixar: 0, disney: 0, marvel: 0 },
       tierCompleted: { easy: [], medium: [], hard: [] },
       correctBank: {}
     };

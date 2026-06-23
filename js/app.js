@@ -1405,8 +1405,9 @@ const App = {
       const previews = GachaSystem.getPreviewCards(pool.id);
       return `
         <div class="gacha-pool-card pool-${pool.id}">
-          <div class="gacha-pool-banner">
-            <img src="${pool.bannerImage}" alt="${pool.name}" class="gacha-banner-img">
+          <div class="gacha-pool-banner gacha-banner-${pool.id}">
+            <img src="${getPoolBannerChar(pool.id)}" alt="${pool.name}" class="gacha-banner-hero" loading="lazy"
+              onerror="this.onerror=null;this.style.display='none'">
             <div class="gacha-pool-banner-overlay">
               <span class="gacha-pool-badge">${pool.icon} ${pool.name}</span>
               <p>${pool.banner}</p>

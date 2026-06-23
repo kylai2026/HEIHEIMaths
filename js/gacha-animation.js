@@ -1,12 +1,14 @@
-/* 抽卡動畫：寶可夢、Sanrio、PIXAR */
+/* 抽卡動畫：寶可夢、Sanrio、PIXAR、DISNEY、MARVEL */
 const GachaAnimation = {
   ASSETS: {
     pokemon: 'assets/img/gacha-anim-pokemon-v2.png',
     sanrio: 'assets/img/gacha-anim-cinnamoroll-v2.png',
-    pixar: ''
+    pixar: '',
+    disney: '',
+    marvel: ''
   },
 
-  DURATION: { pokemon: 3400, sanrio: 3600, pixar: 3600 },
+  DURATION: { pokemon: 3400, sanrio: 3600, pixar: 3600, disney: 3800, marvel: 3900 },
   REVEAL_STAGGER: 120,
 
   _raf: null,
@@ -46,23 +48,33 @@ const GachaAnimation = {
   _animFamily(poolId) {
     if (poolId === 'sanrio' || poolId === 'cinnamoroll') return 'sanrio';
     if (poolId === 'pixar') return 'pixar';
+    if (poolId === 'disney') return 'disney';
+    if (poolId === 'marvel') return 'marvel';
     return 'pokemon';
   },
 
   _waitingHtml(poolId, rarity) {
     const family = this._animFamily(poolId);
     const asset = this.ASSETS[family];
-    const bgStyle = family === 'pixar'
+    const bgStyle = (family === 'pixar' || family === 'disney' || family === 'marvel')
       ? ''
       : `style="background-image:url('${asset}')"`;
     const label = family === 'pokemon'
       ? '⚡ 準備收服…'
       : family === 'pixar'
         ? '🎬 準備開演…'
-        : '🎀 準備召喚…';
+        : family === 'disney'
+          ? '🏰 童話即將降臨…'
+          : family === 'marvel'
+            ? '🦸 英雄即將登場…'
+            : '🎀 準備召喚…';
     const bgEl = family === 'pixar'
       ? '<div class="gacha-anim-bg pixar-cinema-bg"></div>'
-      : `<div class="gacha-anim-bg gacha-waiting-bg" ${bgStyle}></div>`;
+      : family === 'disney'
+        ? '<div class="gacha-anim-bg disney-kingdom-bg"></div>'
+        : family === 'marvel'
+          ? '<div class="gacha-anim-bg marvel-comic-bg"></div>'
+          : `<div class="gacha-anim-bg gacha-waiting-bg" ${bgStyle}></div>`;
     return `
       ${bgEl}
       <div class="gacha-anim-vignette"></div>
@@ -128,13 +140,21 @@ const GachaAnimation = {
       ? this._pokemonHtml(bestRarity)
       : family === 'pixar'
         ? this._pixarHtml(bestRarity)
-        : this._cinnaHtml(bestRarity);
+        : family === 'disney'
+          ? this._disneyHtml(bestRarity)
+          : family === 'marvel'
+            ? this._marvelHtml(bestRarity)
+            : this._cinnaHtml(bestRarity);
 
     modal.querySelector('.gacha-modal')?.classList.add('is-animating');
 
     if (typeof AudioManager !== 'undefined') {
       AudioManager.ensureContext();
-      const sfx = family === 'pokemon' ? 'gachaPokemon' : family === 'pixar' ? 'gachaPixar' : 'gachaCinna';
+      const sfx = family === 'pokemon' ? 'gachaPokemon'
+        : family === 'pixar' ? 'gachaPixar'
+        : family === 'disney' ? 'gachaDisney'
+        : family === 'marvel' ? 'gachaMarvel'
+        : 'gachaCinna';
       AudioManager.playSfx(sfx);
     }
 
@@ -193,9 +213,21 @@ const GachaAnimation = {
 
   _rarityOverlay(rarity, poolId) {
     const family = this._animFamily(poolId);
-    const sub = family === 'pokemon' ? 'poke' : family === 'pixar' ? 'pixar' : 'cinna';
-    const urIcon = family === 'pokemon' ? '⭐' : family === 'pixar' ? '🎬' : '💎';
-    const ssrIcon = family === 'pokemon' ? '⚡' : family === 'pixar' ? '🏆' : '👑';
+    const sub = family === 'pokemon' ? 'poke'
+      : family === 'pixar' ? 'pixar'
+      : family === 'disney' ? 'disney'
+      : family === 'marvel' ? 'marvel'
+      : 'cinna';
+    const urIcon = family === 'pokemon' ? '⭐'
+      : family === 'pixar' ? '🎬'
+      : family === 'disney' ? '✨'
+      : family === 'marvel' ? '🛡️'
+      : '💎';
+    const ssrIcon = family === 'pokemon' ? '⚡'
+      : family === 'pixar' ? '🏆'
+      : family === 'disney' ? '👑'
+      : family === 'marvel' ? '🦸'
+      : '👑';
     if (rarity === 'sr') {
       return `
         <div class="gacha-sr-overlay" aria-hidden="true">
@@ -321,6 +353,89 @@ const GachaAnimation = {
     `;
   },
 
+  _disneyHtml(rarity) {
+    const burst = rarity === 'ssr' ? 'burst-ssr' : rarity === 'ur' ? 'burst-ur' : rarity === 'sr' ? 'burst-sr' : '';
+    return `
+      <div class="gacha-anim-bg disney-kingdom-bg"></div>
+      <div class="gacha-anim-aurora disney-aurora"></div>
+      <div class="gacha-anim-rays disney-rays"></div>
+      <div class="gacha-anim-vignette disney-vignette"></div>
+      <canvas class="gacha-anim-canvas" aria-hidden="true"></canvas>
+      <div class="gacha-anim-core disney-core ${burst}">
+        <div class="gacha-shockwave s1"></div>
+        <div class="gacha-shockwave s2"></div>
+        <div class="gacha-shockwave s3"></div>
+        <div class="disney-castle">
+          <div class="disney-castle-tower t1"></div>
+          <div class="disney-castle-tower t2"></div>
+          <div class="disney-castle-tower t3"></div>
+          <div class="disney-castle-base"></div>
+          <div class="disney-castle-gate"></div>
+        </div>
+        <div class="disney-wand">
+          <div class="disney-wand-stick"></div>
+          <div class="disney-wand-star"></div>
+          <div class="disney-wand-trail"></div>
+        </div>
+        <div class="disney-firework fw1"></div>
+        <div class="disney-firework fw2"></div>
+        <div class="disney-firework fw3"></div>
+        <div class="disney-storybook">
+          <div class="disney-book-cover"></div>
+          <div class="disney-book-pages"></div>
+          <div class="disney-book-glow"></div>
+        </div>
+        <div class="disney-ears e1"></div>
+        <div class="disney-ears e2"></div>
+        <div class="disney-float-star fs1">✦</div>
+        <div class="disney-float-star fs2">🏰</div>
+        <div class="disney-float-star fs3">✦</div>
+      </div>
+      <div class="gacha-anim-flash disney-flash"></div>
+      <div class="gacha-anim-sparkles disney-sparkles"></div>
+      ${this._rarityOverlay(rarity, 'disney')}
+      <p class="gacha-anim-text disney-text">✨ 童話降臨中…</p>
+    `;
+  },
+
+  _marvelHtml(rarity) {
+    const burst = rarity === 'ssr' ? 'burst-ssr' : rarity === 'ur' ? 'burst-ur' : rarity === 'sr' ? 'burst-sr' : '';
+    return `
+      <div class="gacha-anim-bg marvel-comic-bg"></div>
+      <div class="gacha-anim-aurora marvel-aurora"></div>
+      <div class="gacha-anim-rays marvel-rays"></div>
+      <div class="gacha-anim-vignette marvel-vignette"></div>
+      <canvas class="gacha-anim-canvas" aria-hidden="true"></canvas>
+      <div class="gacha-anim-core marvel-core ${burst}">
+        <div class="gacha-shockwave s1"></div>
+        <div class="gacha-shockwave s2"></div>
+        <div class="gacha-shockwave s3"></div>
+        <div class="marvel-shield">
+          <div class="marvel-shield-star s1"></div>
+          <div class="marvel-shield-star s2"></div>
+          <div class="marvel-shield-star s3"></div>
+          <div class="marvel-shield-ring"></div>
+        </div>
+        <div class="marvel-web w1"></div>
+        <div class="marvel-web w2"></div>
+        <div class="marvel-lightning bolt1"></div>
+        <div class="marvel-lightning bolt2"></div>
+        <div class="marvel-comic-panel p1"></div>
+        <div class="marvel-comic-panel p2"></div>
+        <div class="marvel-comic-panel p3"></div>
+        <div class="marvel-hex h1"></div>
+        <div class="marvel-hex h2"></div>
+        <div class="marvel-float-icon fi1">🦸</div>
+        <div class="marvel-float-icon fi2">💥</div>
+        <div class="marvel-float-icon fi3">⚡</div>
+      </div>
+      <div class="gacha-anim-flash marvel-flash"></div>
+      <div class="gacha-anim-sparkles marvel-sparkles"></div>
+      ${this._rarityOverlay(rarity, 'marvel')}
+      <p class="gacha-anim-text marvel-text">🦸 英雄集結中…</p>
+    `;
+  },
+
   _cinnaHtml(rarity) {
     const burst = rarity === 'ssr' ? 'burst-ssr' : rarity === 'ur' ? 'burst-ur' : rarity === 'sr' ? 'burst-sr' : '';
     return `
@@ -358,7 +473,11 @@ const GachaAnimation = {
     const ctx = canvas.getContext('2d');
     const particles = [];
     const family = this._animFamily(poolId);
-    const count = family === 'pokemon' ? 90 : family === 'pixar' ? 85 : 80;
+    const count = family === 'pokemon' ? 90
+      : family === 'pixar' ? 85
+      : family === 'disney' ? 95
+      : family === 'marvel' ? 100
+      : 80;
     const W = () => canvas.width;
     const H = () => canvas.height;
 
@@ -373,22 +492,30 @@ const GachaAnimation = {
       ? ['#fbbf24', '#38bdf8', '#a78bfa', '#fef08a', '#ffffff']
       : family === 'pixar'
         ? ['#fbbf24', '#ef4444', '#fef08a', '#f97316', '#ffffff']
-        : ['#fda4af', '#bae6fd', '#fef08a', '#e9d5ff', '#ffffff'];
+        : family === 'disney'
+          ? ['#c4b5fd', '#f472b6', '#fef08a', '#38bdf8', '#ffffff', '#fde68a']
+          : family === 'marvel'
+            ? ['#dc2626', '#2563eb', '#fbbf24', '#ffffff', '#1e293b', '#ef4444']
+            : ['#fda4af', '#bae6fd', '#fef08a', '#e9d5ff', '#ffffff'];
 
     for (let i = 0; i < count; i++) {
       particles.push({
         x: Math.random() * 300,
         y: Math.random() * 300,
-        vx: (Math.random() - 0.5) * (family === 'pokemon' ? 4 : family === 'pixar' ? 3 : 2.2),
-        vy: (Math.random() - 0.5) * (family === 'pokemon' ? 4 : family === 'pixar' ? 3 : 2.2),
-        size: 2 + Math.random() * (family === 'pokemon' ? 4 : family === 'pixar' ? 4 : 5),
+        vx: (Math.random() - 0.5) * (family === 'pokemon' ? 4 : family === 'pixar' ? 3 : family === 'disney' ? 2.8 : family === 'marvel' ? 3.2 : 2.2),
+        vy: (Math.random() - 0.5) * (family === 'pokemon' ? 4 : family === 'pixar' ? 3 : family === 'disney' ? 2.8 : family === 'marvel' ? 3.2 : 2.2),
+        size: 2 + Math.random() * (family === 'pokemon' ? 4 : family === 'pixar' ? 4 : family === 'disney' ? 4.5 : family === 'marvel' ? 4 : 5),
         color: palette[Math.floor(Math.random() * palette.length)],
         life: Math.random(),
         shape: family === 'pokemon'
           ? (Math.random() > 0.6 ? 'bolt' : 'dot')
           : family === 'pixar'
             ? (Math.random() > 0.55 ? 'star' : 'dot')
-            : (Math.random() > 0.5 ? 'heart' : 'star')
+            : family === 'disney'
+              ? (Math.random() > 0.45 ? 'star' : 'dot')
+              : family === 'marvel'
+                ? (Math.random() > 0.5 ? 'bolt' : 'star')
+                : (Math.random() > 0.5 ? 'heart' : 'star')
       });
     }
 

@@ -13,14 +13,18 @@ const GACHA_PULL10_COST = 90;
 const GACHA_POOL_ENABLED = {
   pokemon: true,
   sanrio: false,
-  pixar: false
+  pixar: false,
+  disney: true,
+  marvel: true
 };
 
 /** 暫時關閉嘅卡冊分頁：設為 false 即可（即使有卡都唔顯示） */
 const GACHA_COLLECTION_ENABLED = {
   pokemon: true,
   sanrio: false,
-  pixar: false
+  pixar: false,
+  disney: true,
+  marvel: true
 };
 
 function isPoolPullable(poolId) {
@@ -41,21 +45,40 @@ function getCollectionTabPools(data) {
 
 const GACHA_IMAGE = {
   pokemon: {
-    banner: 'assets/img/gacha-pool-pokemon.png',
+    banner: 'assets/img/gacha-banners/pokemon-pikachu.svg',
+    bannerChar: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png',
     style: 'bottts-neutral',
     bg: 'b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf'
   },
   sanrio: {
     banner: 'assets/img/cinnamoroll/cinnamoroll-party.png',
+    bannerChar: 'assets/img/cinnamoroll/cinnamoroll-party.png',
     style: 'lorelei',
     bg: 'b6e3f4,ffd5dc,fecaca,fde68a,e9d5ff'
   },
   pixar: {
     banner: 'assets/img/pixar/cards/art-001.svg',
+    bannerChar: 'assets/img/pixar/cards/art-001.svg',
     style: 'adventurer',
     bg: 'fde68a,bae6fd,fecaca,e9d5ff,bbf7d0'
+  },
+  disney: {
+    banner: 'assets/img/gacha-banners/disney-mickey.svg',
+    bannerChar: 'https://static.wikia.nocookie.net/disney/images/2/2e/Disney_Mickey_Mouse.png',
+    style: 'lorelei',
+    bg: 'c4b5fd,bae6fd,fde68a,fbcfe8,fef08a'
+  },
+  marvel: {
+    banner: 'assets/img/gacha-banners/marvel-ironman.svg',
+    bannerChar: 'https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/lg/346-iron-man.jpg',
+    style: 'bottts-neutral',
+    bg: '1e293b,dc2626,991b1b,fbbf24,64748b'
   }
 };
+
+function getPoolBannerChar(poolId) {
+  return GACHA_IMAGE[poolId]?.bannerChar || GACHA_IMAGE[poolId]?.banner || '';
+}
 
 function getCardImageUrl(poolId, cardId) {
   const cfg = GACHA_IMAGE[poolId];
@@ -70,7 +93,7 @@ const CARD_POOLS = [
     icon: '⚡',
     theme: 'pokemon',
     bannerImage: GACHA_IMAGE.pokemon.banner,
-    banner: '比卡超、水箭龜、噴火龜…收集百隻寶可夢！',
+    banner: '比卡超帶領…收集百隻寶可夢！',
     desc: '比卡超、水箭龜、小火龍、傑尼龜…經典寶可夢等你收服'
   },
   {
@@ -90,6 +113,24 @@ const CARD_POOLS = [
     bannerImage: GACHA_IMAGE.pixar.banner,
     banner: '玩具總動員、海底總動員、玩轉腦朋友…',
     desc: 'PIXAR 動畫電影角色同場景，百張收藏卡'
+  },
+  {
+    id: 'disney',
+    name: 'DISNEY',
+    icon: '🏰',
+    theme: 'disney',
+    bannerImage: GACHA_IMAGE.disney.banner,
+    banner: '米奇領航…百位迪士尼角色！',
+    desc: '米奇、艾莎、辛巴、史迪奇、花木蘭…經典迪士尼角色等你收集'
+  },
+  {
+    id: 'marvel',
+    name: 'MARVEL',
+    icon: '🦸',
+    theme: 'marvel',
+    bannerImage: GACHA_IMAGE.marvel.banner,
+    banner: '鋼鐵俠領隊…百位漫威英雄！',
+    desc: '鋼鐵俠、蜘蛛俠、美國隊長、雷神、黑寡婦…漫威宇宙英雄等你收集'
   }
 ];
 
@@ -183,10 +224,38 @@ function buildPixarCards() {
   }));
 }
 
+function buildDisneyCards() {
+  return DISNEY_DECK.map((entry, i) => ({
+    id: `disney-${String(i + 1).padStart(3, '0')}`,
+    poolId: 'disney',
+    name: entry.name,
+    rarity: entry.rarity,
+    emoji: '🏰',
+    desc: entry.desc,
+    imageUrl: entry.imageUrl,
+    apiId: entry.apiId
+  }));
+}
+
+function buildMarvelCards() {
+  return MARVEL_DECK.map((entry, i) => ({
+    id: `marvel-${String(i + 1).padStart(3, '0')}`,
+    poolId: 'marvel',
+    name: entry.name,
+    rarity: entry.rarity,
+    emoji: '🦸',
+    desc: entry.desc,
+    imageUrl: entry.imageUrl,
+    apiId: entry.apiId
+  }));
+}
+
 const ALL_GACHA_CARDS = [
   ...buildPokemonCards(),
   ...buildSanrioCards(),
-  ...buildPixarCards()
+  ...buildPixarCards(),
+  ...buildDisneyCards(),
+  ...buildMarvelCards()
 ].map(card => ({
   ...card,
   imageUrl: card.imageUrl || getCardImageUrl(card.poolId, card.id)
@@ -206,11 +275,13 @@ const GachaSystem = {
   },
 
   ensureCollection(data) {
-    if (!data.cardCollection) data.cardCollection = { pokemon: {}, sanrio: {}, pixar: {} };
+    if (!data.cardCollection) data.cardCollection = { pokemon: {}, sanrio: {}, pixar: {}, disney: {}, marvel: {} };
     if (!data.cardCollection.pokemon) data.cardCollection.pokemon = {};
     if (!data.cardCollection.sanrio) data.cardCollection.sanrio = {};
     if (!data.cardCollection.pixar) data.cardCollection.pixar = {};
-    if (!data.gachaStats) data.gachaStats = { totalPulls: 0, pokemon: 0, sanrio: 0, pixar: 0 };
+    if (!data.cardCollection.disney) data.cardCollection.disney = {};
+    if (!data.cardCollection.marvel) data.cardCollection.marvel = {};
+    if (!data.gachaStats) data.gachaStats = { totalPulls: 0, pokemon: 0, sanrio: 0, pixar: 0, disney: 0, marvel: 0 };
     return data.cardCollection;
   },
 
@@ -306,6 +377,16 @@ const GachaSystem = {
       const pool = this.getCardsByPool(poolId);
       return featured.map(id => pool.find(c => c.id === id)).filter(Boolean);
     }
+    if (poolId === 'disney') {
+      const featured = ['disney-001', 'disney-003', 'disney-011', 'disney-021', 'disney-041', 'disney-061'];
+      const pool = this.getCardsByPool(poolId);
+      return featured.map(id => pool.find(c => c.id === id)).filter(Boolean);
+    }
+    if (poolId === 'marvel') {
+      const featured = ['marvel-001', 'marvel-003', 'marvel-011', 'marvel-021', 'marvel-041', 'marvel-061'];
+      const pool = this.getCardsByPool(poolId);
+      return featured.map(id => pool.find(c => c.id === id)).filter(Boolean);
+    }
     return this.getCardsByPool(poolId).slice(0, 6);
   },
 
@@ -317,7 +398,9 @@ const GachaSystem = {
     const fallback = card.fallbackUrl || card.imageUrl;
     const poolClass = card.poolId === 'pokemon' ? 'card-art-pokemon'
       : card.poolId === 'sanrio' ? 'card-art-sanrio'
-      : card.poolId === 'pixar' ? 'card-art-pixar' : '';
+      : card.poolId === 'pixar' ? 'card-art-pixar'
+      : card.poolId === 'disney' ? 'card-art-disney'
+      : card.poolId === 'marvel' ? 'card-art-marvel' : '';
     return `
       <div class="card-art${sizeClass} ${poolClass}">
         <img src="${card.imageUrl}" alt="${card.name}" class="card-img" loading="lazy"

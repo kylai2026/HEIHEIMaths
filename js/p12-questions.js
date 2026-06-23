@@ -123,12 +123,19 @@ const P12Questions = {
     const items = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
     const trio = MathUtils.shuffle(items).slice(0, 3);
     const [left, mid, right] = trio;
-    const qText = `三個物品排成一行：最左是${left}，最右是${right}，中間的是哪一個？`;
+    const qText = `
+      <p><strong>${left}</strong>、<strong>${mid}</strong>、<strong>${right}</strong> 三個字母由左至右排成一行：</p>
+      <div class="pos-between-row" aria-hidden="true">
+        <span class="pos-between-item">${left}</span>
+        <span class="pos-between-item pos-between-mid">${mid}</span>
+        <span class="pos-between-item">${right}</span>
+      </div>
+      <p>中間的是哪一個？</p>`;
     const wrong = items.filter(x => x !== mid);
     const options = MathUtils.shuffle([mid, ...MathUtils.shuffle(wrong).slice(0, 3)]);
     return this._mcq('p1-position', qText, options, mid,
       '提示：中間唔係最左，亦唔係最右',
-      `<h4>📖 解法</h4><p>中間的是 <strong>${mid}</strong></p>`);
+      `<h4>📖 解法</h4><p>由左至右係 <strong>${left}</strong> → <strong>${mid}</strong> → <strong>${right}</strong>，中間的是 <strong>${mid}</strong></p>`);
   },
 
   // ── 小一：20以內的數 ──
