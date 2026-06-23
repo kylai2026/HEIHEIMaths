@@ -40,7 +40,7 @@ const BADGES = [
   { id: 'points-100', name: '積分王者', icon: '🏆', desc: '累積 100 積分', check: d => (d.points || 0) >= 100 },
   { id: 'streak-5', name: '五連擊', icon: '🔥', desc: '連續答對 5 題', check: d => d.bestStreak >= 5 },
   { id: 'daily-done', name: '今日達人', icon: '🎯', desc: '完成今日挑戰', check: d => d.dailyCompleted > 0 },
-  { id: 'quiz-pass', name: '小測合格', icon: '✅', desc: '模擬小測達 50%', check: d => d.quizHistory.some(q => q.percentage >= 50) },
+  { id: 'quiz-pass', name: '小測合格', icon: '✅', desc: '模擬小測達 60%', check: d => d.quizHistory.some(q => q.percentage >= 60) },
   { id: 'streak-days-7', name: '一週達人', icon: '🗓️', desc: '連續練習 7 天', check: d => d.streakDays >= 7 },
   { id: 'level-5', name: 'Lv.5 達人', icon: '⭐', desc: '升到等級 5', check: d => Scoring.getLevel(d.xp || 0).level >= 5 },
   { id: 'gift-small', name: '小禮物得主', icon: '🎁', desc: '兌換小禮物', check: d => (d.redeemedGifts || []).includes('gift-small') },
@@ -158,12 +158,26 @@ const Scoring = {
   },
 
   awardQuiz(data, percentage) {
+    const PASS_THRESHOLD = 60;
+    const POINTS_GOOD = 30;
+    const POINTS_PERFECT = 40;
     let bonusXp = 0;
-    if (percentage >= 50) bonusXp += 30;
+    let pointsEarned = 0;
+
+    if (percentage >= PASS_THRESHOLD) bonusXp += 30;
     if (percentage >= 80) bonusXp += 50;
+    if (percentage >= 100) {
+      pointsEarned = POINTS_PERFECT;
+    } else if (percentage >= 80) {
+      pointsEarned = POINTS_GOOD;
+    }
+
+    if (pointsEarned > 0) {
+      data.points = (data.points || 0) + pointsEarned;
+    }
     data.xp = (data.xp || 0) + bonusXp;
     const newBadges = RewardSystem.checkBadges(data);
-    return { bonusXp, newBadges };
+    return { bonusXp, pointsEarned, passed: percentage >= PASS_THRESHOLD, newBadges };
   },
 
   awardDaily(data) {

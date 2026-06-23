@@ -1205,10 +1205,10 @@ const App = {
     const pct = Math.round((score / total) * 100);
 
     let grade, message;
-    if (pct >= 80) { grade = '優秀 🌟'; message = '太勁啦！繼續保持！'; }
-    else if (pct >= 60) { grade = '良好 👍'; message = '做得唔錯！針對弱項再練會更好！'; }
-    else if (pct >= 50) { grade = '過半答對 ✓'; message = '超過一半答對！繼續努力！'; }
-    else { grade = '繼續加油 💪'; message = '針對弱項多練習，一定進步！'; }
+    if (pct >= 100) { grade = '滿分 🏆'; message = '全部答對！獲得 40 積分！'; }
+    else if (pct >= 80) { grade = '優秀 🌟'; message = '太勁啦！獲得 30 積分！'; }
+    else if (pct >= 60) { grade = '合格 ✓'; message = '達到合格標準！針對弱項再練會更好！'; }
+    else { grade = '繼續加油 💪'; message = '要達 60% 先合格，針對弱項多練習！'; }
 
     const weakList = Object.entries(this.state.quizWeak)
       .sort((a, b) => b[1] - a[1])
@@ -1224,7 +1224,10 @@ const App = {
       <div class="result-score">${score}/${total}</div>
       <div class="result-grade">${grade}（${pct}%）</div>
       <p class="result-message">${message}</p>
-      ${quizReward.bonusXp > 0 ? `<p class="reward-line">🎁 獎勵：+${quizReward.bonusXp} XP</p>` : ''}
+      ${quizReward.pointsEarned > 0 || quizReward.bonusXp > 0 ? `<p class="reward-line">🎁 獎勵：${[
+        quizReward.pointsEarned > 0 ? `+${quizReward.pointsEarned} 積分` : '',
+        quizReward.bonusXp > 0 ? `+${quizReward.bonusXp} XP` : ''
+      ].filter(Boolean).join(' · ')}</p>` : ''}
       ${weakList ? `<div class="weak-topics"><h4>📌 需要加強：</h4><ul>${weakList}</ul></div>` : '<p>全部答對！</p>'}
       <button class="btn btn-primary" id="retryQuiz">再測一次</button>
       <button class="btn btn-secondary" id="goPractice" style="margin-left:0.5rem">去練習弱項</button>
@@ -1452,10 +1455,17 @@ const App = {
       area.querySelectorAll('.gacha-result-card').forEach((card, i) => {
         setTimeout(() => {
           card.classList.remove('gacha-card-hidden');
-          card.classList.add('gacha-card-reveal');
           const rarity = items[i]?.rarity;
-          if (rarity === 'ssr' || rarity === 'ur') {
-            AudioManager.playSfx(rarity === 'ssr' ? 'gachaSSR' : 'gachaUR');
+          card.classList.add('gacha-card-reveal');
+          if (rarity === 'ssr') {
+            card.classList.add('gacha-reveal-ssr');
+            AudioManager.playSfx('gachaSSR');
+          } else if (rarity === 'ur') {
+            card.classList.add('gacha-reveal-ur');
+            AudioManager.playSfx('gachaUR');
+          } else if (rarity === 'sr') {
+            card.classList.add('gacha-reveal-sr');
+            AudioManager.playSfx('gachaSR');
           }
         }, i * GachaAnimation.REVEAL_STAGGER);
       });

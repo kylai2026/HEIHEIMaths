@@ -155,6 +155,23 @@ const AudioManager = {
       return;
     }
 
+    if (name === 'gachaSR') {
+      [494, 587, 740, 880].forEach((freq, i) => {
+        const o = ctx.createOscillator();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(freq, t + i * 0.07);
+        const gg = ctx.createGain();
+        gg.gain.setValueAtTime(0.0001, t + i * 0.07);
+        gg.gain.exponentialRampToValueAtTime(0.09, t + i * 0.07 + 0.03);
+        gg.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.07 + 0.22);
+        o.connect(gg);
+        gg.connect(ctx.destination);
+        o.start(t + i * 0.07);
+        o.stop(t + i * 0.07 + 0.24);
+      });
+      return;
+    }
+
     if (name === 'gachaSSR') {
       [523, 659, 784, 1047, 1319].forEach((freq, i) => {
         const o = ctx.createOscillator();

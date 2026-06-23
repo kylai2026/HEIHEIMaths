@@ -27,7 +27,7 @@ const GachaAnimation = {
     modal.classList.remove('hidden');
     modal.querySelector('.gacha-modal')?.classList.remove('gacha-modal--results');
 
-    stage.className = `gacha-anim-stage anim-${poolId}`;
+    stage.className = `gacha-anim-stage anim-${poolId}${this._tierClass(bestRarity)}`;
     stage.innerHTML = poolId === 'pokemon'
       ? this._pokemonHtml(bestRarity)
       : this._cinnaHtml(bestRarity);
@@ -42,7 +42,7 @@ const GachaAnimation = {
     if (canvas) this._startParticles(canvas, poolId, bestRarity);
 
     const base = this.DURATION[poolId] || 3000;
-    const bonus = bestRarity === 'ssr' ? 1400 : bestRarity === 'ur' ? 800 : bestRarity === 'sr' ? 300 : 0;
+    const bonus = bestRarity === 'ssr' ? 1800 : bestRarity === 'ur' ? 1200 : bestRarity === 'sr' ? 700 : 0;
     const ms = base + bonus + (items.length > 1 ? 500 : 0);
 
     setTimeout(() => {
@@ -73,13 +73,61 @@ const GachaAnimation = {
     return order[best];
   },
 
+  _tierClass(rarity) {
+    if (rarity === 'ssr') return ' anim-tier-ssr';
+    if (rarity === 'ur') return ' anim-tier-ur';
+    if (rarity === 'sr') return ' anim-tier-sr';
+    return '';
+  },
+
+  _rarityOverlay(rarity, poolId) {
+    const sub = poolId === 'pokemon' ? 'poke' : 'cinna';
+    if (rarity === 'sr') {
+      return `
+        <div class="gacha-sr-overlay" aria-hidden="true">
+          <div class="gacha-sr-ring r1"></div>
+          <div class="gacha-sr-ring r2"></div>
+          <div class="gacha-sr-ring r3"></div>
+          <div class="gacha-sr-sparkles"><span>✦</span><span>✦</span><span>✦</span><span>✦</span><span>✦</span><span>✦</span></div>
+        </div>
+        <p class="gacha-anim-sub ${sub}-sub sr-hint">💜 超稀有 · 紫光凝聚中！</p>
+      `;
+    }
+    if (rarity === 'ur') {
+      return `
+        <div class="gacha-ur-overlay" aria-hidden="true">
+          <div class="gacha-ur-sunburst"></div>
+          <div class="gacha-ur-orbit o1"></div>
+          <div class="gacha-ur-orbit o2"></div>
+          <div class="gacha-ur-gems"><span>✧</span><span>✧</span><span>✧</span><span>✧</span><span>✧</span><span>✧</span></div>
+          <div class="gacha-ur-glow"></div>
+          <div class="gacha-ur-icon">${poolId === 'pokemon' ? '⭐' : '💎'}</div>
+        </div>
+        <p class="gacha-anim-sub ${sub}-sub ur-hint">🌟 極稀有 · 金光綻放中！</p>
+      `;
+    }
+    if (rarity === 'ssr') {
+      return `
+        <div class="gacha-ssr-overlay" aria-hidden="true">
+          <div class="gacha-ssr-beams"></div>
+          <div class="gacha-ssr-rainbow"></div>
+          <div class="gacha-ssr-crown">${poolId === 'pokemon' ? '⚡' : '👑'}</div>
+          <div class="gacha-ssr-flare"></div>
+        </div>
+        <p class="gacha-anim-sub ${sub}-sub ssr-hint">🔥 傳說 · 彩虹降臨！</p>
+      `;
+    }
+    return '';
+  },
+
   _triggerFinale(stage, poolId, rarity) {
     if (!stage) return;
     stage.classList.add('anim-finale');
-    if (rarity === 'ssr' || rarity === 'ur') {
+    if (rarity === 'sr' || rarity === 'ur' || rarity === 'ssr') {
       stage.classList.add(`anim-finale-${rarity}`);
       if (typeof AudioManager !== 'undefined') {
-        AudioManager.playSfx(rarity === 'ssr' ? 'gachaSSR' : 'gachaUR');
+        const sfx = rarity === 'ssr' ? 'gachaSSR' : rarity === 'ur' ? 'gachaUR' : 'gachaSR';
+        AudioManager.playSfx(sfx);
       }
     }
     const flash = stage.querySelector('.gacha-anim-flash');
@@ -116,9 +164,8 @@ const GachaAnimation = {
       </div>
       <div class="gacha-anim-flash poke-flash"></div>
       <div class="gacha-anim-sparkles poke-sparkles"></div>
+      ${this._rarityOverlay(rarity, 'pokemon')}
       <p class="gacha-anim-text poke-text">⚡ 收服中…</p>
-      ${rarity === 'ssr' ? '<p class="gacha-anim-sub poke-sub ssr-hint">傳說寶可夢接近中！</p>' : ''}
-      ${rarity === 'ur' ? '<p class="gacha-anim-sub poke-sub ur-hint">極稀有光芒閃耀！</p>' : ''}
     `;
   },
 
@@ -150,9 +197,8 @@ const GachaAnimation = {
       </div>
       <div class="gacha-anim-flash cinna-flash"></div>
       <div class="gacha-anim-sparkles cinna-sparkles"></div>
+      ${this._rarityOverlay(rarity, 'cinnamoroll')}
       <p class="gacha-anim-text cinna-text">🐶 召喚中…</p>
-      ${rarity === 'ssr' ? '<p class="gacha-anim-sub cinna-sub ssr-hint">超華麗卡片即將出現！</p>' : ''}
-      ${rarity === 'ur' ? '<p class="gacha-anim-sub cinna-sub ur-hint">夢幻禮物綻放光芒！</p>' : ''}
     `;
   },
 
@@ -187,18 +233,48 @@ const GachaAnimation = {
       });
     }
 
-    if (rarity === 'ssr' || rarity === 'ur') {
-      for (let i = 0; i < 45; i++) {
-        const angle = (Math.PI * 2 * i) / 45;
+    if (rarity === 'sr') {
+      for (let i = 0; i < 28; i++) {
+        const angle = (Math.PI * 2 * i) / 28;
+        const speed = 2 + Math.random() * 4;
+        particles.push({
+          x: W() / 2, y: H() / 2,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          size: 2 + Math.random() * 5,
+          color: ['#9333ea', '#c084fc', '#e9d5ff', '#ffffff'][Math.floor(Math.random() * 4)],
+          life: 1,
+          shape: 'burst'
+        });
+      }
+    }
+
+    if (rarity === 'ur') {
+      for (let i = 0; i < 40; i++) {
+        const angle = (Math.PI * 2 * i) / 40;
+        const speed = 2.5 + Math.random() * 5;
+        particles.push({
+          x: W() / 2, y: H() / 2,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          size: 2 + Math.random() * 6,
+          color: ['#f59e0b', '#fbbf24', '#fef08a', '#ffffff', '#fde68a'][Math.floor(Math.random() * 5)],
+          life: 1,
+          shape: 'burst'
+        });
+      }
+    }
+
+    if (rarity === 'ssr') {
+      for (let i = 0; i < 70; i++) {
+        const angle = (Math.PI * 2 * i) / 70;
         const speed = 3 + Math.random() * 6;
         particles.push({
           x: W() / 2, y: H() / 2,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
           size: 3 + Math.random() * 8,
-          color: rarity === 'ssr'
-            ? ['#ef4444', '#fbbf24', '#ffffff', '#f472b6'][Math.floor(Math.random() * 4)]
-            : ['#f59e0b', '#fef08a', '#ffffff', '#fda4af'][Math.floor(Math.random() * 4)],
+          color: ['#ef4444', '#fbbf24', '#ffffff', '#f472b6'][Math.floor(Math.random() * 4)],
           life: 1,
           shape: 'burst'
         });
