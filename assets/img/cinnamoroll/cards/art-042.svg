@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbcfe8"/>
+      <stop offset="100%" stop-color="#fdf2f8"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcd34d"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#fcd34d"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="20" fill="url(#bg)"/>
+  <text x="196.688" y="201.00799999999998" font-size="14" fill="#f472b6" opacity="0.6029" transform="rotate(56.88 196.688 201.00799999999998)">★</text>
+<circle cx="145.064" cy="85.448" r="5" fill="#fff" opacity="0.36214999999999997"/>
+<text x="29.503999999999998" y="33.824" font-size="16" opacity="0.5714" transform="rotate(138.24 29.503999999999998 33.824)">♡</text>
+<text x="129.94400000000002" y="134.264" font-size="26" fill="#f472b6" opacity="0.46385" transform="rotate(305.64 129.94400000000002 134.264)">★</text>
+<text x="128" y="238" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="11" fill="#64748b" opacity="0.85">咖啡</text>
+  
+    <g transform="translate(131.78,112.44) scale(0.8734999999999999)">
+      <ellipse cx="0" cy="18" rx="38" ry="32" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+      <ellipse cx="-52" cy="-8" rx="22" ry="48" fill="#fff" stroke="#94a3b8" stroke-width="2" transform="rotate(-16.759999999999998)"/>
+      <ellipse cx="52" cy="-8" rx="22" ry="48" fill="#fff" stroke="#94a3b8" stroke-width="2" transform="rotate(16.759999999999998)"/>
+      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
+      <ellipse cx="14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
+      <ellipse cx="-22" cy="10" rx="9" ry="5" fill="#fda4af" opacity="0.7"/>
+      <ellipse cx="22" cy="10" rx="9" ry="5" fill="#fda4af" opacity="0.7"/>
+      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="0" cy="42" r="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+    </g>
+  <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+</svg>

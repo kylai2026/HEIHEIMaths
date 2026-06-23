@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a5f3fc"/>
+      <stop offset="100%" stop-color="#cffafe"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcd34d"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#fcd34d"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="20" fill="url(#bg)"/>
+  <text x="82.856" y="204.248" font-size="14" fill="#f472b6" opacity="0.65375" transform="rotate(154.44 82.856 204.248)">★</text>
+<circle cx="31.232" cy="88.688" r="5" fill="#fff" opacity="0.5462"/>
+<text x="131.672" y="37.064" font-size="16" opacity="0.75545" transform="rotate(235.8 131.672 37.064)">♡</text>
+<text x="80.048" y="137.50400000000002" font-size="26" fill="#f472b6" opacity="0.5146999999999999" transform="rotate(43.199999999999996 80.048 137.50400000000002)">★</text>
+<circle cx="180.488" cy="85.88" r="8" fill="#fff" opacity="0.40714999999999996"/>
+<text x="128" y="238" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="11" fill="#64748b" opacity="0.85">餅乾</text>
+  
+    <g transform="translate(115.37,124.66) scale(0.85625)">
+      <ellipse cx="0" cy="18" rx="38" ry="32" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+      <ellipse cx="-52" cy="-8" rx="22" ry="48" fill="#fff" stroke="#94a3b8" stroke-width="2" transform="rotate(-14.5)"/>
+      <ellipse cx="52" cy="-8" rx="22" ry="48" fill="#fff" stroke="#94a3b8" stroke-width="2" transform="rotate(14.5)"/>
+      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
+      <ellipse cx="14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
+      <ellipse cx="-22" cy="10" rx="9" ry="5" fill="#fda4af" opacity="0.7"/>
+      <ellipse cx="22" cy="10" rx="9" ry="5" fill="#fda4af" opacity="0.7"/>
+      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="0" cy="42" r="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+    </g>
+  <rect x="4" y="4" width="248" height="248" rx="18" fill="none" stroke="url(#gold)" stroke-width="5"/>
+      <rect x="10" y="10" width="236" height="236" rx="15" fill="none" stroke="#fff" stroke-width="1.5" opacity="0.6"/>
+</svg>

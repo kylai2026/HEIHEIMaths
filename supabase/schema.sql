@@ -1,4 +1,4 @@
--- 舅父晞晞數學補習網 · Supabase 資料表
+-- 舅父與晞晞、雋雋補習網 · Supabase 資料表
 -- 喺 Supabase Dashboard → SQL Editor 貼上執行
 
 create table if not exists public.progress (

@@ -6,20 +6,20 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>舅父晞晞數學補習網</title>
+  <title>舅父與晞晞、雋雋補習網</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=17">
+  <link rel="stylesheet" href="css/style.css?v=25">
 </head>
 <body>
   <header class="header">
     <div class="header-bg"></div>
     <div class="header-inner">
       <div class="logo">
-        <img src="assets/img/logo-uncle.png" alt="舅父晞晞" class="logo-img">
+        <img src="assets/img/logo-uncle.png" alt="舅父與晞晞、雋雋" class="logo-img">
         <div>
-          <h1>舅父晞晞數學補習網</h1>
+          <h1>舅父與晞晞、雋雋補習網</h1>
         </div>
       </div>
       <div class="header-stats">
@@ -69,7 +69,7 @@
     <button class="nav-tab active" data-view="home"><img src="assets/img/tier-easy.png" alt="" class="nav-icon">主頁</button>
     <button class="nav-tab" data-view="practice"><img src="assets/img/tier-medium.png" alt="" class="nav-icon">分題練習</button>
     <button class="nav-tab" data-view="quiz"><img src="assets/img/bg-pattern.png" alt="" class="nav-icon">模擬小測</button>
-    <button class="nav-tab" data-view="rewards"><img src="assets/img/gift-big.png" alt="" class="nav-icon">獎勵</button>
+    <button class="nav-tab" data-view="rewards"><img src="assets/img/gift-big.png" alt="" class="nav-icon">抽卡</button>
     <button class="nav-tab" data-view="tips"><img src="assets/img/logo-uncle.png" alt="" class="nav-icon">溫習秘笈</button>
     <button class="nav-tab" data-view="progress"><img src="assets/img/tier-hard.png" alt="" class="nav-icon">學習記錄</button>
   </nav>
@@ -79,7 +79,7 @@
       <div class="hero-banner">
         <img src="assets/img/hero-banner.png" alt="數學學習" class="hero-img">
         <div class="hero-text">
-          <h2>加油！舅父晞晞信你可以做到 💪</h2>
+          <h2>加油！舅父與晞晞、雋雋信你可以做到 💪</h2>
           <p>每日練習 <strong>20 分鐘</strong>，做題賺積分，抽卡收集！</p>
         </div>
       </div>
@@ -110,7 +110,23 @@
         <div class="tier-rules-grid" id="tierRulesGrid"></div>
       </div>
 
-      <h3 class="section-title">📚 小三、小四課題練習（題目隨機出現）</h3>
+      <div class="correct-bank-panel" id="correctBankPanel">
+        <h3>📋 答對題目 · 揀選重做</h3>
+        <p class="correct-bank-intro">答對過嘅題目會儲存喺呢度。揀選重做可以鞏固記憶，但<strong>重做唔會獲取積分</strong>。</p>
+        <div id="correctBankList"></div>
+        <button type="button" class="btn btn-secondary hidden" id="startBankRedo">重做已選題目</button>
+      </div>
+
+      <div class="grade-picker-panel" id="gradePickerPanel">
+        <div class="grade-picker-header">
+          <h3 class="section-title">🎒 選擇年級</h3>
+          <span class="grade-current-badge hidden" id="gradeCurrentBadge"></span>
+        </div>
+        <div class="grade-picker-grid" id="gradePickerGrid"></div>
+      </div>
+
+      <h3 class="section-title" id="homeTopicsTitle">📚 課題練習</h3>
+      <p class="grade-topics-placeholder hidden" id="gradeTopicsPlaceholder">👆 請先喺上面揀一個年級，就會顯示對應課題</p>
       <div id="tierSections"></div>
 
       <div class="daily-challenge">
@@ -125,7 +141,10 @@
 
     <section class="view" id="view-practice">
       <div class="practice-layout">
-        <aside class="topic-sidebar" id="topicSidebar"></aside>
+        <aside class="topic-sidebar">
+          <div class="practice-grade-bar" id="practiceGradeBar"></div>
+          <div id="topicSidebar"></div>
+        </aside>
         <div class="practice-area">
           <div class="practice-header">
             <h2 id="practiceTitle">選擇課題開始練習</h2>
@@ -145,7 +164,7 @@
               <img src="assets/img/tier-hard.png" alt=""> 高級 +3分
             </button>
           </div>
-          <p class="weekly-cap-hint" id="weeklyCapHint"></p>
+          <p class="tier-progress-hint" id="tierProgressHint"></p>
           <div class="question-card" id="questionCard">
             <p class="placeholder-text">👈 請喺左邊揀一個課題</p>
           </div>
@@ -171,7 +190,7 @@
       <div class="quiz-intro" id="quizIntro">
         <img src="assets/img/bg-pattern.png" alt="" class="quiz-hero-img">
         <h2>📝 模擬小測</h2>
-        <p><strong>20 條選擇題</strong>，涵蓋小三、小四課題，難度隨機！</p>
+        <p><strong>20 條選擇題</strong>，涵蓋小一至小六課題，難度隨機！</p>
         <ul class="quiz-rules">
           <li>每題只有一個正確答案</li>
           <li>唔使計時，慢慢諗清楚先答</li>
@@ -191,7 +210,7 @@
     </section>
 
     <section class="view" id="view-rewards">
-      <h2>🏆 獎勵中心</h2>
+      <h2>🎴 抽卡</h2>
       <div class="rewards-hero">
         <div class="level-card" id="levelCard"></div>
         <div class="coins-card points-card">
@@ -200,6 +219,7 @@
           <p>答題賺積分，抽卡收集！</p>
         </div>
       </div>
+      <h3>📊 題目完成進度</h3>
       <div class="weekly-status" id="weeklyStatus"></div>
 
       <h3>🎴 積分抽卡</h3>
@@ -216,7 +236,7 @@
 
     <section class="view" id="view-tips">
       <h2>💡 溫習秘笈</h2>
-      <p class="tips-intro">舅父晞晞話你知：記住呢啲技巧就可以搶分！</p>
+      <p class="tips-intro">舅父與晞晞、雋雋話你知：記住呢啲技巧就可以搶分！</p>
       <div class="tips-grid" id="tipsGrid"></div>
     </section>
 
@@ -234,10 +254,19 @@
     </section>
   </main>
 
+  <div class="modal hidden" id="gradeModal">
+    <div class="modal-content grade-modal">
+      <div class="modal-icon">🎒</div>
+      <h3>你讀緊邊個年級？</h3>
+      <p class="grade-modal-intro">揀好年級之後，會顯示對應嘅課題練習。之後都可以隨時轉換。</p>
+      <div class="grade-picker-grid grade-picker-grid--large" id="gradeModalGrid"></div>
+    </div>
+  </div>
+
   <div class="modal hidden" id="profileModal">
     <div class="modal-content profile-modal">
       <div class="modal-icon">👋</div>
-      <h3>歡迎嚟到舅父晞晞數學補習網！</h3>
+      <h3>歡迎嚟到舅父與晞晞、雋雋補習網！</h3>
       <p class="profile-intro">輸入帳號同密碼，進度會自動儲存到雲端。<br>換手機、換電腦都唔會冇晒！</p>
       <form id="profileForm" class="profile-form">
         <div class="profile-field">
@@ -256,8 +285,17 @@
 
   <div class="modal hidden" id="gachaModal">
     <div class="modal-content gacha-modal">
-      <div class="gacha-result-area" id="gachaResultArea"></div>
-      <button class="btn btn-primary" id="gachaModalClose">太好啦！</button>
+      <div class="gacha-anim-stage" id="gachaAnimStage" aria-hidden="true"></div>
+      <div class="gacha-result-area hidden" id="gachaResultArea"></div>
+      <button class="btn btn-primary hidden" id="gachaModalClose">太好啦！</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="cardViewerModal" role="dialog" aria-modal="true" aria-labelledby="cardViewerName">
+    <div class="modal-content card-viewer-content" id="cardViewerPanel">
+      <button type="button" class="card-viewer-close" id="cardViewerClose" aria-label="關閉">×</button>
+      <div class="card-viewer-art" id="cardViewerArt"></div>
+      <div class="card-viewer-info" id="cardViewerInfo"></div>
     </div>
   </div>
 
@@ -273,21 +311,26 @@
 
   <footer class="footer">
     <img src="assets/img/logo-uncle.png" alt="" class="footer-logo">
-    <p>舅父晞晞數學補習網 · 加油！🌟</p>
+    <p>舅父與晞晞、雋雋補習網 · 加油！🌟</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js?v=17"></script>
-  <script src="js/settings.js?v=17"></script>
-  <script src="js/audio.js?v=17"></script>
-  <script src="js/utils.js?v=17"></script>
+  <script src="js/settings.js?v=24"></script>
+  <script src="js/audio.js?v=19"></script>
+  <script src="js/utils.js?v=21"></script>
   <script src="js/cloud-sync.js?v=17"></script>
-  <script src="js/scoring.js?v=17"></script>
-  <script src="js/topics-config.js?v=17"></script>
-  <script src="js/p34-questions.js?v=17"></script>
-  <script src="js/question-pool.js?v=17"></script>
-  <script src="js/questions.js?v=17"></script>
-  <script src="js/gacha-pools.js?v=17"></script>
-  <script src="js/app.js?v=17"></script>
+  <script src="js/scoring.js?v=21"></script>
+  <script src="js/topics-config.js?v=24"></script>
+  <script src="js/p34-questions.js?v=20"></script>
+  <script src="js/p12-questions.js?v=20"></script>
+  <script src="js/p56-questions.js?v=20"></script>
+  <script src="js/question-engine.js?v=20"></script>
+  <script src="js/question-pool.js?v=21"></script>
+  <script src="js/questions.js?v=21"></script>
+  <script src="js/cinnamoroll-deck.js?v=19"></script>
+  <script src="js/gacha-animation.js?v=25"></script>
+  <script src="js/gacha-pools.js?v=19"></script>
+  <script src="js/app.js?v=25"></script>
 </body>
 </html>

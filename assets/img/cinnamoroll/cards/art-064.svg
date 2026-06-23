@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd5dc"/>
+      <stop offset="100%" stop-color="#fce7f3"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcd34d"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#fcd34d"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="20" fill="url(#bg)"/>
+  <text x="32.096000000000004" y="220.448" font-size="14" fill="#f472b6" opacity="0.422" transform="rotate(83.52000000000001 32.096000000000004 220.448)">★</text>
+<circle cx="132.536" cy="168.82399999999998" r="5" fill="#fff" opacity="0.63125"/>
+<text x="80.91199999999999" y="53.264" font-size="16" opacity="0.5237" transform="rotate(58.32 80.91199999999999 53.264)">♡</text>
+<text x="181.352" y="153.704" font-size="26" fill="#f472b6" opacity="0.73295" transform="rotate(332.28000000000003 181.352 153.704)">★</text>
+<circle cx="129.728" cy="102.08" r="8" fill="#fff" opacity="0.49219999999999997"/>
+<text x="230.168" y="202.51999999999998" font-size="16" opacity="0.38465" transform="rotate(53.64 230.168 202.51999999999998)">♡</text>
+<text x="114.608" y="150.896" font-size="22" fill="#f472b6" opacity="0.5939" transform="rotate(221.04 114.608 150.896)">★</text>
+<circle cx="62.984" cy="35.336" r="6" fill="#fff" opacity="0.48634999999999995"/>
+<text x="128" y="238" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="11" fill="#64748b" opacity="0.85">泡泡</text>
+  
+    <g transform="translate(119.24,127.68) scale(0.896)">
+      <ellipse cx="0" cy="18" rx="38" ry="32" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+      <ellipse cx="-52" cy="-8" rx="22" ry="48" fill="#fff" stroke="#94a3b8" stroke-width="2" transform="rotate(-24.799999999999997)"/>
+      <ellipse cx="52" cy="-8" rx="22" ry="48" fill="#fff" stroke="#94a3b8" stroke-width="2" transform="rotate(24.799999999999997)"/>
+      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
+      <ellipse cx="14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
+      <ellipse cx="-22" cy="10" rx="9" ry="5" fill="#fda4af" opacity="0.7"/>
+      <ellipse cx="22" cy="10" rx="9" ry="5" fill="#fda4af" opacity="0.7"/>
+      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="0" cy="42" r="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+    </g>
+  <rect x="6" y="6" width="244" height="244" rx="16" fill="none" stroke="#c084fc" stroke-width="4" opacity="0.85"/>
+</svg>

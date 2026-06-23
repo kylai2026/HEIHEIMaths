@@ -5,7 +5,6 @@ const DIFFICULTY_TIERS = {
     icon: '🌱',
     image: 'assets/img/tier-easy.png',
     points: 1,
-    weeklyCap: 50,
     cssClass: 'tier-easy'
   },
   medium: {
@@ -14,7 +13,6 @@ const DIFFICULTY_TIERS = {
     icon: '⭐',
     image: 'assets/img/tier-medium.png',
     points: 2,
-    weeklyCap: 30,
     cssClass: 'tier-medium'
   },
   hard: {
@@ -23,13 +21,12 @@ const DIFFICULTY_TIERS = {
     icon: '🔥',
     image: 'assets/img/tier-hard.png',
     points: 3,
-    weeklyCap: 60,
     cssClass: 'tier-hard'
   }
 };
 
 const GIFT_SHOP = [
-  { id: 'gift-small', name: '小禮物', image: 'assets/img/gift-small.png', desc: '舅父晞晞準備的小驚喜', cost: 30, tier: 'small' },
+  { id: 'gift-small', name: '小禮物', image: 'assets/img/gift-small.png', desc: '舅父與晞晞、雋雋準備的小驚喜', cost: 30, tier: 'small' },
   { id: 'gift-medium', name: '中級禮物', image: 'assets/img/gift-medium.png', desc: '做得好好嘅獎勵', cost: 60, tier: 'medium' },
   { id: 'gift-big', name: '大獎', image: 'assets/img/gift-big.png', desc: '超勁嘅終極獎品', cost: 100, tier: 'big' }
 ];
@@ -64,25 +61,45 @@ const Scoring = {
     return monday.toISOString().slice(0, 10);
   },
 
-  ensureWeeklyPoints(data) {
-    const weekKey = this.getWeekKey();
-    if (!data.weeklyPoints || data.weeklyPoints.weekKey !== weekKey) {
-      data.weeklyPoints = { weekKey, easy: 0, medium: 0, hard: 0 };
+  ensureTierCompleted(data) {
+    if (!data.tierCompleted) {
+      data.tierCompleted = { easy: [], medium: [], hard: [] };
     }
-    return data.weeklyPoints;
+    return data.tierCompleted;
   },
 
-  getWeeklyStatus(data) {
-    const wp = this.ensureWeeklyPoints(data);
+  getTierTotals() {
+    if (typeof QuestionPool === 'undefined' || !QuestionPool.getTierTotals) {
+      return { easy: 1, medium: 1, hard: 1 };
+    }
+    return QuestionPool.getTierTotals();
+  },
+
+  getTierProgress(data) {
+    const completed = this.ensureTierCompleted(data);
+    const totals = this.getTierTotals();
     return Object.keys(DIFFICULTY_TIERS).map(key => {
       const t = DIFFICULTY_TIERS[key];
+      const done = (completed[key] || []).length;
+      const total = totals[key] || 1;
       return {
         ...t,
-        earned: wp[key] || 0,
-        remaining: Math.max(0, t.weeklyCap - (wp[key] || 0)),
-        percent: Math.round(((wp[key] || 0) / t.weeklyCap) * 100)
+        completed: done,
+        total,
+        percent: Math.min(100, Math.round((done / total) * 100))
       };
     });
+  },
+
+  markQuestionCompleted(data, tier, poolKey) {
+    if (!poolKey || !tier || !DIFFICULTY_TIERS[tier]) return;
+    const tc = this.ensureTierCompleted(data);
+    if (!tc[tier].includes(poolKey)) tc[tier].push(poolKey);
+  },
+
+  /** @deprecated 保留相容；請用 getTierProgress */
+  getWeeklyStatus(data) {
+    return this.getTierProgress(data);
   },
 
   getLevel(xp) {
@@ -101,12 +118,13 @@ const Scoring = {
     };
   },
 
-  awardAnswer(data, correct, tier) {
+  awardAnswer(data, correct, tier, options = {}) {
+    const noPoints = !!options.noPoints;
     const result = {
       xp: 0,
       pointsEarned: 0,
       tier,
-      weeklyCapped: false,
+      noPoints,
       levelUp: false,
       newBadges: []
     };
@@ -118,17 +136,9 @@ const Scoring = {
       data.currentStreak = (data.currentStreak || 0) + 1;
       if (data.currentStreak > (data.bestStreak || 0)) data.bestStreak = data.currentStreak;
 
-      const wp = this.ensureWeeklyPoints(data);
-      const weeklyEarned = wp[tier] || 0;
-      if (weeklyEarned >= tierConfig.weeklyCap) {
-        result.weeklyCapped = true;
-        result.pointsEarned = 0;
-      } else {
-        const toAdd = Math.min(tierConfig.points, tierConfig.weeklyCap - weeklyEarned);
-        wp[tier] = weeklyEarned + toAdd;
-        data.points = (data.points || 0) + toAdd;
-        result.pointsEarned = toAdd;
-        if (toAdd < tierConfig.points) result.weeklyCapped = true;
+      if (!noPoints) {
+        data.points = (data.points || 0) + tierConfig.points;
+        result.pointsEarned = tierConfig.points;
       }
     } else {
       result.xp = 0;

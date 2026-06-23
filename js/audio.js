@@ -105,6 +105,87 @@ const AudioManager = {
         o.start(t + i * 0.1);
         o.stop(t + i * 0.1 + 0.24);
       });
+      return;
+    }
+
+    if (name === 'gachaPokemon') {
+      for (let i = 0; i < 8; i++) {
+        const o = ctx.createOscillator();
+        o.type = 'square';
+        o.frequency.setValueAtTime(180 + i * 40, t + i * 0.07);
+        const gg = ctx.createGain();
+        gg.gain.setValueAtTime(0.0001, t + i * 0.07);
+        gg.gain.exponentialRampToValueAtTime(0.06, t + i * 0.07 + 0.02);
+        gg.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.07 + 0.08);
+        o.connect(gg);
+        gg.connect(ctx.destination);
+        o.start(t + i * 0.07);
+        o.stop(t + i * 0.07 + 0.09);
+      }
+      return;
+    }
+
+    if (name === 'gachaCinna') {
+      [523, 659, 784, 988].forEach((freq, i) => {
+        const o = ctx.createOscillator();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(freq, t + i * 0.15);
+        const gg = ctx.createGain();
+        gg.gain.setValueAtTime(0.0001, t + i * 0.15);
+        gg.gain.exponentialRampToValueAtTime(0.07, t + i * 0.15 + 0.04);
+        gg.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.15 + 0.2);
+        o.connect(gg);
+        gg.connect(ctx.destination);
+        o.start(t + i * 0.15);
+        o.stop(t + i * 0.15 + 0.22);
+      });
+      return;
+    }
+
+    if (name === 'gachaReveal') {
+      const o = ctx.createOscillator();
+      o.type = 'triangle';
+      o.frequency.setValueAtTime(440, t);
+      o.frequency.exponentialRampToValueAtTime(880, t + 0.15);
+      g.gain.exponentialRampToValueAtTime(0.14, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
+      o.connect(g);
+      o.start(t);
+      o.stop(t + 0.36);
+      return;
+    }
+
+    if (name === 'gachaSSR') {
+      [523, 659, 784, 1047, 1319].forEach((freq, i) => {
+        const o = ctx.createOscillator();
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(freq, t + i * 0.08);
+        const gg = ctx.createGain();
+        gg.gain.setValueAtTime(0.0001, t + i * 0.08);
+        gg.gain.exponentialRampToValueAtTime(0.1, t + i * 0.08 + 0.02);
+        gg.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.08 + 0.25);
+        o.connect(gg);
+        gg.connect(ctx.destination);
+        o.start(t + i * 0.08);
+        o.stop(t + i * 0.08 + 0.28);
+      });
+      return;
+    }
+
+    if (name === 'gachaUR') {
+      [392, 494, 587, 740].forEach((freq, i) => {
+        const o = ctx.createOscillator();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(freq, t + i * 0.09);
+        const gg = ctx.createGain();
+        gg.gain.setValueAtTime(0.0001, t + i * 0.09);
+        gg.gain.exponentialRampToValueAtTime(0.08, t + i * 0.09 + 0.03);
+        gg.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.09 + 0.2);
+        o.connect(gg);
+        gg.connect(ctx.destination);
+        o.start(t + i * 0.09);
+        o.stop(t + i * 0.09 + 0.22);
+      });
     }
   },
 

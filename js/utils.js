@@ -170,6 +170,8 @@ const Storage = {
     if (!data.dailyLog) data.dailyLog = {};
     if (!data.cardCollection) data.cardCollection = { pokemon: {}, cinnamoroll: {} };
     if (!data.gachaStats) data.gachaStats = { totalPulls: 0, pokemon: 0, cinnamoroll: 0 };
+    if (!data.tierCompleted) data.tierCompleted = { easy: [], medium: [], hard: [] };
+    if (!data.correctBank) data.correctBank = {};
     return data;
   },
 
@@ -250,7 +252,9 @@ const Storage = {
       lastDailyDate: null,
       dailyLog: {},
       cardCollection: { pokemon: {}, cinnamoroll: {} },
-      gachaStats: { totalPulls: 0, pokemon: 0, cinnamoroll: 0 }
+      gachaStats: { totalPulls: 0, pokemon: 0, cinnamoroll: 0 },
+      tierCompleted: { easy: [], medium: [], hard: [] },
+      correctBank: {}
     };
   },
 
@@ -315,6 +319,30 @@ const Storage = {
 
     if (!dataRef) this.save(data);
     return data;
+  },
+
+  saveCorrectQuestion(data, q) {
+    if (!q?.poolKey) return;
+    if (!data.correctBank) data.correctBank = {};
+    data.correctBank[q.poolKey] = {
+      poolKey: q.poolKey,
+      topicId: q.topicId,
+      tier: q.tier,
+      question: q.question,
+      answer: q.answer,
+      answerDisplay: q.answerDisplay,
+      hint: q.hint,
+      solution: q.solution,
+      type: q.type,
+      options: q.options ? [...q.options] : undefined,
+      correctIndex: q.correctIndex,
+      savedAt: Date.now()
+    };
+  },
+
+  getCorrectBankList(data) {
+    const bank = data.correctBank || {};
+    return Object.values(bank).sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0));
   },
 
   recordQuiz(score, total, weakTopics) {

@@ -10,7 +10,7 @@ const QuestionBank = {
   generateMCQ(topicId, tier = 'medium') {
     QuestionPool.init();
     const q = QuestionPool.draw(topicId, tier);
-    return P34Questions.toMCQ(q, topicId);
+    return QuestionEngine.toMCQ(q, topicId);
   },
 
   generateQuiz(count = 20) {

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fecaca"/>
+      <stop offset="100%" stop-color="#fee2e2"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcd34d"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#fcd34d"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="20" fill="url(#bg)"/>
+  <text x="128.43200000000002" y="229.51999999999998" font-size="14" fill="#f472b6" opacity="0.39949999999999997" transform="rotate(317.52 128.43200000000002 229.51999999999998)">★</text>
+<circle cx="76.80799999999999" cy="177.896" r="5" fill="#fff" opacity="0.6087499999999999"/>
+<text x="177.248" y="62.336" font-size="16" opacity="0.5012" transform="rotate(38.88 177.248 62.336)">♡</text>
+<text x="61.688" y="226.712" font-size="26" fill="#f472b6" opacity="0.71045" transform="rotate(206.27999999999997 61.688 226.712)">★</text>
+<circle cx="226.064" cy="111.152" r="8" fill="#fff" opacity="0.6029"/>
+<text x="110.50399999999999" y="211.592" font-size="16" opacity="0.36214999999999997" transform="rotate(287.64000000000004 110.50399999999999 211.592)">♡</text>
+<text x="128" y="238" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="11" fill="#64748b" opacity="0.85">牛奶糖</text>
+  
+    <g transform="translate(141.74,122.6) scale(0.8584999999999999)">
+      <ellipse cx="0" cy="18" rx="38" ry="32" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+      <ellipse cx="-52" cy="-8" rx="22" ry="48" fill="#fff" stroke="#94a3b8" stroke-width="2" transform="rotate(-25.8)"/>
+      <ellipse cx="52" cy="-8" rx="22" ry="48" fill="#fff" stroke="#94a3b8" stroke-width="2" transform="rotate(25.8)"/>
+      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
+      <ellipse cx="14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
+      <ellipse cx="-22" cy="10" rx="9" ry="5" fill="#fda4af" opacity="0.7"/>
+      <ellipse cx="22" cy="10" rx="9" ry="5" fill="#fda4af" opacity="0.7"/>
+      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="0" cy="42" r="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+    </g>
+  <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+</svg>

@@ -13,8 +13,110 @@ const App = {
     randomMode: false,
     randomTopicPool: null,
     practiceTier: 'medium',
+    noPointsMode: false,
+    sessionCorrect: [],
     sessionLastTick: Date.now(),
-    gachaCollectionPool: 'pokemon'
+    gachaCollectionPool: 'pokemon',
+    selectedGrade: null
+  },
+
+  getSelectedGrade() {
+    return this.state.selectedGrade || UserSettings.load().grade || null;
+  },
+
+  setSelectedGrade(grade) {
+    if (!GRADE_ORDER.includes(grade)) return;
+    UserSettings.save({ grade });
+    this.state.selectedGrade = grade;
+    document.getElementById('gradeModal')?.classList.add('hidden');
+    this.renderGradePicker();
+    this.renderTierSections();
+    this.renderSidebar();
+    this.updateGradeLabels();
+    AudioManager.playSfx('click');
+  },
+
+  showGradeModalIfNeeded() {
+    if (this.getSelectedGrade()) return;
+    const modal = document.getElementById('gradeModal');
+    if (!modal) return;
+    this.renderGradeModalGrid();
+    modal.classList.remove('hidden');
+  },
+
+  renderGradeModalGrid() {
+    const grid = document.getElementById('gradeModalGrid');
+    if (!grid) return;
+    grid.innerHTML = GRADE_ORDER.map(grade => this.gradeButtonHtml(grade, true)).join('');
+    grid.querySelectorAll('[data-grade]').forEach(btn => {
+      btn.addEventListener('click', () => this.setSelectedGrade(btn.dataset.grade));
+    });
+  },
+
+  gradeButtonHtml(grade, large = false) {
+    const active = this.getSelectedGrade() === grade;
+    const count = countTopicsByGrade(grade);
+    return `
+      <button type="button" class="grade-btn ${large ? 'grade-btn-lg' : ''} ${active ? 'active' : ''}" data-grade="${grade}">
+        <span class="grade-btn-icon">${GRADE_ICONS[grade]}</span>
+        <span class="grade-btn-label">${GRADE_LABELS[grade]}</span>
+        <span class="grade-btn-count">${count} 個課題</span>
+      </button>
+    `;
+  },
+
+  renderGradePicker() {
+    const grid = document.getElementById('gradePickerGrid');
+    const bar = document.getElementById('practiceGradeBar');
+    if (grid) {
+      grid.innerHTML = GRADE_ORDER.map(grade => this.gradeButtonHtml(grade)).join('');
+      grid.querySelectorAll('[data-grade]').forEach(btn => {
+        btn.addEventListener('click', () => this.setSelectedGrade(btn.dataset.grade));
+      });
+    }
+    if (bar) {
+      bar.innerHTML = `
+        <div class="practice-grade-label">年級</div>
+        <div class="practice-grade-tabs">
+          ${GRADE_ORDER.map(grade => `
+            <button type="button" class="practice-grade-tab ${this.getSelectedGrade() === grade ? 'active' : ''}" data-grade="${grade}">
+              ${GRADE_LABELS[grade]}
+            </button>
+          `).join('')}
+        </div>
+      `;
+      bar.querySelectorAll('[data-grade]').forEach(btn => {
+        btn.addEventListener('click', () => this.setSelectedGrade(btn.dataset.grade));
+      });
+    }
+    this.updateGradeLabels();
+  },
+
+  updateGradeLabels() {
+    const grade = this.getSelectedGrade();
+    const badge = document.getElementById('gradeCurrentBadge');
+    const title = document.getElementById('homeTopicsTitle');
+    const placeholder = document.getElementById('gradeTopicsPlaceholder');
+    const sections = document.getElementById('tierSections');
+
+    if (badge) {
+      if (grade) {
+        badge.textContent = `而家：${GRADE_LABELS[grade]}`;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+    if (title) {
+      title.textContent = grade
+        ? `📚 ${GRADE_LABELS[grade]}課題練習（題目隨機出現）`
+        : '📚 課題練習';
+    }
+    if (placeholder && sections) {
+      const showPlaceholder = !grade;
+      placeholder.classList.toggle('hidden', !showPlaceholder);
+      sections.classList.toggle('hidden', showPlaceholder);
+    }
   },
 
   async init() {
@@ -31,9 +133,11 @@ const App = {
     }
     this.updateAuthUI();
     QuestionBank.init();
+    this.state.selectedGrade = UserSettings.load().grade || null;
     this.bindNavigation();
     this.bindTierSelector();
     this.renderHUD();
+    this.renderGradePicker();
     this.renderHome();
     this.renderSidebar();
     this.renderTips();
@@ -43,7 +147,9 @@ const App = {
     this.bindQuiz();
     this.bindDaily();
     this.bindModal();
+    this.bindCardZoomDelegation();
     this.bindSessionTracking();
+    this.showGradeModalIfNeeded();
     document.getElementById('resetProgress').addEventListener('click', async () => {
       if (confirm('確定要重設所有學習記錄嗎？（雲端記錄都會一併清除）')) {
         Storage.reset();
@@ -112,9 +218,12 @@ const App = {
           modal.classList.add('hidden');
           this.updateAuthUI();
           this.renderHUD();
+          this.renderGradePicker();
           this.renderHome();
+          this.renderSidebar();
           this.renderProgress();
           this.renderRewards();
+          this.showGradeModalIfNeeded();
           resolve();
         } catch (err) {
           errEl.textContent = '連線失敗，請檢查密碼或網絡後再試。';
@@ -238,7 +347,69 @@ const App = {
     });
     document.getElementById('gachaModalClose')?.addEventListener('click', () => {
       document.getElementById('gachaModal').classList.add('hidden');
+      document.getElementById('gachaAnimStage').innerHTML = '';
+      document.getElementById('gachaResultArea').classList.add('hidden');
+      document.getElementById('gachaModalClose').classList.add('hidden');
+      document.querySelector('.gacha-modal')?.classList.remove('gacha-modal--results');
+      GachaAnimation._running = false;
+      GachaAnimation._stopParticles();
     });
+    document.getElementById('cardViewerClose')?.addEventListener('click', () => this.closeCardViewer());
+    document.getElementById('cardViewerModal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'cardViewerModal') this.closeCardViewer();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !document.getElementById('cardViewerModal')?.classList.contains('hidden')) {
+        this.closeCardViewer();
+      }
+    });
+  },
+
+  bindCardZoomDelegation() {
+    if (this._cardZoomBound) return;
+    this._cardZoomBound = true;
+    document.addEventListener('click', (e) => {
+      const el = e.target.closest('[data-card-zoom]');
+      if (!el) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const cardId = el.dataset.cardId;
+      if (!cardId) return;
+      const card = GachaSystem.getCard(cardId);
+      if (card) this.openCardViewer(card, el.dataset.owned !== 'false');
+    });
+  },
+
+  openCardViewer(card, owned = true) {
+    if (!card) return;
+    const modal = document.getElementById('cardViewerModal');
+    const panel = document.getElementById('cardViewerPanel');
+    const r = GACHA_RARITIES[card.rarity] || GACHA_RARITIES.common;
+    panel.className = `modal-content card-viewer-content ${r.css}`;
+    document.getElementById('cardViewerArt').innerHTML = GachaSystem.cardArtHtml(card, owned, 'xl');
+    document.getElementById('cardViewerInfo').innerHTML = owned ? `
+      ${GachaSystem.starsHtml(card.rarity, 'lg')}
+      <h3 class="card-viewer-name" id="cardViewerName">${card.name}</h3>
+      <p class="card-viewer-rarity">${r.label}</p>
+      ${card.desc ? `<p class="card-viewer-desc">${card.desc}</p>` : ''}
+      <p class="card-viewer-hint">點擊背景或按 × 關閉</p>
+    ` : `
+      <h3 class="card-viewer-name" id="cardViewerName">???</h3>
+      <p class="card-viewer-rarity">尚未獲得</p>
+      <p class="card-viewer-desc">繼續練習賺積分，就有機會抽到這張卡！</p>
+    `;
+    modal.classList.remove('hidden');
+    document.body.classList.add('card-viewer-open');
+    if (typeof AudioManager !== 'undefined') AudioManager.playSfx('click');
+  },
+
+  closeCardViewer() {
+    document.getElementById('cardViewerModal')?.classList.add('hidden');
+    document.body.classList.remove('card-viewer-open');
+  },
+
+  bindCardZoomClicks() {
+    /* 已由 bindCardZoomDelegation 統一處理 */
   },
 
   showModal(icon, title, message, imageUrl = null) {
@@ -292,13 +463,14 @@ const App = {
     if (view === 'progress') this.renderProgress();
     if (view === 'rewards') this.renderRewards();
     if (view === 'home') this.renderDailyProgress();
+    if (view === 'practice' && !this.getSelectedGrade()) this.showGradeModalIfNeeded();
     this.renderHUD();
   },
 
   renderTierRules() {
     const data = Storage.load();
-    const weekly = Scoring.getWeeklyStatus(data);
-    document.getElementById('tierRulesGrid').innerHTML = weekly.map(t => `
+    const progress = Scoring.getTierProgress(data);
+    document.getElementById('tierRulesGrid').innerHTML = progress.map(t => `
       <div class="tier-rule-card ${t.cssClass}">
         <img src="${t.image}" alt="${t.name}" class="tier-rule-img">
         <div class="tier-rule-header">
@@ -308,7 +480,7 @@ const App = {
         <div class="tier-weekly-bar">
           <div class="tier-weekly-fill" style="width:${t.percent}%"></div>
         </div>
-        <p class="tier-weekly-text">本週已賺 ${t.earned} / ${t.weeklyCap} 分</p>
+        <p class="tier-weekly-text">已完成 ${t.completed} / ${t.total} 題（${t.percent}%）</p>
         <button class="btn btn-primary btn-sm random-tier-btn" data-tier="${t.id}">隨機練習</button>
       </div>
     `).join('');
@@ -316,18 +488,103 @@ const App = {
     document.querySelectorAll('.random-tier-btn').forEach(btn => {
       btn.addEventListener('click', () => this.startRandomPractice(btn.dataset.tier));
     });
+    this.renderCorrectBank();
+  },
+
+  questionPreview(q) {
+    const text = String(q.question || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+    return text.slice(0, 48) + (text.length > 48 ? '…' : '');
+  },
+
+  renderCorrectBank() {
+    const panel = document.getElementById('correctBankPanel');
+    const list = document.getElementById('correctBankList');
+    const btn = document.getElementById('startBankRedo');
+    if (!panel || !list) return;
+
+    const data = Storage.load();
+    const items = Storage.getCorrectBankList(data);
+
+    if (!items.length) {
+      panel.classList.add('empty');
+      list.innerHTML = '<p class="correct-bank-empty">答對題目會儲存喺呢度，可以揀選重做（重做唔計分）。</p>';
+      btn?.classList.add('hidden');
+      return;
+    }
+
+    panel.classList.remove('empty');
+    list.innerHTML = items.slice(0, 30).map((q, i) => {
+      const topic = TOPICS.find(t => t.id === q.topicId);
+      const tier = DIFFICULTY_TIERS[q.tier] || DIFFICULTY_TIERS.medium;
+      return `
+        <label class="redo-item">
+          <input type="checkbox" class="bank-redo-check" data-key="${q.poolKey}" checked>
+          <span class="redo-meta">
+            <span class="badge ${tier.cssClass}">${tier.name}</span>
+            ${topic ? `<span class="badge">${topic.name}</span>` : ''}
+          </span>
+          <span class="redo-preview">${this.questionPreview(q)}</span>
+        </label>
+      `;
+    }).join('');
+    if (items.length > 30) {
+      list.innerHTML += `<p class="correct-bank-more">另有 ${items.length - 30} 題答對記錄…</p>`;
+    }
+    btn?.classList.remove('hidden');
+    btn?.onclick = () => this.startRedoFromBank();
+  },
+
+  startRedoFromBank() {
+    const checks = document.querySelectorAll('.bank-redo-check:checked');
+    if (!checks.length) {
+      alert('請至少揀一題重做');
+      return;
+    }
+    const data = Storage.load();
+    const bank = data.correctBank || {};
+    const questions = [...checks].map(c => bank[c.dataset.key]).filter(Boolean);
+    if (!questions.length) return;
+    this.startRedoPractice(questions);
+  },
+
+  startRedoPractice(questions) {
+    if (!questions.length) return;
+    AudioManager.playSfx('click');
+    this.state.dailyMode = false;
+    this.state.randomMode = false;
+    this.state.noPointsMode = true;
+    this.state.sessionCorrect = [];
+    this.state.practiceTopic = 'redo';
+    this.state.practiceQuestions = questions.map(q => ({ ...q, isRedo: true }));
+    this.state.practiceIndex = 0;
+    this.state.practiceAnswered = false;
+
+    document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('practiceTitle').textContent = '重做練習';
+    document.getElementById('practiceTopicBadge').textContent = `${questions.length} 題 · 唔計分`;
+    document.getElementById('tierSelector').classList.add('hidden');
+    this.updateTierProgressHint();
+    this.switchView('practice');
+    this.showPracticeQuestion();
   },
 
   renderTierSections() {
     const container = document.getElementById('tierSections');
-    container.innerHTML = EXAM_SECTIONS.map(sec => {
+    const grade = this.getSelectedGrade();
+    if (!grade) {
+      container.innerHTML = '';
+      return;
+    }
+
+    const sections = getSectionsByGrade(grade);
+    container.innerHTML = sections.map(sec => {
       const topicIds = sec.topics;
       const topics = TOPICS.filter(t => topicIds.includes(t.id));
+      const sectionName = sec.name.replace(/^小[一二三四五六] · /, '');
       return `
         <div class="exam-section">
           <div class="exam-section-header">
-            <span>${sec.icon} ${sec.name}</span>
-            <span class="exam-weight">${sec.grade === 'P3' ? '小三' : '小四'}</span>
+            <span>${sec.icon} ${sectionName}</span>
           </div>
           <div class="section-random-row">
             ${['easy', 'medium', 'hard'].map(tierKey => {
@@ -350,7 +607,7 @@ const App = {
 
     container.querySelectorAll('.section-random-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        const sec = EXAM_SECTIONS.find(s => s.id === btn.dataset.section);
+        const sec = CURRICULUM_SECTIONS.find(s => s.id === btn.dataset.section);
         this.startRandomPractice(btn.dataset.tier, sec.topics);
       });
     });
@@ -375,13 +632,21 @@ const App = {
     this.renderTierSections();
     this.renderDailyProgress();
     this.renderHUD();
+    this.updateGradeLabels();
   },
 
   renderSidebar() {
     const sidebar = document.getElementById('topicSidebar');
+    const grade = this.getSelectedGrade();
+    if (!grade) {
+      sidebar.innerHTML = '<p class="sidebar-placeholder">請先喺主頁揀年級</p>';
+      return;
+    }
+
     let html = '';
-    EXAM_SECTIONS.forEach(sec => {
-      html += `<div class="sidebar-section">${sec.icon} ${sec.name}</div>`;
+    getSectionsByGrade(grade).forEach(sec => {
+      const sectionName = sec.name.replace(/^小[一二三四五六] · /, '');
+      html += `<div class="sidebar-section">${sec.icon} ${sectionName}</div>`;
       TOPICS.filter(t => sec.topics.includes(t.id)).forEach(t => {
         html += `<button class="sidebar-item" data-topic="${t.id}">${t.icon} ${t.name}</button>`;
       });
@@ -398,7 +663,7 @@ const App = {
         const tier = btn.dataset.tier;
         this.state.practiceTier = tier;
         document.querySelectorAll('.tier-btn').forEach(b => b.classList.toggle('active', b.dataset.tier === tier));
-        this.updateWeeklyCapHint();
+        this.updateTierProgressHint();
         if (this.state.practiceTopic) {
           const pool = this.state.randomMode ? this.state.randomTopicPool : null;
           if (this.state.randomMode) {
@@ -414,25 +679,26 @@ const App = {
     });
   },
 
-  updateWeeklyCapHint() {
+  updateTierProgressHint() {
+    const hint = document.getElementById('tierProgressHint');
+    if (!hint) return;
+    if (this.state.noPointsMode) {
+      hint.innerHTML = '🔄 <strong>重做模式</strong>：做題唔會獲取積分';
+      hint.className = 'tier-progress-hint redo-mode';
+      return;
+    }
     const data = Storage.load();
     const tier = DIFFICULTY_TIERS[this.state.practiceTier];
-    const wp = Scoring.ensureWeeklyPoints(data);
-    const earned = wp[this.state.practiceTier] || 0;
-    const remaining = Math.max(0, tier.weeklyCap - earned);
-    const hint = document.getElementById('weeklyCapHint');
-    if (remaining === 0) {
-      hint.innerHTML = `⚠️ 本週${tier.name}積分已達上限（${tier.weeklyCap}分），可以轉做其他難度！`;
-      hint.className = 'weekly-cap-hint capped';
-    } else {
-      hint.innerHTML = `${tier.icon} ${tier.name}：答對 +${tier.points} 分 · 本週仲可以賺 <strong>${remaining}</strong> 分`;
-      hint.className = 'weekly-cap-hint';
-    }
+    const progress = Scoring.getTierProgress(data).find(t => t.id === this.state.practiceTier);
+    hint.innerHTML = `${tier.icon} ${tier.name}：答對 +${tier.points} 分 · 已完成 <strong>${progress.percent}%</strong>（${progress.completed}/${progress.total} 題）`;
+    hint.className = 'tier-progress-hint';
   },
 
   startRandomPractice(tier, topicIds = null) {
     this.state.dailyMode = false;
     this.state.randomMode = true;
+    this.state.noPointsMode = false;
+    this.state.sessionCorrect = [];
     this.state.randomTopicPool = topicIds;
     this.state.practiceTopic = 'random';
     this.state.practiceTier = tier;
@@ -449,7 +715,7 @@ const App = {
       b.classList.toggle('active', b.dataset.tier === tier);
     });
     document.getElementById('tierSelector').classList.remove('hidden');
-    this.updateWeeklyCapHint();
+    this.updateTierProgressHint();
     this.switchView('practice');
     this.showPracticeQuestion();
   },
@@ -457,6 +723,8 @@ const App = {
   startPractice(topicId, tier = 'medium') {
     this.state.dailyMode = false;
     this.state.randomMode = false;
+    this.state.noPointsMode = false;
+    this.state.sessionCorrect = [];
     this.state.randomTopicPool = null;
     this.state.practiceTopic = topicId;
     this.state.practiceTier = tier;
@@ -477,7 +745,7 @@ const App = {
       b.classList.toggle('active', b.dataset.tier === tier);
     });
     document.getElementById('tierSelector').classList.remove('hidden');
-    this.updateWeeklyCapHint();
+    this.updateTierProgressHint();
 
     this.switchView('practice');
     this.showPracticeQuestion();
@@ -488,12 +756,15 @@ const App = {
     const total = this.state.practiceQuestions.length;
     const current = this.state.practiceIndex + 1;
     const tierInfo = DIFFICULTY_TIERS[q.tier || this.state.practiceTier];
+    const pointsBadge = this.state.noPointsMode
+      ? '<span class="badge badge-redo">重做 · 唔計分</span>'
+      : `<span class="badge ${tierInfo.cssClass}">${tierInfo.icon} ${tierInfo.name} +${tierInfo.points}分</span>`;
 
     document.getElementById('practiceCount').textContent = `${current} / ${total}`;
     const topicName = q.topicId ? (TOPICS.find(t => t.id === q.topicId)?.name || '') : '';
     document.getElementById('questionCard').innerHTML = `
       <p>第 ${current} 題
-        <span class="badge ${tierInfo.cssClass}">${tierInfo.icon} ${tierInfo.name} +${tierInfo.points}分</span>
+        ${pointsBadge}
         ${topicName ? `<span class="badge">${topicName}</span>` : ''}
       </p>
       <div class="math-expr">${q.question}</div>
@@ -554,7 +825,15 @@ const App = {
     AudioManager.playSfx(correct ? 'correct' : 'wrong');
 
     const data = Storage.load();
-    const scoreResult = Scoring.awardAnswer(data, correct, tier);
+    const q = this.state.currentQuestion;
+    const alreadyMastered = !!(q?.poolKey && data.correctBank?.[q.poolKey]);
+    const noPoints = this.state.noPointsMode || q?.isRedo || (correct && alreadyMastered);
+    const scoreResult = Scoring.awardAnswer(data, correct, tier, { noPoints });
+
+    if (q?.poolKey) Scoring.markQuestionCompleted(data, tier, q.poolKey);
+    if (correct && !noPoints && q) Storage.saveCorrectQuestion(data, q);
+    if (correct && q) this.state.sessionCorrect.push({ ...q });
+
     Storage.recordAnswer(topicId, correct, {
       points: scoreResult.pointsEarned || 0,
       xp: scoreResult.xp || 0
@@ -564,16 +843,18 @@ const App = {
     this.renderHUD();
     this.renderHome();
     this.renderDailyProgress();
-    this.updateWeeklyCapHint();
+    this.updateTierProgressHint();
 
     let rewardMsg = '';
     if (correct) {
-      if (scoreResult.pointsEarned > 0) {
-        rewardMsg += `+${scoreResult.pointsEarned} 積分 🎁`;
-      } else if (scoreResult.weeklyCapped) {
-        rewardMsg += '本週呢個難度積分已滿';
+      if (noPoints) {
+        rewardMsg = '重做 · 唔計分';
+      } else if (scoreResult.pointsEarned > 0) {
+        rewardMsg = `+${scoreResult.pointsEarned} 積分 🎁`;
       }
-      if (scoreResult.xp > 0) rewardMsg += ` · +${scoreResult.xp} XP`;
+      if (scoreResult.xp > 0) {
+        rewardMsg += (rewardMsg ? ' · ' : '') + `+${scoreResult.xp} XP`;
+      }
     }
 
     if (scoreResult.levelUp) {
@@ -620,7 +901,11 @@ const App = {
 
     if (correct) {
       feedback.classList.add('correct');
-      feedback.innerHTML = `🎉 答對了！${rewardMsg ? '<br><small>' + rewardMsg + '</small>' : ''}`;
+      if (this.state.noPointsMode) {
+        feedback.innerHTML = '🎉 答對了！<br><small>重做 · 唔計分</small>';
+      } else {
+        feedback.innerHTML = `🎉 答對了！${rewardMsg ? '<br><small>' + rewardMsg + '</small>' : ''}`;
+      }
       showSolutionBtn.classList.remove('hidden');
     } else {
       feedback.classList.add('wrong');
@@ -642,7 +927,7 @@ const App = {
 
     const q = this.state.currentQuestion;
     const correct = MathUtils.answersEqual(input, q.answer);
-    const topicId = this.state.dailyMode ? q.topicId : this.state.practiceTopic;
+    const topicId = q.topicId || this.state.practiceTopic;
     const tier = q.tier || this.state.practiceTier;
     const rewardMsg = this.processAnswer(correct, topicId, tier);
     document.getElementById('answerInput').disabled = true;
@@ -667,13 +952,71 @@ const App = {
     this.showFeedback(correct, q, rewardMsg);
   },
 
+  showPracticeComplete() {
+    const data = Storage.load();
+    const rate = data.totalAnswered > 0
+      ? Math.round((data.totalCorrect / data.totalAnswered) * 100) : 0;
+
+    const unique = [];
+    const seen = new Set();
+    for (const q of this.state.sessionCorrect || []) {
+      if (q.poolKey && !seen.has(q.poolKey)) {
+        seen.add(q.poolKey);
+        unique.push(q);
+      } else if (!q.poolKey) {
+        unique.push(q);
+      }
+    }
+
+    let redoHtml = '';
+    if (unique.length > 0) {
+      redoHtml = `
+        <div class="redo-picker">
+          <h4>📋 今次答對嘅題目 · 揀選重做</h4>
+          <p class="redo-picker-note">重做唔會獲取積分</p>
+          <div class="redo-list session-redo-list">
+            ${unique.map((q, i) => `
+              <label class="redo-item">
+                <input type="checkbox" class="session-redo-check" data-idx="${i}" checked>
+                <span class="redo-preview">${this.questionPreview(q)}</span>
+              </label>
+            `).join('')}
+          </div>
+          <button class="btn btn-secondary btn-sm" id="startSessionRedo">重做已選題目</button>
+        </div>
+      `;
+    }
+
+    document.getElementById('questionCard').innerHTML = `
+      <h3>🎊 完成晒所有題目！</h3>
+      <p>總正確率：${rate}% · 積分：${data.points || 0} 分</p>
+      <p>繼續練習，抽卡收集小精靈同肉桂狗！</p>
+      ${redoHtml}
+    `;
+    document.getElementById('answerArea').classList.add('hidden');
+    const mcq = document.getElementById('practiceMcqArea');
+    if (mcq) mcq.classList.add('hidden');
+    document.getElementById('actionRow').classList.add('hidden');
+    document.getElementById('feedback').classList.add('hidden');
+    this.state.noPointsMode = false;
+
+    document.getElementById('startSessionRedo')?.addEventListener('click', () => {
+      const checks = document.querySelectorAll('.session-redo-check:checked');
+      const selected = [...checks].map(c => unique[parseInt(c.dataset.idx, 10)]).filter(Boolean);
+      if (!selected.length) {
+        alert('請至少揀一題重做');
+        return;
+      }
+      this.startRedoPractice(selected);
+    });
+
+    this.renderHUD();
+    this.renderCorrectBank();
+  },
+
   nextPracticeQuestion() {
     this.state.practiceIndex++;
     if (this.state.practiceIndex >= this.state.practiceQuestions.length) {
-      const data = Storage.load();
-      const rate = data.totalAnswered > 0
-        ? Math.round((data.totalCorrect / data.totalAnswered) * 100) : 0;
-
       if (this.state.dailyMode) {
         const dailyReward = Scoring.awardDaily(Storage.load());
         if (dailyReward) {
@@ -684,18 +1027,7 @@ const App = {
           this.showModal('🎯', '今日挑戰完成！', `+${dailyReward.xp} XP`);
         }
       }
-
-      document.getElementById('questionCard').innerHTML = `
-        <h3>🎊 完成晒所有題目！</h3>
-        <p>正確率：${rate}% · 積分：${data.points || 0} 分</p>
-        <p>繼續練習，抽卡收集小精靈同肉桂狗！</p>
-      `;
-      document.getElementById('answerArea').classList.add('hidden');
-      const mcq = document.getElementById('practiceMcqArea');
-      if (mcq) mcq.classList.add('hidden');
-      document.getElementById('actionRow').classList.add('hidden');
-      document.getElementById('feedback').classList.add('hidden');
-      this.renderHUD();
+      this.showPracticeComplete();
       return;
     }
     this.showPracticeQuestion();
@@ -706,6 +1038,8 @@ const App = {
       AudioManager.playSfx('click');
       this.state.dailyMode = true;
       this.state.randomMode = true;
+      this.state.noPointsMode = false;
+      this.state.sessionCorrect = [];
       this.state.randomTopicPool = TOPICS.filter(t => t.exam).map(t => t.id);
       this.state.practiceTopic = 'random';
       this.state.practiceQuestions = QuestionBank.generateDaily(10);
@@ -869,7 +1203,7 @@ const App = {
   renderRewards() {
     const data = Storage.load();
     const lvl = Scoring.getLevel(data.xp || 0);
-    const weekly = Scoring.getWeeklyStatus(data);
+    const weekly = Scoring.getTierProgress(data);
 
     document.getElementById('rewardPoints').textContent = Storage.getPoints(data);
     document.getElementById('levelCard').innerHTML = `
@@ -885,7 +1219,7 @@ const App = {
         <img src="${t.image}" alt="" class="weekly-tier-img">
         <span>${t.name}</span>
         <div class="weekly-mini-bar"><div style="width:${t.percent}%"></div></div>
-        <span>${t.earned}/${t.weeklyCap} 分</span>
+        <span>${t.completed}/${t.total} 題（${t.percent}%）</span>
       </div>
     `).join('');
 
@@ -923,7 +1257,11 @@ const App = {
           <div class="gacha-pool-body">
             <p class="gacha-pool-desc">${pool.desc}</p>
             <div class="gacha-preview-row">
-              ${previews.map(c => GachaSystem.cardArtHtml(c, true, 'sm')).join('')}
+              ${previews.map(c => `
+                <button type="button" class="gacha-preview-thumb" data-card-zoom data-card-id="${c.id}" data-owned="true" title="點擊放大欣賞">
+                  ${GachaSystem.cardArtHtml(c, true, 'sm')}
+                </button>
+              `).join('')}
             </div>
             <div class="gacha-pool-progress">
               <div class="gacha-progress-bar"><div style="width:${pct}%"></div></div>
@@ -951,9 +1289,12 @@ const App = {
 
     document.querySelectorAll('.gacha-pull-btn').forEach(btn => {
       btn.addEventListener('click', () => {
+        if (GachaAnimation._running) return;
         this.doGachaPull(btn.dataset.pool, parseInt(btn.dataset.count, 10));
       });
     });
+
+    this.bindCardZoomClicks();
   },
 
   renderGachaCollection(data) {
@@ -983,18 +1324,22 @@ const App = {
       const owned = count > 0;
       const r = GACHA_RARITIES[card.rarity];
       return `
-        <div class="collect-card ${owned ? 'owned' : 'locked'} ${r.css}">
+        <button type="button" class="collect-card ${owned ? 'owned' : 'locked'} ${r.css}"
+          data-card-zoom data-card-id="${card.id}" data-owned="${owned}"
+          title="${owned ? '點擊放大欣賞' : '點擊預覽'}">
           ${GachaSystem.cardArtHtml(card, owned)}
           ${owned ? GachaSystem.starsHtml(card.rarity) : ''}
           <div class="collect-name">${owned ? card.name : '???'}</div>
           <div class="collect-rarity">${owned ? r.label : '未獲得'}</div>
+          <span class="collect-zoom-hint">🔍 放大</span>
           ${count > 1 ? `<span class="collect-dup">×${count}</span>` : ''}
-        </div>
+        </button>
       `;
     }).join('');
   },
 
   doGachaPull(poolId, count) {
+    if (GachaAnimation._running) return;
     const data = Storage.load();
     AudioManager.playSfx('click');
     let result;
@@ -1010,36 +1355,62 @@ const App = {
     }
 
     Storage.save(data);
-    AudioManager.playSfx('levelUp');
-    this.showGachaResult(result, poolId);
     this.renderRewards();
     this.renderHUD();
+
+    GachaAnimation.play(poolId, result.results || [result], () => {
+      this.showGachaResult(result, poolId);
+    });
   },
 
   showGachaResult(result, poolId) {
     const pool = GachaSystem.getPool(poolId);
     const area = document.getElementById('gachaResultArea');
+    const closeBtn = document.getElementById('gachaModalClose');
+    const modalPanel = document.querySelector('.gacha-modal');
     const items = result.results || [result];
 
+    modalPanel?.classList.add('gacha-modal--results');
+    area.classList.remove('hidden');
+    closeBtn.classList.add('hidden');
+
     area.innerHTML = `
-      <div class="gacha-result-title">${pool.icon} ${pool.name} · 抽卡結果</div>
-      <div class="gacha-result-grid ${items.length > 1 ? 'multi' : ''}">
-        ${items.map(item => {
+      <div class="gacha-result-title gacha-reveal-title">${pool.icon} ${pool.name} · 抽卡結果</div>
+      <div class="gacha-result-grid ${items.length > 1 ? 'multi' : ''}" id="gachaResultGrid">
+        ${items.map((item, i) => {
           const r = GACHA_RARITIES[item.rarity];
           return `
-            <div class="gacha-result-card ${r.css}">
+            <button type="button" class="gacha-result-card ${r.css} gacha-card-hidden"
+              style="animation-delay:${i * 0.12}s" data-idx="${i}"
+              data-card-zoom data-card-id="${item.card.id}" data-owned="true" title="點擊放大欣賞">
               ${GachaSystem.cardArtHtml(item.card, true, 'lg')}
               ${GachaSystem.starsHtml(item.rarity, 'lg')}
               <div class="gacha-card-name">${item.card.name}</div>
               <div class="gacha-card-rarity">${r.label}</div>
               ${item.isNew ? '<span class="gacha-new-tag">NEW!</span>' : '<span class="gacha-dup-tag">重複</span>'}
-            </div>
+            </button>
           `;
         }).join('')}
       </div>
-      <p class="gacha-cost-note">消耗 ${result.cost} 積分</p>
+      <p class="gacha-cost-note gacha-reveal-note">消耗 ${result.cost} 積分</p>
     `;
+
     document.getElementById('gachaModal').classList.remove('hidden');
+
+    requestAnimationFrame(() => {
+      area.querySelectorAll('.gacha-result-card').forEach((card, i) => {
+        setTimeout(() => {
+          card.classList.remove('gacha-card-hidden');
+          card.classList.add('gacha-card-reveal');
+          const rarity = items[i]?.rarity;
+          if (rarity === 'ssr' || rarity === 'ur') {
+            AudioManager.playSfx(rarity === 'ssr' ? 'gachaSSR' : 'gachaUR');
+          }
+        }, i * GachaAnimation.REVEAL_STAGGER);
+      });
+      const totalDelay = items.length * GachaAnimation.REVEAL_STAGGER + 400;
+      setTimeout(() => closeBtn.classList.remove('hidden'), totalDelay);
+    });
   },
 
   renderTips() {

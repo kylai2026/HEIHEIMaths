@@ -27,7 +27,7 @@ const QuestionPool = {
     while (pool.length < this.MIN_PER_TOPIC && attempts < maxAttempts) {
       attempts++;
       const tier = tiers[pool.length % tiers.length];
-      const q = P34Questions.generateRaw(topicId, tier);
+      const q = QuestionEngine.generateRaw(topicId, tier);
       if (!q) continue;
       const key = this.questionKey(q);
       if (seen.has(key)) continue;
@@ -53,6 +53,17 @@ const QuestionPool = {
   getTotalSize() {
     this.init();
     return Object.values(this.pools).reduce((sum, p) => sum + p.length, 0);
+  },
+
+  getTierTotals() {
+    this.init();
+    const totals = { easy: 0, medium: 0, hard: 0 };
+    for (const pool of Object.values(this.pools)) {
+      for (const q of pool) {
+        if (totals[q.tier] !== undefined) totals[q.tier]++;
+      }
+    }
+    return totals;
   },
 
   filterByTier(pool, tier) {

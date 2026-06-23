@@ -4,7 +4,8 @@ const UserSettings = {
     fontSize: 'md',
     theme: 'light',
     muteMusic: false,
-    muteSfx: false
+    muteSfx: false,
+    grade: null
   },
 
   load() {

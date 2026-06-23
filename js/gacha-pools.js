@@ -117,113 +117,15 @@ function buildPokemonCards() {
 }
 
 function buildCinnamorollCards() {
-  const CINNA_ART = {
-    cinnamoroll: 'assets/img/cinnamoroll/cinnamoroll-solo.png',
-    prince: 'assets/img/cinnamoroll/cinnamoroll-prince.png',
-    winter: 'assets/img/cinnamoroll/cinnamoroll-winter.png',
-    party: 'assets/img/cinnamoroll/cinnamoroll-party.png',
-    mocha: 'assets/img/cinnamoroll/cinna-mocha.png',
-    milk: 'assets/img/cinnamoroll/cinna-milk.png',
-    chiffon: 'assets/img/cinnamoroll/cinna-chiffon.png',
-    cappuccino: 'assets/img/cinnamoroll/cinna-cappuccino.png',
-    espresso: 'assets/img/cinnamoroll/cinna-espresso.png'
-  };
-
-  const CHARACTERS = [
-    { base: '肉桂狗', art: 'cinnamoroll', variants: [
-      '雲朵版', '雪糕版', '圍巾版', '星星版', '睡覺版', '飛行版', '咖啡廳版', '草莓版',
-      '牛奶糖版', '棉花糖版', '晴天版', '雨天版', '生日版', '聖誕版', '新年版'
-    ]},
-    { base: '摩卡', art: 'mocha', variants: [
-      '蝴蝶結版', '櫻花版', '下午茶版', '購物版', '拍照版', '甜品版', '草莓蛋糕版',
-      '珍珠奶茶版', '野餐版', '溫泉版', '學院版', '公主版'
-    ]},
-    { base: '牛奶', art: 'milk', variants: [
-      '奶嘴版', '奶瓶版', '小被子版', '搖籃版', '星星毯版', '彩虹版', '月亮版',
-      '雲朵床版', '玩具熊版', '泡泡版', '糖果版', '枕頭版'
-    ]},
-    { base: '芙蘭', art: 'chiffon', variants: [
-      '毛帽版', '雪花版', '滑雪版', '暖爐版', '圍巾版', '手套版', '雪人版',
-      '熱可可版', '冬日版', '北極版', '冰晶版', '暖冬版'
-    ]},
-    { base: '卡布奇諾', art: 'cappuccino', variants: [
-      '耳罩版', '冬日版', '睡覺版', '懶洋洋版', '枕頭版', '毛毯版', '暖暖版',
-      '咖啡香版', '午覺版', '慵懶版', '柔軟版', '舒服版'
-    ]},
-    { base: '濃縮咖啡', art: 'espresso', variants: [
-      '紳士版', '背包版', '探險版', '學者版', '咖啡師版', '禮帽版', '領結版',
-      '書本版', '地圖版', '望遠鏡版', '筆記版', '智慧版'
-    ]},
-    { base: '肉桂狗', art: 'prince', variants: [
-      '王子版', '指揮版', '皇冠版', '音樂會版', '豎琴版', '喇叭版', '鼓手版',
-      '舞台版', '星光版', '魔法版', '城堡版', '皇家版', '慶典版'
-    ]},
-    { base: '肉桂狗和朋友', art: 'winter', variants: [
-      '冬日版', '壽司聯名版', '雪花版', '圍爐版', '聖誕版', '新年版', '團聚版',
-      '星座版', '許願版', '極光版', '雪人版', '禮物版'
-    ]},
-    { base: '肉桂狗和朋友', art: 'party', variants: [
-      '派對版', '生日版', '蛋糕版', '氣球版', '禮物版', '慶祝版', '狂歡版',
-      '彩帶版', '煙花版', '聚會版', '歡呼版', '永遠版', '甜蜜版'
-    ]}
-  ];
-
-  const CINNA_SSR = new Set(['肉桂狗·王子版', '肉桂狗·皇冠版', '肉桂狗和朋友·永遠版']);
-  const CINNA_UR = new Set([
-    '肉桂狗·飛行版', '摩卡·公主版', '牛奶·彩虹版', '芙蘭·北極版',
-    '濃縮咖啡·智慧版', '卡布奇諾·暖暖版', '肉桂狗·音樂會版', '肉桂狗和朋友·壽司聯名版',
-    '肉桂狗和朋友·派對版', '摩卡·櫻花版'
-  ]);
-  const CINNA_SR = new Set([
-    '肉桂狗·草莓版', '摩卡·下午茶版', '牛奶·星星毯版', '芙蘭·熱可可版',
-    '濃縮咖啡·探險版', '卡布奇諾·冬日版', '肉桂狗·生日版', '肉桂狗和朋友·聖誕版',
-    '肉桂狗和朋友·蛋糕版', '摩卡·甜品版', '牛奶·月亮版', '芙蘭·滑雪版'
-  ]);
-
-  const cards = [];
-  let i = 0;
-  let rareCount = 0;
-
-  for (const char of CHARACTERS) {
-    for (const variant of char.variants) {
-      if (i >= 100) break;
-      const fullName = `${char.base}·${variant}`;
-      let rarity;
-      if (CINNA_SSR.has(fullName)) rarity = 'ssr';
-      else if (CINNA_UR.has(fullName)) rarity = 'ur';
-      else if (CINNA_SR.has(fullName)) rarity = 'sr';
-      else if (rareCount < 25) { rarity = 'rare'; rareCount++; }
-      else rarity = 'common';
-
-      cards.push({
-        id: `cinna-${String(i + 1).padStart(3, '0')}`,
-        poolId: 'cinnamoroll',
-        name: fullName,
-        rarity,
-        emoji: '🐶',
-        desc: `可愛的${char.base}，${variant}造型。`,
-        imageUrl: CINNA_ART[char.art]
-      });
-      i++;
-    }
-    if (i >= 100) break;
-  }
-
-  while (i < 100) {
-    let rarity = 'common';
-    if (rareCount < 25) { rarity = 'rare'; rareCount++; }
-    cards.push({
-      id: `cinna-${String(i + 1).padStart(3, '0')}`,
-      poolId: 'cinnamoroll',
-      name: `肉桂狗·限定 No.${i + 1}`,
-      rarity,
-      emoji: '🐶',
-      desc: '限定版肉桂狗卡片。',
-      imageUrl: CINNA_ART.cinnamoroll
-    });
-    i++;
-  }
-  return cards;
+  return CINNAMOROLL_DECK.map((entry, i) => ({
+    id: `cinna-${String(i + 1).padStart(3, '0')}`,
+    poolId: 'cinnamoroll',
+    name: entry.name,
+    rarity: entry.rarity,
+    emoji: '🐶',
+    desc: entry.desc,
+    imageUrl: entry.img
+  }));
 }
 
 const ALL_GACHA_CARDS = [...buildPokemonCards(), ...buildCinnamorollCards()].map(card => ({
@@ -329,7 +231,7 @@ const GachaSystem = {
       return featured.map(dex => pool.find(c => c.dexId === dex)).filter(Boolean);
     }
     if (poolId === 'cinnamoroll') {
-      const featured = ['cinna-001', 'cinna-016', 'cinna-028', 'cinna-040', 'cinna-052', 'cinna-064'];
+      const featured = ['cinna-001', 'cinna-002', 'cinna-003', 'cinna-004', 'cinna-013', 'cinna-014'];
       const pool = this.getCardsByPool(poolId);
       return featured.map(id => pool.find(c => c.id === id)).filter(Boolean);
     }
