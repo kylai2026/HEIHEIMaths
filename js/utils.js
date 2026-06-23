@@ -168,6 +168,8 @@ const Storage = {
       data.redeemedGifts = data.unlockedRewards;
     }
     if (!data.dailyLog) data.dailyLog = {};
+    if (!data.cardCollection) data.cardCollection = { pokemon: {}, cinnamoroll: {} };
+    if (!data.gachaStats) data.gachaStats = { totalPulls: 0, pokemon: 0, cinnamoroll: 0 };
     return data;
   },
 
@@ -246,7 +248,9 @@ const Storage = {
       examCorrect: 0,
       dailyCompleted: 0,
       lastDailyDate: null,
-      dailyLog: {}
+      dailyLog: {},
+      cardCollection: { pokemon: {}, cinnamoroll: {} },
+      gachaStats: { totalPulls: 0, pokemon: 0, cinnamoroll: 0 }
     };
   },
 

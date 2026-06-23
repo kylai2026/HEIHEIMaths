@@ -13,7 +13,8 @@ const App = {
     randomMode: false,
     randomTopicPool: null,
     practiceTier: 'medium',
-    sessionLastTick: Date.now()
+    sessionLastTick: Date.now(),
+    gachaCollectionPool: 'pokemon'
   },
 
   async init() {
@@ -234,6 +235,9 @@ const App = {
   bindModal() {
     document.getElementById('modalClose').addEventListener('click', () => {
       document.getElementById('rewardModal').classList.add('hidden');
+    });
+    document.getElementById('gachaModalClose')?.addEventListener('click', () => {
+      document.getElementById('gachaModal').classList.add('hidden');
     });
   },
 
@@ -680,7 +684,7 @@ const App = {
       document.getElementById('questionCard').innerHTML = `
         <h3>🎊 完成晒所有題目！</h3>
         <p>正確率：${rate}% · 積分：${data.points || 0} 分</p>
-        <p>繼續練習，向禮物目標進發！</p>
+        <p>繼續練習，抽卡收集小精靈同肉桂狗！</p>
       `;
       document.getElementById('answerArea').classList.add('hidden');
       const mcq = document.getElementById('practiceMcqArea');
@@ -881,38 +885,8 @@ const App = {
       </div>
     `).join('');
 
-    document.getElementById('giftGrid').innerHTML = GIFT_SHOP.map(gift => {
-      const redeemed = (data.redeemedGifts || []).includes(gift.id);
-      const canAfford = (data.points || 0) >= gift.cost;
-      return `
-        <div class="shop-card gift-card ${redeemed ? 'owned' : ''} ${canAfford && !redeemed ? 'affordable' : ''}">
-          <img src="${gift.image}" alt="${gift.name}" class="gift-img">
-          <h4>${gift.name}</h4>
-          <p class="gift-desc">${gift.desc}</p>
-          <p class="shop-cost">需要 ${gift.cost} 積分</p>
-          ${redeemed
-            ? '<span class="owned-tag">已兌換</span>'
-            : `<button class="btn btn-primary btn-sm redeem-btn" data-id="${gift.id}" ${canAfford ? '' : 'disabled'}>兌換</button>`}
-        </div>
-      `;
-    }).join('');
-
-    document.querySelectorAll('.redeem-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const d = Storage.load();
-        const result = RewardSystem.redeemGift(d, btn.dataset.id);
-        if (result.ok) {
-          Storage.save(d);
-          this.showModal('🎉', '兌換成功！',
-            `恭喜！你兌換了「${result.gift.name}」<br>記得搵舅父晞晞攞禮物呀！`,
-            result.gift.image);
-          this.renderRewards();
-          this.renderHUD();
-        } else {
-          alert(result.msg);
-        }
-      });
-    });
+    this.renderGachaPools(data);
+    this.renderGachaCollection(data);
 
     document.getElementById('badgesGrid').innerHTML = BADGES.map(b => {
       const owned = (data.badges || []).includes(b.id);
@@ -924,11 +898,136 @@ const App = {
         </div>
       `;
     }).join('');
+  },
 
-    const redeemed = (data.redeemedGifts || []).map(id => GIFT_SHOP.find(g => g.id === id)).filter(Boolean);
-    document.getElementById('ownedRewards').innerHTML = redeemed.length
-      ? redeemed.map(r => `<span class="owned-item"><img src="${r.image}" alt="" class="owned-gift-img">${r.name}</span>`).join('')
-      : '<p style="color:var(--text-muted)">尚未兌換禮物，做題賺積分啦！</p>';
+  renderGachaPools(data) {
+    const points = data.points || 0;
+    document.getElementById('gachaPools').innerHTML = CARD_POOLS.map(pool => {
+      const stats = GachaSystem.getCollectionStats(data, pool.id);
+      const pct = Math.round((stats.owned / stats.total) * 100);
+      return `
+        <div class="gacha-pool-card pool-${pool.id}">
+          <div class="gacha-pool-head">
+            <span class="gacha-pool-icon">${pool.icon}</span>
+            <div>
+              <h4>${pool.name}</h4>
+              <p>${pool.desc}</p>
+            </div>
+          </div>
+          <div class="gacha-pool-meta">
+            <span>卡池 ${stats.total} 張</span>
+            <span>已收集 ${stats.owned}/${stats.total}（${pct}%）</span>
+          </div>
+          <div class="gacha-rates">
+            ${Object.values(GACHA_RARITIES).map(r =>
+              `<span class="rate-tag ${r.css}">${r.label} ${r.weight}%</span>`
+            ).join('')}
+          </div>
+          <div class="gacha-pool-actions">
+            <button class="btn btn-primary gacha-pull-btn" data-pool="${pool.id}" data-count="1"
+              ${points >= GACHA_PULL_COST ? '' : 'disabled'}>
+              抽 1 次（${GACHA_PULL_COST} 分）
+            </button>
+            <button class="btn btn-secondary gacha-pull-btn" data-pool="${pool.id}" data-count="10"
+              ${points >= GACHA_PULL10_COST ? '' : 'disabled'}>
+              十連抽（${GACHA_PULL10_COST} 分）
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    document.querySelectorAll('.gacha-pull-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        this.doGachaPull(btn.dataset.pool, parseInt(btn.dataset.count, 10));
+      });
+    });
+  },
+
+  renderGachaCollection(data) {
+    const active = this.state.gachaCollectionPool || 'pokemon';
+    document.getElementById('gachaCollectionTabs').innerHTML = CARD_POOLS.map(pool => {
+      const stats = GachaSystem.getCollectionStats(data, pool.id);
+      return `
+        <button class="gacha-tab ${pool.id === active ? 'active' : ''}" data-pool="${pool.id}">
+          ${pool.icon} ${pool.name}（${stats.owned}/${stats.total}）
+        </button>
+      `;
+    }).join('');
+
+    document.querySelectorAll('.gacha-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        this.state.gachaCollectionPool = tab.dataset.pool;
+        this.renderGachaCollection(Storage.load());
+      });
+    });
+
+    const poolId = this.state.gachaCollectionPool;
+    const coll = GachaSystem.ensureCollection(data)[poolId];
+    const allCards = GachaSystem.getCardsByPool(poolId);
+
+    document.getElementById('gachaCollection').innerHTML = allCards.map(card => {
+      const count = coll[card.id] || 0;
+      const owned = count > 0;
+      const r = GACHA_RARITIES[card.rarity];
+      return `
+        <div class="collect-card ${owned ? 'owned' : 'locked'} ${r.css}">
+          <div class="collect-emoji">${owned ? card.emoji : '❓'}</div>
+          ${owned ? GachaSystem.starsHtml(card.rarity) : ''}
+          <div class="collect-name">${owned ? card.name : '???'}</div>
+          <div class="collect-rarity">${owned ? r.label : '未獲得'}</div>
+          ${count > 1 ? `<span class="collect-dup">×${count}</span>` : ''}
+        </div>
+      `;
+    }).join('');
+  },
+
+  doGachaPull(poolId, count) {
+    const data = Storage.load();
+    AudioManager.playSfx('click');
+    let result;
+    if (count >= 10) {
+      result = GachaSystem.pull10(data, poolId);
+    } else {
+      result = GachaSystem.pull(data, poolId);
+    }
+
+    if (!result.ok) {
+      alert(result.msg);
+      return;
+    }
+
+    Storage.save(data);
+    AudioManager.playSfx('levelUp');
+    this.showGachaResult(result, poolId);
+    this.renderRewards();
+    this.renderHUD();
+  },
+
+  showGachaResult(result, poolId) {
+    const pool = GachaSystem.getPool(poolId);
+    const area = document.getElementById('gachaResultArea');
+    const items = result.results || [result];
+
+    area.innerHTML = `
+      <div class="gacha-result-title">${pool.icon} ${pool.name} · 抽卡結果</div>
+      <div class="gacha-result-grid ${items.length > 1 ? 'multi' : ''}">
+        ${items.map(item => {
+          const r = GACHA_RARITIES[item.rarity];
+          return `
+            <div class="gacha-result-card ${r.css}">
+              <div class="gacha-card-emoji">${item.card.emoji}</div>
+              ${GachaSystem.starsHtml(item.rarity, 'lg')}
+              <div class="gacha-card-name">${item.card.name}</div>
+              <div class="gacha-card-rarity">${r.label}</div>
+              ${item.isNew ? '<span class="gacha-new-tag">NEW!</span>' : '<span class="gacha-dup-tag">重複</span>'}
+            </div>
+          `;
+        }).join('')}
+      </div>
+      <p class="gacha-cost-note">消耗 ${result.cost} 積分</p>
+    `;
+    document.getElementById('gachaModal').classList.remove('hidden');
   },
 
   renderTips() {

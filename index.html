@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=12">
+  <link rel="stylesheet" href="css/style.css?v=13">
 </head>
 <body>
   <header class="header">
@@ -79,7 +79,7 @@
         <img src="assets/img/hero-banner.png" alt="數學學習" class="hero-img">
         <div class="hero-text">
           <h2>加油！舅父晞晞信你可以做到 💪</h2>
-          <p>每日練習 <strong>20 分鐘</strong>，做題賺積分，換取禮物！</p>
+          <p>每日練習 <strong>20 分鐘</strong>，做題賺積分，抽卡收集！</p>
         </div>
       </div>
 
@@ -196,17 +196,21 @@
         <div class="coins-card points-card">
           <img src="assets/img/gift-medium.png" alt="" class="points-hero-img">
           <span class="big-coins"><strong id="rewardPoints">0</strong> 分</span>
-          <p>答題賺積分，換取禮物！</p>
+          <p>答題賺積分，抽卡收集！</p>
         </div>
       </div>
       <div class="weekly-status" id="weeklyStatus"></div>
-      <h3>🛍️ 禮物兌換</h3>
-      <p class="gift-note">30 分 → 小禮物 · 60 分 → 中級禮物 · 100 分 → 大獎</p>
-      <div class="shop-grid gift-grid" id="giftGrid"></div>
+
+      <h3>🎴 積分抽卡</h3>
+      <p class="gift-note">每次抽卡 <strong>10 分</strong> · 十連抽 <strong>90 分</strong> · 每個卡池有 <strong>100 張</strong>唔同卡片</p>
+      <div class="gacha-pools" id="gachaPools"></div>
+
+      <h3>📚 我的卡冊</h3>
+      <div class="gacha-collection-tabs" id="gachaCollectionTabs"></div>
+      <div class="gacha-collection" id="gachaCollection"></div>
+
       <h3>🎖️ 徽章成就</h3>
       <div class="badges-grid" id="badgesGrid"></div>
-      <h3>已兌換禮物</h3>
-      <div class="owned-rewards" id="ownedRewards"></div>
     </section>
 
     <section class="view" id="view-tips">
@@ -249,6 +253,13 @@
     </div>
   </div>
 
+  <div class="modal hidden" id="gachaModal">
+    <div class="modal-content gacha-modal">
+      <div class="gacha-result-area" id="gachaResultArea"></div>
+      <button class="btn btn-primary" id="gachaModalClose">太好啦！</button>
+    </div>
+  </div>
+
   <div class="modal hidden" id="rewardModal">
     <div class="modal-content">
       <div class="modal-icon" id="modalIcon">🎉</div>
@@ -265,16 +276,17 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js?v=12"></script>
-  <script src="js/settings.js?v=12"></script>
-  <script src="js/audio.js?v=12"></script>
-  <script src="js/utils.js?v=12"></script>
-  <script src="js/cloud-sync.js?v=12"></script>
-  <script src="js/scoring.js?v=12"></script>
-  <script src="js/topics-config.js?v=12"></script>
-  <script src="js/p34-questions.js?v=12"></script>
-  <script src="js/question-pool.js?v=12"></script>
-  <script src="js/questions.js?v=12"></script>
-  <script src="js/app.js?v=12"></script>
+  <script src="js/supabase-config.js?v=13"></script>
+  <script src="js/settings.js?v=13"></script>
+  <script src="js/audio.js?v=13"></script>
+  <script src="js/utils.js?v=13"></script>
+  <script src="js/cloud-sync.js?v=13"></script>
+  <script src="js/scoring.js?v=13"></script>
+  <script src="js/topics-config.js?v=13"></script>
+  <script src="js/p34-questions.js?v=13"></script>
+  <script src="js/question-pool.js?v=13"></script>
+  <script src="js/questions.js?v=13"></script>
+  <script src="js/gacha-pools.js?v=13"></script>
+  <script src="js/app.js?v=13"></script>
 </body>
 </html>
