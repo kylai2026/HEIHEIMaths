@@ -579,8 +579,10 @@ const App = {
     if (items.length > 30) {
       list.innerHTML += `<p class="correct-bank-more">另有 ${items.length - 30} 題答對記錄…</p>`;
     }
-    btn?.classList.remove('hidden');
-    btn?.onclick = () => this.startRedoFromBank();
+    if (btn) {
+      btn.classList.remove('hidden');
+      btn.onclick = () => this.startRedoFromBank();
+    }
   },
 
   startRedoFromBank() {
