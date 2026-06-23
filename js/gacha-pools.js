@@ -12,7 +12,14 @@ const GACHA_PULL10_COST = 90;
 /** 暫時關閉嘅卡池：設為 false 即可 */
 const GACHA_POOL_ENABLED = {
   pokemon: true,
-  sanrio: true,
+  sanrio: false,
+  pixar: false
+};
+
+/** 暫時關閉嘅卡冊分頁：設為 false 即可（即使有卡都唔顯示） */
+const GACHA_COLLECTION_ENABLED = {
+  pokemon: true,
+  sanrio: false,
   pixar: false
 };
 
@@ -20,16 +27,16 @@ function isPoolPullable(poolId) {
   return GACHA_POOL_ENABLED[poolId] !== false;
 }
 
+function isCollectionVisible(poolId) {
+  return GACHA_COLLECTION_ENABLED[poolId] !== false;
+}
+
 function getPullablePools() {
   return CARD_POOLS.filter(p => isPoolPullable(p.id));
 }
 
 function getCollectionTabPools(data) {
-  return CARD_POOLS.filter(p => {
-    if (isPoolPullable(p.id)) return true;
-    const coll = data?.cardCollection?.[p.id];
-    return coll && Object.keys(coll).length > 0;
-  });
+  return CARD_POOLS.filter(p => isCollectionVisible(p.id));
 }
 
 const GACHA_IMAGE = {
