@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="hsl(217, 55%, 94%)"/>
-      <stop offset="100%" stop-color="hsl(257, 45%, 82%)"/>
+      <stop offset="0%" stop-color="#dcfce7"/>
+      <stop offset="100%" stop-color="#86efac"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -17,17 +17,16 @@
 <circle cx="246.016" cy="159.5" r="4.203" fill="#fff" opacity="0.2065"/>
 <circle cx="206.848" cy="55" r="2.598" fill="#fff" opacity="0.39675"/>
   <rect x="12" y="10" width="232" height="28" rx="14" fill="#22c55e" opacity="0.88"/>
-    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">小鸚鵡</text>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">森小子</text>
   
   <g transform="translate(119.58,126.662) rotate(0) scale(0.8845)">
-      <ellipse cx="0" cy="16" rx="26" ry="30" fill="#22c55e" stroke="#15803d" stroke-width="2"/>
-      <ellipse cx="0" cy="-22" rx="20" ry="18" fill="#22c55e" stroke="#15803d" stroke-width="2"/>
-      <polygon points="0,-6 18,0 0,8" fill="#f97316"/>
-      <ellipse cx="-8" cy="-16" rx="5" ry="7" fill="#1e293b"/><ellipse cx="8" cy="-16" rx="5" ry="7" fill="#1e293b"/>
-      <path d="M20 20 Q40 40 30 60" fill="none" stroke="#ef4444" stroke-width="8" stroke-linecap="round"/>
+      <ellipse cx="0" cy="16" rx="26" ry="28" fill="#86efac" stroke="#22c55e" stroke-width="2"/>
+      <polygon points="-16,-36 0,-58 16,-36" fill="#166534"/>
+      <ellipse cx="-8" cy="8" rx="5" ry="7" fill="#1e293b"/><ellipse cx="8" cy="8" rx="5" ry="7" fill="#1e293b"/>
+      <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/><ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
     </g>
 
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">小鸚鵡·鸚鵡學舌</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">森小子·森林探險</text>
   <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#091</text>
 </svg>

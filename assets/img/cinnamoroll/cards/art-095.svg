@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="hsl(310, 55%, 94%)"/>
-      <stop offset="100%" stop-color="hsl(350, 45%, 82%)"/>
+      <stop offset="0%" stop-color="#fff1f2"/>
+      <stop offset="100%" stop-color="#fecdd3"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -20,18 +20,20 @@
 <circle cx="64" cy="165.44" r="1.6320000000000001" fill="#fff" opacity="0.37925"/>
 <circle cx="100.608" cy="60.940000000000005" r="3.027" fill="#fff" opacity="0.3195"/>
 <circle cx="137.216" cy="176.44" r="4.422" fill="#fff" opacity="0.18575"/>
-  <rect x="12" y="10" width="232" height="28" rx="14" fill="#78716c" opacity="0.88"/>
-    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">小水獺</text>
-  <ellipse cx="188" cy="200" rx="12" ry="8" fill="#fda4af"/><ellipse cx="200" cy="194" rx="9" ry="6" fill="#e2e8f0"/>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#fbcfe8" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">櫻花兔</text>
+  <text x="48" y="52" font-size="22" fill="#fda4af">🌸</text><text x="188" y="68" font-size="18" fill="#fda4af">🌸</text>
 <circle cx="40.48" cy="44.88" r="5" fill="#fda4af" opacity="0.65"/>
   <g transform="translate(132.94,119.55) rotate(0) scale(1.02202)">
-      <ellipse cx="0" cy="16" rx="30" ry="28" fill="#78716c" stroke="#57534e" stroke-width="2"/>
-      <ellipse cx="0" cy="-18" rx="24" ry="20" fill="#78716c" stroke="#57534e" stroke-width="2"/>
-      <ellipse cx="-10" cy="-4" rx="5" ry="7" fill="#1e293b"/><ellipse cx="10" cy="-4" rx="5" ry="7" fill="#1e293b"/>
-      <ellipse cx="0" cy="6" rx="8" ry="5" fill="#e7e5e4"/>
+      <ellipse cx="0" cy="14" rx="28" ry="26" fill="#fff" stroke="#fbcfe8" stroke-width="2"/>
+      <ellipse cx="-10" cy="-48" rx="10" ry="36" fill="#fff" stroke="#fbcfe8" stroke-width="2"/>
+      <ellipse cx="14" cy="-48" rx="10" ry="36" fill="#fff" stroke="#fbcfe8" stroke-width="2"/>
+      <text x="0" y="-36" text-anchor="middle" font-size="14" fill="#f472b6">🌸</text>
+      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#1e293b"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#1e293b"/>
+      <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/><ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
     </g>
 
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">小水獺·水獺石頭</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">櫻花兔·櫻花飛舞</text>
   <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#095</text>
 </svg>

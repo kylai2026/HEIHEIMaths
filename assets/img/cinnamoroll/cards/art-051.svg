@@ -18,17 +18,19 @@
 <line x1="16" y1="114" x2="240" y2="116.608" stroke="#fff" stroke-width="1" opacity="0.12"/>
 <line x1="16" y1="142" x2="240" y2="142.696" stroke="#fff" stroke-width="1" opacity="0.12"/>
 <line x1="16" y1="170" x2="240" y2="174.416" stroke="#fff" stroke-width="1" opacity="0.12"/>
-  <rect x="12" y="10" width="232" height="28" rx="14" fill="#64748b" opacity="0.88"/>
-    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">野狼健</text>
-  <polygon points="188,210 210,170 232,210" fill="#166534"/><rect x="200" y="210" width="20" height="8" fill="#57534e"/>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#78350f" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">鋼牙妹</text>
+  
   <g transform="translate(129.66,122.07) rotate(0) scale(0.9896199999999999)">
-      <ellipse cx="0" cy="14" rx="30" ry="28" fill="#94a3b8" stroke="#64748b" stroke-width="2"/>
-      <polygon points="-20,-40 -8,-58 4,-42" fill="#94a3b8"/><polygon points="20,-40 8,-58 -4,-42" fill="#94a3b8"/>
-      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#1e293b"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#1e293b"/>
-      <ellipse cx="0" cy="10" rx="10" ry="8" fill="#e2e8f0"/>
+      <ellipse cx="0" cy="14" rx="30" ry="26" fill="#92400e" stroke="#713f12" stroke-width="2"/>
+      <rect x="-18" y="28" width="36" height="14" rx="4" fill="#78350f"/>
+      <ellipse cx="-10" cy="-20" rx="8" ry="10" fill="#92400e"/><ellipse cx="10" cy="-20" rx="8" ry="10" fill="#92400e"/>
+      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#fff"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#fff"/>
+      <rect x="-6" y="32" width="4" height="8" fill="#fff"/><rect x="2" y="32" width="4" height="8" fill="#fff"/>
     </g>
-
+<g transform="translate(5,1)"><rect x="112" y="118" width="32" height="8" rx="3" fill="#e2e8f0" stroke="#94a3b8"/></g>
+<g transform="translate(5,1)"><rect x="150" y="120" width="28" height="18" rx="3" fill="#3b82f6" stroke="#1d4ed8"/><text x="164" y="133" font-size="10" fill="#fff">♪</text></g>
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">野狼健·野營帳篷</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">鋼牙妹·金屬牙套</text>
   <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#051</text>
 </svg>

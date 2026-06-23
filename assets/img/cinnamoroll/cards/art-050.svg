@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="hsl(120, 55%, 94%)"/>
-      <stop offset="100%" stop-color="hsl(160, 45%, 82%)"/>
+      <stop offset="0%" stop-color="#fdf2f8"/>
+      <stop offset="100%" stop-color="#fbcfe8"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -13,18 +13,20 @@
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
 <ellipse cx="128" cy="220" rx="100" ry="24" fill="#fff" opacity="0.08"/>
-  <rect x="12" y="10" width="232" height="28" rx="14" fill="#78350f" opacity="0.88"/>
-    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">鋼牙妹</text>
-  <circle cx="123.52000000000001" cy="67.36" r="5" fill="#fda4af" opacity="0.65"/>
+  <rect x="12" y="10" width="232" height="28" rx="14" fill="#fcd34d" opacity="0.88"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">蜜糖邦妮</text>
+  <circle cx="186" cy="196" r="14" fill="#f472b6" opacity="0.8"/>
+<circle cx="128" cy="48" r="10" fill="#fda4af"/><circle cx="116" cy="44" r="6" fill="#fbcfe8"/><circle cx="140" cy="44" r="6" fill="#fbcfe8"/>
   <g transform="translate(131.32,117.884) rotate(0) scale(1.04524)">
-      <ellipse cx="0" cy="14" rx="30" ry="26" fill="#92400e" stroke="#713f12" stroke-width="2"/>
-      <rect x="-18" y="28" width="36" height="14" rx="4" fill="#78350f"/>
-      <ellipse cx="-10" cy="-20" rx="8" ry="10" fill="#92400e"/><ellipse cx="10" cy="-20" rx="8" ry="10" fill="#92400e"/>
-      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#fff"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#fff"/>
-      <rect x="-6" y="32" width="4" height="8" fill="#fff"/><rect x="2" y="32" width="4" height="8" fill="#fff"/>
+      <ellipse cx="0" cy="14" rx="28" ry="26" fill="#fef9c3" stroke="#facc15" stroke-width="2"/>
+      <ellipse cx="-10" cy="-48" rx="10" ry="36" fill="#fef9c3" stroke="#facc15" stroke-width="2"/>
+      <ellipse cx="14" cy="-48" rx="10" ry="36" fill="#fef9c3" stroke="#facc15" stroke-width="2"/>
+      <ellipse cx="0" cy="-50" rx="12" ry="8" fill="#fbbf24"/>
+      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#1e293b"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#1e293b"/>
+      <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/><ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
     </g>
-<g transform="translate(-3,-5)"><rect x="112" y="118" width="32" height="8" rx="3" fill="#e2e8f0" stroke="#94a3b8"/></g>
+
   <rect x="8" y="8" width="240" height="240" rx="14" fill="none" stroke="#60a5fa" stroke-width="3" opacity="0.7"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">鋼牙妹·牙套閃耀</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">蜜糖邦妮·邦妮花園</text>
   <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#050</text>
 </svg>

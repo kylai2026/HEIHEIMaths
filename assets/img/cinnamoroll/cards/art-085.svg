@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="hsl(56, 55%, 94%)"/>
-      <stop offset="100%" stop-color="hsl(96, 45%, 82%)"/>
+      <stop offset="0%" stop-color="#fdf2f8"/>
+      <stop offset="100%" stop-color="#fbcfe8"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -18,16 +18,16 @@
 <circle cx="109.056" cy="190.96" r="4.452" fill="#fff" opacity="0.39675"/>
 <circle cx="145.664" cy="86.46000000000001" r="2.847" fill="#fff" opacity="0.263"/>
   <rect x="12" y="10" width="232" height="28" rx="14" fill="#fde047" opacity="0.88"/>
-    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">小刺豚</text>
-  <circle cx="100" cy="58" r="12" fill="#f472b6"/><circle cx="128" cy="48" r="14" fill="#60a5fa"/><circle cx="156" cy="58" r="11" fill="#fbbf24"/><line x1="128" y1="62" x2="128" y2="88" stroke="#94a3b8" stroke-width="2"/>
+    <text x="128" y="29" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">花丸鬼</text>
+  
   <g transform="translate(135.46,125.402) rotate(0) scale(0.98494)">
-      <circle cx="0" cy="10" r="36" fill="#fef08a" stroke="#eab308" stroke-width="2"/>
-      <line x1="0" y1="-26" x2="0" y2="-50" stroke="#eab308" stroke-width="2"/>
-      <ellipse cx="-12" cy="6" rx="6" ry="8" fill="#1e293b"/><ellipse cx="12" cy="6" rx="6" ry="8" fill="#1e293b"/>
-      <path d="M-8 20 Q0 28 8 20" fill="none" stroke="#ca8a04" stroke-width="2"/>
+      <ellipse cx="0" cy="10" rx="30" ry="28" fill="#fde047" stroke="#eab308" stroke-width="2"/>
+      <circle cx="0" cy="-20" r="18" fill="#f472b6"/><circle cx="-12" cy="-24" r="8" fill="#fda4af"/><circle cx="12" cy="-24" r="8" fill="#fda4af"/>
+      <ellipse cx="-10" cy="6" rx="5" ry="7" fill="#1e293b"/><ellipse cx="10" cy="6" rx="5" ry="7" fill="#1e293b"/>
+      <path d="M-20 24 Q0 40 20 24" fill="#4ade80" opacity="0.7"/>
     </g>
 
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">小刺豚·刺豚氣球</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#64748b" opacity="0.95">花丸鬼·花丸跳舞</text>
   <text x="244" y="248" text-anchor="end" font-family="monospace" font-size="7" fill="#94a3b8" opacity="0.5">#085</text>
 </svg>

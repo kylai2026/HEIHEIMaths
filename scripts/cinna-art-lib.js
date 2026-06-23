@@ -15,48 +15,53 @@ const CHAR_FROM_NAME = [
   { keys: ['大眼蛙', '跳跳蛙'], id: 'keroppi' },
   { keys: ['蛋黃哥'], id: 'gudetama' },
   { keys: ['酷企鵝', '唐企鵝'], id: 'badtz' },
-  { keys: ['小企鵝'], id: 'penguin' },
   { keys: ['帕恰狗'], id: 'pochacco' },
   { keys: ['奇奇'], id: 'kiki' },
   { keys: ['拉拉'], id: 'lala' },
   { keys: ['燕尾服山姆'], id: 'sam' },
   { keys: ['漢頓'], id: 'hangyodon' },
+  { keys: ['烈子'], id: 'aggretsuko' },
   { keys: ['海獅君', '小海豹'], id: 'seal' },
   { keys: ['巧克貓'], id: 'chococat' },
   { keys: ['毛毯熊'], id: 'corocorokuririn' },
   { keys: ['邦邦兔'], id: 'bonbon' },
   { keys: ['許願兔'], id: 'wish' },
   { keys: ['蜜糖邦妮'], id: 'honey' },
-  { keys: ['可可豆'], id: 'pochi' },
   { keys: ['必愛諾'], id: 'piano' },
   { keys: ['淘氣猴'], id: 'monkichi' },
+  { keys: ['丹尼爾'], id: 'deardaniel' },
   { keys: ['小香香'], id: 'deardaniel' },
-  { keys: ['豆豆鴨', '鴨仔雷蒙'], id: 'duck' },
+  { keys: ['佩可醬', '豆豆鴨'], id: 'pekkle' },
+  { keys: ['田寶'], id: 'tabo' },
+  { keys: ['三文魚'], id: 'kirimi' },
   { keys: ['鋼牙妹'], id: 'beaver' },
   { keys: ['野狼健'], id: 'wolf' },
   { keys: ['小浣熊'], id: 'raccoon' },
+  { keys: ['鴨仔雷蒙'], id: 'duck' },
   { keys: ['摩卡'], id: 'mocha' },
   { keys: ['牛奶'], id: 'milk' },
   { keys: ['芙蘭'], id: 'chiffon' },
   { keys: ['卡布奇諾'], id: 'cappuccino' },
   { keys: ['濃縮咖啡'], id: 'espresso' },
-  { keys: ['小倉鼠'], id: 'hamster' },
-  { keys: ['小綿羊'], id: 'sheep' },
-  { keys: ['小刺蝟'], id: 'hedgehog' },
-  { keys: ['小狐狸'], id: 'fox' },
-  { keys: ['小鹿斑比'], id: 'deer' },
-  { keys: ['小松鼠'], id: 'squirrel' },
-  { keys: ['小刺豚'], id: 'puffer' },
-  { keys: ['小無尾熊'], id: 'koala' },
-  { keys: ['小樹懶'], id: 'sloth' },
-  { keys: ['小鸚鵡'], id: 'parrot' },
-  { keys: ['小水獺'], id: 'otter' },
-  { keys: ['小恐龍'], id: 'dino' }
+  { keys: ['帕蒂'], id: 'patty' },
+  { keys: ['吉米'], id: 'jimmy' },
+  { keys: ['烏薩哈娜'], id: 'usahana' },
+  { keys: ['可吉'], id: 'cogimyun' },
+  { keys: ['帕塔派'], id: 'peppa' },
+  { keys: ['座敷狸'], id: 'zashiki' },
+  { keys: ['花丸鬼'], id: 'hanamaru' },
+  { keys: ['熊寶'], id: 'panda' },
+  { keys: ['蘭德里'], id: 'landry' },
+  { keys: ['森小子'], id: 'forest' },
+  { keys: ['抹茶兔'], id: 'matchabunny' },
+  { keys: ['櫻花兔'], id: 'sakurabunny' },
+  { keys: ['糖果妹'], id: 'candygirl' },
+  { keys: ['可憐咪'], id: 'korilakkuma' }
 ];
 
 const POSE_FROM_NAME = [
-  { keys: ['飛行', '雲海', '飛奔', '飄飄', '大耳'], id: 'fly' },
-  { keys: ['睡覺', '午覺', '午睡', '搖籃', '慵懶', '打盹', '吊床'], id: 'sleep' },
+  { keys: ['飛行', '雲海', '飛奔', '飄飄', '大耳', '彩帶', '雲端'], id: 'fly' },
+  { keys: ['睡覺', '午覺', '午睡', '搖籃', '慵懶', '打盹', '吊床', '枕頭'], id: 'sleep' },
   { keys: ['探頭', '驚喜'], id: 'peek' },
   { keys: ['坐下', '花籃', '煎蛋', '游泳'], id: 'sit' }
 ];
@@ -73,7 +78,11 @@ const PROP_FROM_NAME = [
   { keys: ['月亮', '晚安'], svg: '<path d="M170 48 A28 28 0 1 1 150 76 A22 22 0 1 0 170 48" fill="#fef08a" opacity="0.9"/>' },
   { keys: ['太陽', '晴天'], svg: '<circle cx="196" cy="48" r="18" fill="#fbbf24" opacity="0.85"/>' },
   { keys: ['彩虹'], svg: '<path d="M40 170 Q128 90 216 170" fill="none" stroke="#f472b6" stroke-width="5" opacity="0.5"/>' },
-  { keys: ['煙花', '慶典', '派對'], svg: '<circle cx="64" cy="50" r="3" fill="#f472b6"/><line x1="64" y1="50" x2="48" y2="34" stroke="#f472b6" stroke-width="1.5"/>' },
+  { keys: ['煙花', '慶典', '派對', '燈籠', '祭典'], svg: '<circle cx="64" cy="50" r="3" fill="#f472b6"/><line x1="64" y1="50" x2="48" y2="34" stroke="#f472b6" stroke-width="1.5"/><circle cx="192" cy="44" r="2" fill="#60a5fa"/><line x1="192" y1="44" x2="204" y2="28" stroke="#60a5fa" stroke-width="1.5"/>' },
+  { keys: ['燈籠', '祭典'], svg: '<ellipse cx="56" cy="56" rx="10" ry="14" fill="#ef4444"/><rect x="52" y="68" width="8" height="4" fill="#fbbf24"/><ellipse cx="200" cy="60" rx="9" ry="12" fill="#f472b6"/>' },
+  { keys: ['手風琴', '電子琴', '音樂祭', '搖滾'], svg: '<rect x="168" y="178" width="36" height="28" rx="4" fill="#ef4444" stroke="#991b1b"/><rect x="174" y="184" width="6" height="16" fill="#fff"/><rect x="184" y="184" width="6" height="16" fill="#fff"/><text x="178" y="62" font-size="22" fill="#a78bfa">♪</text>' },
+  { keys: ['城堡', '拱門', '舞台'], svg: '<rect x="168" y="168" width="48" height="40" fill="#fda4af" opacity="0.7"/><polygon points="168,168 192,140 216,168" fill="#f472b6" opacity="0.8"/>' },
+  { keys: ['吐司', '海灘', '煎蛋'], svg: '<rect x="100" y="188" width="56" height="20" rx="6" fill="#fde68a" stroke="#d97706"/><ellipse cx="128" cy="196" rx="14" ry="10" fill="#fbbf24"/>' },
   { keys: ['禮物', '生日'], svg: '<rect x="108" y="200" width="40" height="28" rx="4" fill="#60a5fa"/><rect x="108" y="192" width="40" height="12" fill="#f472b6"/>' },
   { keys: ['咖啡', '茶會', '下午茶', '摩卡', '濃縮'], svg: '<rect x="178" y="188" width="28" height="22" rx="4" fill="#fff" stroke="#94a3b8"/><ellipse cx="192" cy="196" rx="10" ry="4" fill="#8b5a2b" opacity="0.5"/>' },
   { keys: ['音符', '搖滾', '墨鏡'], svg: '<text x="178" y="62" font-size="28" fill="#a78bfa">♪</text>' },
@@ -121,7 +130,11 @@ const CHAR_BRAND = {
   wolf: '#64748b', raccoon: '#78716c', mocha: '#a68a64', milk: '#fef3c7', chiffon: '#fda4af',
   cappuccino: '#8b6914', espresso: '#57534e', hamster: '#f59e0b', sheep: '#f8fafc', hedgehog: '#a8a29e',
   fox: '#f97316', deer: '#b45309', squirrel: '#d97706', puffer: '#fde047', koala: '#94a3b8',
-  sloth: '#a8a29e', parrot: '#22c55e', otter: '#78716c', dino: '#65a30d', penguin: '#38bdf8'
+  sloth: '#a8a29e', parrot: '#22c55e', otter: '#78716c', dino: '#65a30d', penguin: '#38bdf8',
+  aggretsuko: '#f97316', tabo: '#fbbf24', kirimi: '#fb7185', pekkle: '#fef08a', patty: '#f472b6',
+  jimmy: '#60a5fa', usahana: '#fda4af', cogimyun: '#fff', peppa: '#c084fc', zashiki: '#fda4af',
+  hanamaru: '#fde047', panda: '#1e293b', landry: '#38bdf8', forest: '#22c55e', matchabunny: '#86efac',
+  sakurabunny: '#fbcfe8', candygirl: '#f472b6', korilakkuma: '#fff'
 };
 
 const THEME_TINTS = [
@@ -133,7 +146,9 @@ const THEME_TINTS = [
   { keys: ['冬日', '雪花', '圍巾', '耳罩', '冰'], colors: ['#f0f9ff', '#bae6fd'] },
   { keys: ['蜜糖', '香蕉', '芒果'], colors: ['#fffbeb', '#fde68a'] },
   { keys: ['惡魔', '骷髏', '庫洛'], colors: ['#1e1b4b', '#581c87'] },
-  { keys: ['花', '花園', '百合'], colors: ['#fdf2f8', '#fbcfe8'] }
+  { keys: ['花', '花園', '百合', '櫻花'], colors: ['#fdf2f8', '#fbcfe8'] },
+  { keys: ['祭典', '燈籠', '煙花', '音樂祭'], colors: ['#1e1b4b', '#7c3aed'] },
+  { keys: ['城堡', '舞台', '拱門'], colors: ['#fce7f3', '#f9a8d4'] }
 ];
 
 function parseCard(name) {
@@ -174,7 +189,9 @@ function variantWearable(name, idx) {
   if (/貝雷|帽子|雷蒙|鴨帽/.test(variant)) items.push(`<g ${g}><ellipse cx="128" cy="72" rx="26" ry="12" fill="#854d0e"/></g>`);
   if (/奶嘴/.test(variant)) items.push(`<g ${g}><circle cx="128" cy="108" r="8" fill="#fda4af"/><circle cx="128" cy="118" r="4" fill="#fff"/></g>`);
   if (/牙套|鋼牙/.test(variant)) items.push(`<g ${g}><rect x="112" y="118" width="32" height="8" rx="3" fill="#e2e8f0" stroke="#94a3b8"/></g>`);
-  if (/翅膀|飛行|飄飄|大耳/.test(variant)) items.push(`<g ${g}><ellipse cx="60" cy="110" rx="22" ry="10" fill="#fff" opacity="0.7" transform="rotate(-25 60 110)"/><ellipse cx="196" cy="110" rx="22" ry="10" fill="#fff" opacity="0.7" transform="rotate(25 196 110)"/></g>`);
+  if (/翅膀|飛行|飄飄|大耳|彩帶|雲端/.test(variant)) items.push(`<g ${g}><ellipse cx="60" cy="110" rx="22" ry="10" fill="#fff" opacity="0.7" transform="rotate(-25 60 110)"/><ellipse cx="196" cy="110" rx="22" ry="10" fill="#fff" opacity="0.7" transform="rotate(25 196 110)"/></g>`);
+  if (/吊帶|藍衣|紅裙/.test(variant)) items.push(`<g ${g}><rect x="104" y="130" width="48" height="36" rx="6" fill="#60a5fa" opacity="0.75"/><line x1="108" y1="130" x2="108" y2="108" stroke="#60a5fa" stroke-width="3"/><line x1="148" y1="130" x2="148" y2="108" stroke="#60a5fa" stroke-width="3"/></g>`);
+  if (/金屬|搖滾|電子琴|辦公室/.test(variant)) items.push(`<g ${g}><rect x="150" y="120" width="28" height="18" rx="3" fill="#3b82f6" stroke="#1d4ed8"/><text x="164" y="133" font-size="10" fill="#fff">♪</text></g>`);
   return items.slice(0, 2).join('\n');
 }
 
@@ -690,6 +707,183 @@ const BODY_DRAW = {
       <polygon points="-8,-44 0,-58 8,-44" fill="#65a30d"/>
       <path d="M28 10 Q50 -10 56 20" fill="none" stroke="#65a30d" stroke-width="10" stroke-linecap="round"/>
       <ellipse cx="-10" cy="-8" rx="5" ry="7" fill="#1e293b"/><ellipse cx="10" cy="-8" rx="5" ry="7" fill="#1e293b"/>
+    </g>`;
+  },
+  aggretsuko(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="16" rx="30" ry="28" fill="#f97316" stroke="#c2410c" stroke-width="2"/>
+      <ellipse cx="0" cy="-24" rx="26" ry="22" fill="#f97316" stroke="#c2410c" stroke-width="2"/>
+      <ellipse cx="-28" cy="-8" rx="12" ry="16" fill="#f97316"/><ellipse cx="28" cy="-8" rx="12" ry="16" fill="#f97316"/>
+      <ellipse cx="0" cy="-4" rx="18" ry="14" fill="#fff"/>
+      <ellipse cx="-10" cy="-6" rx="5" ry="7" fill="#1e293b"/><ellipse cx="10" cy="-6" rx="5" ry="7" fill="#1e293b"/>
+      <path d="M-6 8 Q0 14 6 8" fill="none" stroke="#9a3412" stroke-width="2"/>
+      <ellipse cx="-18" cy="2" rx="6" ry="4" fill="#1e293b" opacity="0.5"/><ellipse cx="18" cy="2" rx="6" ry="4" fill="#1e293b" opacity="0.5"/>
+    </g>`;
+  },
+  tabo(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="14" rx="28" ry="26" fill="#fef08a" stroke="#eab308" stroke-width="2"/>
+      <ellipse cx="0" cy="-28" rx="24" ry="22" fill="#fef08a" stroke="#eab308" stroke-width="2"/>
+      <ellipse cx="-10" cy="-28" rx="5" ry="7" fill="#1e293b"/><ellipse cx="10" cy="-28" rx="5" ry="7" fill="#1e293b"/>
+      <ellipse cx="0" cy="-14" rx="14" ry="10" fill="#fff" stroke="#eab308"/>
+      <ellipse cx="0" cy="-10" rx="8" ry="6" fill="#f472b6"/>
+    </g>`;
+  },
+  kirimi(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="12" rx="42" ry="28" fill="#fb7185" stroke="#e11d48" stroke-width="2"/>
+      <path d="M-30 -8 Q0 20 30 -8" fill="#fda4af" opacity="0.5"/>
+      <ellipse cx="-14" cy="4" rx="5" ry="7" fill="#1e293b"/><ellipse cx="14" cy="4" rx="5" ry="7" fill="#1e293b"/>
+      <path d="M-6 16 Q0 22 6 16" fill="none" stroke="#be123c" stroke-width="2"/>
+      <line x1="-36" y1="0" x2="-48" y2="-8" stroke="#fff" stroke-width="2" opacity="0.6"/>
+      <line x1="36" y1="0" x2="48" y2="-8" stroke="#fff" stroke-width="2" opacity="0.6"/>
+    </g>`;
+  },
+  pekkle(pose, idx) { return BODY_DRAW.duck(pose, idx); },
+  patty(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="14" rx="28" ry="26" fill="#fff" stroke="#f472b6" stroke-width="2"/>
+      <ellipse cx="-30" cy="-6" rx="12" ry="18" fill="#1e293b"/><ellipse cx="30" cy="-6" rx="12" ry="18" fill="#1e293b"/>
+      <ellipse cx="-42" cy="-10" rx="8" ry="6" fill="#f472b6"/>
+      <ellipse cx="0" cy="-38" rx="8" ry="6" fill="#f472b6"/>
+      ${eyesOpen('#1e293b', pose === 'sleep')}
+      ${cheeks()}
+    </g>`;
+  },
+  jimmy(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="14" rx="28" ry="26" fill="#fff" stroke="#60a5fa" stroke-width="2"/>
+      <ellipse cx="-30" cy="-6" rx="12" ry="18" fill="#1e293b"/><ellipse cx="30" cy="-6" rx="12" ry="18" fill="#1e293b"/>
+      <ellipse cx="0" cy="-46" rx="22" ry="10" fill="#60a5fa"/>
+      ${eyesOpen('#1e293b', pose === 'sleep')}
+      ${cheeks()}
+    </g>`;
+  },
+  usahana(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="14" rx="28" ry="26" fill="#fda4af" stroke="#f472b6" stroke-width="2"/>
+      <ellipse cx="-10" cy="-48" rx="10" ry="36" fill="#fda4af" stroke="#f472b6" stroke-width="2"/>
+      <ellipse cx="14" cy="-48" rx="10" ry="36" fill="#fda4af" stroke="#f472b6" stroke-width="2"/>
+      <ellipse cx="0" cy="-52" rx="14" ry="8" fill="#f472b6"/>
+      <text x="0" y="-38" text-anchor="middle" font-size="12" fill="#fff">🌸</text>
+      ${eyesOpen('#1e293b', pose === 'sleep')}
+      ${cheeks()}
+    </g>`;
+  },
+  cogimyun(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <circle cx="0" cy="8" r="34" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+      <circle cx="-14" cy="-6" r="10" fill="#fff" stroke="#e2e8f0"/><circle cx="14" cy="-6" r="10" fill="#fff" stroke="#e2e8f0"/>
+      <circle cx="0" cy="-18" r="12" fill="#fff" stroke="#e2e8f0"/>
+      <ellipse cx="-10" cy="6" rx="5" ry="7" fill="#1e293b"/><ellipse cx="10" cy="6" rx="5" ry="7" fill="#1e293b"/>
+      <ellipse cx="0" cy="18" rx="8" ry="5" fill="#fda4af"/>
+    </g>`;
+  },
+  peppa(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="16" rx="26" ry="24" fill="#c084fc" stroke="#7c3aed" stroke-width="2"/>
+      <ellipse cx="-28" cy="-20" rx="18" ry="14" fill="#a78bfa" opacity="0.8" transform="rotate(-20)"/>
+      <ellipse cx="28" cy="-20" rx="18" ry="14" fill="#a78bfa" opacity="0.8" transform="rotate(20)"/>
+      <ellipse cx="-8" cy="8" rx="5" ry="7" fill="#1e293b"/><ellipse cx="8" cy="8" rx="5" ry="7" fill="#1e293b"/>
+      ${cheeks()}
+    </g>`;
+  },
+  zashiki(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="20" rx="36" ry="24" fill="#fda4af" stroke="#f472b6" stroke-width="2"/>
+      <ellipse cx="0" cy="0" rx="30" ry="26" fill="#fda4af" stroke="#f472b6" stroke-width="2"/>
+      <ellipse cx="-10" cy="-4" rx="5" ry="7" fill="#1e293b"/><ellipse cx="10" cy="-4" rx="5" ry="7" fill="#1e293b"/>
+      <ellipse cx="0" cy="8" rx="10" ry="7" fill="#f472b6"/>
+      <rect x="-34" y="18" width="68" height="16" rx="4" fill="#d97706" opacity="0.5"/>
+    </g>`;
+  },
+  hanamaru(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="10" rx="30" ry="28" fill="#fde047" stroke="#eab308" stroke-width="2"/>
+      <circle cx="0" cy="-20" r="18" fill="#f472b6"/><circle cx="-12" cy="-24" r="8" fill="#fda4af"/><circle cx="12" cy="-24" r="8" fill="#fda4af"/>
+      <ellipse cx="-10" cy="6" rx="5" ry="7" fill="#1e293b"/><ellipse cx="10" cy="6" rx="5" ry="7" fill="#1e293b"/>
+      <path d="M-20 24 Q0 40 20 24" fill="#4ade80" opacity="0.7"/>
+    </g>`;
+  },
+  panda(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="14" rx="32" ry="28" fill="#fff" stroke="#1e293b" stroke-width="2"/>
+      <circle cx="-28" cy="-10" r="14" fill="#1e293b"/><circle cx="28" cy="-10" r="14" fill="#1e293b"/>
+      <ellipse cx="0" cy="4" rx="20" ry="16" fill="#1e293b"/>
+      <ellipse cx="-8" cy="0" rx="5" ry="7" fill="#fff"/><ellipse cx="8" cy="0" rx="5" ry="7" fill="#fff"/>
+      <ellipse cx="0" cy="10" rx="8" ry="5" fill="#1e293b"/>
+    </g>`;
+  },
+  landry(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <rect x="-32" y="-20" width="64" height="56" rx="8" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+      <ellipse cx="0" cy="-8" rx="22" ry="18" fill="#7dd3fc"/>
+      <ellipse cx="-10" cy="-10" rx="5" ry="7" fill="#1e293b"/><ellipse cx="10" cy="-10" rx="5" ry="7" fill="#1e293b"/>
+      <path d="M-6 4 Q0 10 6 4" fill="none" stroke="#0369a1" stroke-width="2"/>
+    </g>`;
+  },
+  forest(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="16" rx="26" ry="28" fill="#86efac" stroke="#22c55e" stroke-width="2"/>
+      <polygon points="-16,-36 0,-58 16,-36" fill="#166534"/>
+      <ellipse cx="-8" cy="8" rx="5" ry="7" fill="#1e293b"/><ellipse cx="8" cy="8" rx="5" ry="7" fill="#1e293b"/>
+      ${cheeks()}
+    </g>`;
+  },
+  matchabunny(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="14" rx="28" ry="26" fill="#dcfce7" stroke="#86efac" stroke-width="2"/>
+      <ellipse cx="-10" cy="-48" rx="10" ry="36" fill="#dcfce7" stroke="#86efac" stroke-width="2"/>
+      <ellipse cx="14" cy="-48" rx="10" ry="36" fill="#dcfce7" stroke="#86efac" stroke-width="2"/>
+      ${eyesOpen('#1e293b', pose === 'sleep')}
+      ${cheeks()}
+    </g>`;
+  },
+  sakurabunny(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="14" rx="28" ry="26" fill="#fff" stroke="#fbcfe8" stroke-width="2"/>
+      <ellipse cx="-10" cy="-48" rx="10" ry="36" fill="#fff" stroke="#fbcfe8" stroke-width="2"/>
+      <ellipse cx="14" cy="-48" rx="10" ry="36" fill="#fff" stroke="#fbcfe8" stroke-width="2"/>
+      <text x="0" y="-36" text-anchor="middle" font-size="14" fill="#f472b6">🌸</text>
+      ${eyesOpen('#1e293b', pose === 'sleep')}
+      ${cheeks()}
+    </g>`;
+  },
+  candygirl(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="14" rx="28" ry="26" fill="#fce7f3" stroke="#f472b6" stroke-width="2"/>
+      <ellipse cx="-10" cy="-48" rx="10" ry="36" fill="#fce7f3" stroke="#f472b6" stroke-width="2"/>
+      <ellipse cx="14" cy="-48" rx="10" ry="36" fill="#fce7f3" stroke="#f472b6" stroke-width="2"/>
+      <circle cx="0" cy="-50" r="10" fill="#f472b6"/>
+      ${eyesOpen('#1e293b', pose === 'sleep')}
+      ${cheeks()}
+    </g>`;
+  },
+  korilakkuma(pose, idx) {
+    const { tx, ty, rot, scale } = poseTransform(pose, idx);
+    return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${scale})">
+      <ellipse cx="0" cy="16" rx="30" ry="28" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+      <ellipse cx="-30" cy="-8" rx="12" ry="16" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+      <ellipse cx="30" cy="-8" rx="12" ry="16" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+      <ellipse cx="0" cy="-28" rx="8" ry="6" fill="#fda4af"/>
+      ${eyesOpen('#1e293b', pose === 'sleep')}
+      ${cheeks()}
     </g>`;
   }
 };
