@@ -3,23 +3,18 @@
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#f472b6"/>
-      <stop offset="100%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#be185d"/>
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
   
-  <circle cx="80" cy="70" r="16" fill="#fbbf24"/><circle cx="128" cy="55" r="18" fill="#60a5fa"/><circle cx="176" cy="70" r="16" fill="#ef4444"/>
-  
-    <g transform="translate(128,124.02) scale(0.8714)">
-      <ellipse cx="0" cy="10" rx="32" ry="28" fill="#fbbf24" opacity="0.9"/>
-      <ellipse cx="-40" cy="-5" rx="14" ry="28" fill="#fbbf24" opacity="0.75" transform="rotate(-20)"/>
-      <ellipse cx="40" cy="-5" rx="14" ry="28" fill="#fbbf24" opacity="0.75" transform="rotate(20)"/>
-      <ellipse cx="-12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <ellipse cx="12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <circle cx="-12" cy="2" r="3" fill="#1e293b"/>
-      <circle cx="12" cy="2" r="3" fill="#1e293b"/>
-      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#1e293b" stroke-width="2"/>
+  <g transform="translate(131.344,123.922) rotate(3.0100000000000007) scale(0.91605)">
+      <ellipse cx="0" cy="16" rx="28" ry="32" fill="#fda4af"/>
+      <ellipse cx="0" cy="-20" rx="26" ry="24" fill="#fda4af"/>
+      <path d="M-24 -30 Q0 -55 24 -30" fill="#1e293b"/>
+      <ellipse cx="-10" cy="-16" rx="5" ry="7" fill="#1e293b"/><ellipse cx="10" cy="-16" rx="5" ry="7" fill="#1e293b"/>
+      <text x="0" y="30" text-anchor="middle" font-size="18">🌺</text>
     </g>
   <rect x="8" y="8" width="240" height="240" rx="14" fill="none" stroke="#60a5fa" stroke-width="3"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">玩轉腦朋友2·樂樂</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">可可·可可記憶</text>
 </svg>

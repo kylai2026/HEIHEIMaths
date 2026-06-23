@@ -2,24 +2,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ef4444"/>
-      <stop offset="100%" stop-color="#991b1b"/>
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#0369a1"/>
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
   
-  <polygon points="128,50 145,85 115,85" fill="#fbbf24"/><rect x="118" y="85" width="20" height="30" fill="#1e40af"/>
-  
-    <g transform="translate(128,109.2) scale(1.0268)">
-      <ellipse cx="0" cy="10" rx="32" ry="28" fill="#fbbf24" opacity="0.9"/>
-      <ellipse cx="-40" cy="-5" rx="14" ry="28" fill="#fbbf24" opacity="0.75" transform="rotate(-20)"/>
-      <ellipse cx="40" cy="-5" rx="14" ry="28" fill="#fbbf24" opacity="0.75" transform="rotate(20)"/>
-      <ellipse cx="-12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <ellipse cx="12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <circle cx="-12" cy="2" r="3" fill="#1e293b"/>
-      <circle cx="12" cy="2" r="3" fill="#1e293b"/>
-      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#1e293b" stroke-width="2"/>
+  <g transform="translate(131.328,117.664) rotate(-4.4) scale(1.0326)">
+      <ellipse cx="0" cy="10" rx="42" ry="28" fill="#f97316" stroke="#c2410c" stroke-width="2"/>
+      <polygon points="42,10 70,0 70,20" fill="#f97316" stroke="#c2410c"/>
+      <path d="M-20 -10 Q0 -30 20 -10" fill="none" stroke="#fff" stroke-width="3"/>
+      <circle cx="-12" cy="6" r="6" fill="#fff"/><circle cx="-12" cy="6" r="3" fill="#1e293b"/>
+      <circle cx="12" cy="6" r="6" fill="#fff"/><circle cx="12" cy="6" r="3" fill="#1e293b"/>
     </g>
   <rect x="4" y="4" width="248" height="248" rx="18" fill="none" stroke="#fbbf24" stroke-width="5"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">超人特工隊2·彈弓女</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">尼莫·珊瑚礁</text>
 </svg>

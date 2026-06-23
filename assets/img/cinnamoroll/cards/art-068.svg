@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffedd5"/>
-      <stop offset="100%" stop-color="#fed7aa"/>
+      <stop offset="0%" stop-color="#fafafa"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -17,19 +17,16 @@
 <circle cx="137.072" cy="234.704" r="5" fill="#fff" opacity="0.35"/>
 <circle cx="85.448" cy="167.96" r="3" fill="#fff" opacity="0.35"/>
 <circle cx="185.888" cy="101.216" r="4" fill="#fff" opacity="0.35"/>
-  <circle cx="186" cy="196" r="14" fill="#f472b6" opacity="0.8"/><rect x="42" y="188" width="22" height="18" rx="3" fill="#fbbf24" opacity="0.8"/>
-  
-    <g transform="translate(129.92,121.616) rotate(0) scale(1.0695999999999999)">
-      <ellipse cx="0" cy="18" rx="36" ry="30" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
-      <ellipse cx="-50" cy="-6" rx="20" ry="46" fill="#ffffff" stroke="#94a3b8" stroke-width="2" transform="rotate(-20.416)"/>
-      <ellipse cx="50" cy="-6" rx="20" ry="46" fill="#ffffff" stroke="#94a3b8" stroke-width="2" transform="rotate(20.416)"/>
-      
-      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#60a5fa"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
-      <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
-      <ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
-      <path d="M-5 14 Q0 19 5 14" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="0" cy="40" r="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="178" y="188" width="28" height="22" rx="4" fill="#fff" stroke="#94a3b8"/><ellipse cx="192" cy="196" rx="10" ry="4" fill="#8b5a2b" opacity="0.5"/>
+  <g transform="translate(129.6,121.664) rotate(0) scale(1.05064)">
+      <ellipse cx="0" cy="18" rx="36" ry="30" fill="#e8d4b8" stroke="#94a3b8" stroke-width="2"/>
+      <ellipse cx="-50" cy="-6" rx="20" ry="46" fill="#e8d4b8" stroke="#94a3b8" stroke-width="2" transform="rotate(-19.68)"/>
+      <ellipse cx="50" cy="-6" rx="20" ry="46" fill="#e8d4b8" stroke="#94a3b8" stroke-width="2" transform="rotate(19.68)"/>
+      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#44403c"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#44403c"/>
+      <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/><ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
+      <path d="M-5 14 Q0 19 5 14" fill="none" stroke="#44403c" stroke-width="2"/>
+      <circle cx="0" cy="40" r="9" fill="#e8d4b8" stroke="#94a3b8" stroke-width="1.5"/>
     </g>
-  <rect x="8" y="8" width="240" height="240" rx="14" fill="none" stroke="#60a5fa" stroke-width="3" opacity="0.7"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">漢頓·棉花糖版</text>
+  <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">濃縮咖啡·濃縮地圖</text>
 </svg>

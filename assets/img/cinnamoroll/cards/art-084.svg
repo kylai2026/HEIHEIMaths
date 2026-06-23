@@ -17,19 +17,12 @@
 <circle cx="183.728" cy="65.36" r="5" fill="#fff" opacity="0.35"/>
 <circle cx="132.10399999999998" cy="214.616" r="3" fill="#fff" opacity="0.35"/>
 <circle cx="232.54399999999998" cy="147.872" r="4" fill="#fff" opacity="0.35"/>
-  <circle cx="186" cy="196" r="14" fill="#f472b6" opacity="0.8"/><rect x="42" y="188" width="22" height="18" rx="3" fill="#fbbf24" opacity="0.8"/>
   
-    <g transform="translate(138.944,116.368) rotate(0) scale(1.0584)">
-      <ellipse cx="0" cy="18" rx="36" ry="30" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
-      <ellipse cx="-50" cy="-6" rx="20" ry="46" fill="#ffffff" stroke="#94a3b8" stroke-width="2" transform="rotate(-8.128)"/>
-      <ellipse cx="50" cy="-6" rx="20" ry="46" fill="#ffffff" stroke="#94a3b8" stroke-width="2" transform="rotate(8.128)"/>
-      
-      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#60a5fa"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
-      <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
-      <ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
-      <path d="M-5 14 Q0 19 5 14" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="0" cy="40" r="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <g transform="translate(137.12,117.072) rotate(0) scale(1.04056)">
+      <ellipse cx="0" cy="16" rx="26" ry="28" fill="#d97706" stroke="#92400e" stroke-width="2"/>
+      <ellipse cx="0" cy="38" rx="30" ry="22" fill="#b45309" opacity="0.8"/>
+      <ellipse cx="-8" cy="8" rx="5" ry="7" fill="#1e293b"/><ellipse cx="8" cy="8" rx="5" ry="7" fill="#1e293b"/>
     </g>
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">雙子星·糖果</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">小松鼠·松鼠堅果</text>
 </svg>

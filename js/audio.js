@@ -48,8 +48,8 @@ const AudioManager = {
   playGachaLoop(poolId, durationMs) {
     this.stopGachaLoop();
     if (this.muteSfx) return;
-    const name = poolId === 'pokemon' ? 'gachaPulsePoke' : 'gachaPulseCinna';
-    const interval = poolId === 'pokemon' ? 360 : 400;
+    const name = poolId === 'pokemon' ? 'gachaPulsePoke' : poolId === 'pixar' ? 'gachaPulsePixar' : 'gachaPulseCinna';
+    const interval = poolId === 'pokemon' ? 360 : poolId === 'pixar' ? 380 : 400;
     this.playSfx(name);
     this._gachaLoopTimer = setInterval(() => this.playSfx(name), interval);
     setTimeout(() => this.stopGachaLoop(), durationMs);
@@ -163,6 +163,22 @@ const AudioManager = {
       return;
     }
 
+    if (name === 'gachaPulsePixar') {
+      const o = ctx.createOscillator();
+      o.type = 'triangle';
+      o.frequency.setValueAtTime(392, t);
+      o.frequency.exponentialRampToValueAtTime(523, t + 0.1);
+      const gg = ctx.createGain();
+      gg.gain.setValueAtTime(0.0001, t);
+      gg.gain.exponentialRampToValueAtTime(0.05, t + 0.02);
+      gg.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+      o.connect(gg);
+      gg.connect(ctx.destination);
+      o.start(t);
+      o.stop(t + 0.13);
+      return;
+    }
+
     if (name === 'gachaPokemon') {
       for (let i = 0; i < 8; i++) {
         const o = ctx.createOscillator();
@@ -193,6 +209,23 @@ const AudioManager = {
         gg.connect(ctx.destination);
         o.start(t + i * 0.15);
         o.stop(t + i * 0.15 + 0.22);
+      });
+      return;
+    }
+
+    if (name === 'gachaPixar') {
+      [262, 330, 392, 523, 659].forEach((freq, i) => {
+        const o = ctx.createOscillator();
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(freq, t + i * 0.12);
+        const gg = ctx.createGain();
+        gg.gain.setValueAtTime(0.0001, t + i * 0.12);
+        gg.gain.exponentialRampToValueAtTime(0.065, t + i * 0.12 + 0.03);
+        gg.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.12 + 0.16);
+        o.connect(gg);
+        gg.connect(ctx.destination);
+        o.start(t + i * 0.12);
+        o.stop(t + i * 0.12 + 0.18);
       });
       return;
     }

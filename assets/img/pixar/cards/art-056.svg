@@ -2,24 +2,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#38bdf8"/>
-      <stop offset="100%" stop-color="#0ea5e9"/>
+      <stop offset="0%" stop-color="#78716c"/>
+      <stop offset="100%" stop-color="#44403c"/>
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
   
-  <ellipse cx="128" cy="200" rx="50" ry="20" fill="#38bdf8" opacity="0.5"/><circle cx="128" cy="70" r="16" fill="#f97316"/>
-  
-    <g transform="translate(128,119.04) scale(0.9219999999999999)">
-      <ellipse cx="0" cy="10" rx="32" ry="28" fill="#f97316" opacity="0.9"/>
-      <ellipse cx="-40" cy="-5" rx="14" ry="28" fill="#f97316" opacity="0.75" transform="rotate(-20)"/>
-      <ellipse cx="40" cy="-5" rx="14" ry="28" fill="#f97316" opacity="0.75" transform="rotate(20)"/>
-      <ellipse cx="-12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <ellipse cx="12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <circle cx="-12" cy="2" r="3" fill="#1e293b"/>
-      <circle cx="12" cy="2" r="3" fill="#1e293b"/>
-      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#1e293b" stroke-width="2"/>
+  <g transform="translate(133.952,115.144) rotate(0.5200000000000005) scale(0.9540000000000001)">
+      <ellipse cx="0" cy="20" rx="22" ry="18" fill="#78716c"/>
+      <circle cx="0" cy="-8" r="20" fill="#78716c"/>
+      <ellipse cx="-18" cy="-20" rx="8" ry="14" fill="#78716c"/><ellipse cx="18" cy="-20" rx="8" ry="14" fill="#78716c"/>
+      <circle cx="-8" cy="-10" r="4" fill="#1e293b"/><circle cx="8" cy="-10" r="4" fill="#1e293b"/>
+      <path d="M20 -8 Q40 0 36 16" fill="none" stroke="#78716c" stroke-width="4"/>
     </g>
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">路卡的夏天·路卡</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">小米·巴黎廚房</text>
 </svg>

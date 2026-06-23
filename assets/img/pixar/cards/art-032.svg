@@ -2,24 +2,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#a78bfa"/>
-      <stop offset="100%" stop-color="#6d28d9"/>
+      <stop offset="0%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#14532d"/>
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
   
-  <text x="128" y="58" text-anchor="middle" font-size="24" fill="#fbbf24">✨</text>
-  
-    <g transform="translate(128,122.56) scale(0.9683999999999999)">
-      <ellipse cx="0" cy="10" rx="32" ry="28" fill="#fbbf24" opacity="0.9"/>
-      <ellipse cx="-40" cy="-5" rx="14" ry="28" fill="#fbbf24" opacity="0.75" transform="rotate(-20)"/>
-      <ellipse cx="40" cy="-5" rx="14" ry="28" fill="#fbbf24" opacity="0.75" transform="rotate(20)"/>
-      <ellipse cx="-12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <ellipse cx="12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <circle cx="-12" cy="2" r="3" fill="#1e293b"/>
-      <circle cx="12" cy="2" r="3" fill="#1e293b"/>
-      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#1e293b" stroke-width="2"/>
+  <g transform="translate(132.032,119.96) rotate(2.28) scale(0.9888)">
+      <ellipse cx="0" cy="16" rx="44" ry="40" fill="#22c55e" stroke="#14532d" stroke-width="2"/>
+      <path d="M-30 -20 Q-40 -50 -10 -40 Q10 -55 30 -20" fill="#22c55e" stroke="#14532d"/>
+      <circle cx="-16" cy="0" r="14" fill="#fff"/><circle cx="16" cy="0" r="14" fill="#fff"/>
+      <circle cx="-16" cy="0" r="7" fill="#1e293b"/><circle cx="16" cy="0" r="7" fill="#1e293b"/>
+      <path d="M-12 24 Q0 32 12 24" fill="none" stroke="#14532d" stroke-width="2"/>
     </g>
   <rect x="8" y="8" width="240" height="240" rx="14" fill="none" stroke="#60a5fa" stroke-width="3"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">Elio·Glordon</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">毛怪·尖叫工廠</text>
 </svg>

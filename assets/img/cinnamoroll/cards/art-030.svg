@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e0f2fe"/>
+      <stop offset="100%" stop-color="#bae6fd"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcd34d"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#fcd34d"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" fill="url(#bg)"/>
+<circle cx="128.43200000000002" cy="128.43200000000002" r="3" fill="#fff" opacity="0.35"/>
+<circle cx="228.87199999999999" cy="61.688" r="4" fill="#fff" opacity="0.35"/>
+<circle cx="177.248" cy="210.944" r="5" fill="#fff" opacity="0.35"/>
+<circle cx="61.688" cy="144.2" r="3" fill="#fff" opacity="0.35"/>
+<circle cx="162.12800000000001" cy="141.392" r="4" fill="#fff" opacity="0.35"/>
+  
+  <g transform="translate(136.36,115.588) rotate(0) scale(0.9178)">
+      <ellipse cx="0" cy="16" rx="38" ry="32" fill="#d97706" stroke="#92400e" stroke-width="2"/>
+      <ellipse cx="-36" cy="-8" rx="14" ry="18" fill="#d97706"/><ellipse cx="36" cy="-8" rx="14" ry="18" fill="#d97706"/>
+      <rect x="-30" y="0" width="60" height="40" rx="8" fill="#bae6fd" opacity="0.85"/>
+      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#1e293b"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#1e293b"/>
+      <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/><ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
+    </g>
+  <rect x="8" y="8" width="240" height="240" rx="14" fill="none" stroke="#60a5fa" stroke-width="3" opacity="0.7"/>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">毛毯熊·枕頭大戰</text>
+</svg>

@@ -2,24 +2,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f472b6"/>
-      <stop offset="100%" stop-color="#a855f7"/>
+      <stop offset="0%" stop-color="#86efac"/>
+      <stop offset="100%" stop-color="#166534"/>
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
   
-  <circle cx="80" cy="70" r="16" fill="#fbbf24"/><circle cx="128" cy="55" r="18" fill="#60a5fa"/><circle cx="176" cy="70" r="16" fill="#ef4444"/>
-  
-    <g transform="translate(128,126.08) scale(0.874)">
-      <ellipse cx="0" cy="10" rx="32" ry="28" fill="#fbbf24" opacity="0.9"/>
-      <ellipse cx="-40" cy="-5" rx="14" ry="28" fill="#fbbf24" opacity="0.75" transform="rotate(-20)"/>
-      <ellipse cx="40" cy="-5" rx="14" ry="28" fill="#fbbf24" opacity="0.75" transform="rotate(20)"/>
-      <ellipse cx="-12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <ellipse cx="12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <circle cx="-12" cy="2" r="3" fill="#1e293b"/>
-      <circle cx="12" cy="2" r="3" fill="#1e293b"/>
-      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#1e293b" stroke-width="2"/>
+  <g transform="translate(125.376,124.776) rotate(4.04) scale(0.918)">
+      <path d="M-40 40 Q-20 -30 0 -40 Q20 -30 40 40 Z" fill="#86efac" stroke="#166534" stroke-width="2"/>
+      <circle cx="-14" cy="0" r="8" fill="#fff"/><circle cx="14" cy="0" r="8" fill="#fff"/>
+      <circle cx="-14" cy="0" r="4" fill="#1e293b"/><circle cx="14" cy="0" r="4" fill="#1e293b"/>
+      <path d="M-8 18 Q0 24 8 18" fill="none" stroke="#166534" stroke-width="2"/>
+      <polygon points="-30,20 -40,40 -20,35" fill="#86efac"/><polygon points="30,20 40,40 20,35" fill="#86efac"/>
     </g>
   <rect x="4" y="4" width="248" height="248" rx="18" fill="none" stroke="#fbbf24" stroke-width="5"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">玩轉腦朋友2·阿樂</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">抱抱龍·綠色恐龍</text>
 </svg>

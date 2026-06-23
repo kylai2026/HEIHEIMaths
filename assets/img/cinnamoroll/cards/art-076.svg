@@ -17,19 +17,12 @@
 <circle cx="52.4" cy="150.03199999999998" r="5" fill="#fff" opacity="0.35"/>
 <circle cx="216.776" cy="83.288" r="3" fill="#fff" opacity="0.35"/>
 <circle cx="101.216" cy="232.54399999999998" r="4" fill="#fff" opacity="0.35"/>
-  <path d="M170 48 A28 28 0 1 1 150 76 A22 22 0 1 0 170 48" fill="#fef08a" opacity="0.9"/>
   
-    <g transform="translate(137.984,121.36) rotate(0) scale(0.8936)">
-      <ellipse cx="0" cy="18" rx="36" ry="30" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
-      <ellipse cx="-50" cy="-6" rx="20" ry="46" fill="#ffffff" stroke="#94a3b8" stroke-width="2" transform="rotate(-22.72)"/>
-      <ellipse cx="50" cy="-6" rx="20" ry="46" fill="#ffffff" stroke="#94a3b8" stroke-width="2" transform="rotate(22.72)"/>
-      
-      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#60a5fa"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
-      <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
-      <ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
-      <path d="M-5 14 Q0 19 5 14" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="0" cy="40" r="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <g transform="translate(136.32,121.44) rotate(0) scale(0.89224)"><line x1="0" y1="-20" x2="-26.311393382005434" y2="-29.576564013118727" stroke="#78716c" stroke-width="3"/><line x1="0" y1="-20" x2="-21.449244407331385" y2="-37.9980530712231" stroke="#78716c" stroke-width="3"/><line x1="0" y1="-20" x2="-13.999999999999998" y2="-44.248711305964285" stroke="#78716c" stroke-width="3"/><line x1="0" y1="-20" x2="-4.862148974674049" y2="-47.574617084341824" stroke="#78716c" stroke-width="3"/><line x1="0" y1="-20" x2="4.862148974674049" y2="-47.574617084341824" stroke="#78716c" stroke-width="3"/><line x1="0" y1="-20" x2="13.999999999999998" y2="-44.248711305964285" stroke="#78716c" stroke-width="3"/><line x1="0" y1="-20" x2="21.449244407331385" y2="-37.9980530712231" stroke="#78716c" stroke-width="3"/><line x1="0" y1="-20" x2="26.311393382005434" y2="-29.576564013118727" stroke="#78716c" stroke-width="3"/>
+      <ellipse cx="0" cy="14" rx="28" ry="24" fill="#d6d3d1" stroke="#a8a29e" stroke-width="2"/>
+      <ellipse cx="-10" cy="8" rx="5" ry="7" fill="#1e293b"/><ellipse cx="10" cy="8" rx="5" ry="7" fill="#1e293b"/>
+      <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/><ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
     </g>
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">美樂蒂·月亮</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">小刺蝟·刺蝟蘋果</text>
 </svg>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fce7f3"/>
+      <stop offset="100%" stop-color="#fbcfe8"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcd34d"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#fcd34d"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" fill="url(#bg)"/>
+<circle cx="79.61600000000001" cy="79.61600000000001" r="3" fill="#fff" opacity="0.35"/>
+<circle cx="27.992" cy="228.87199999999999" r="4" fill="#fff" opacity="0.35"/>
+<circle cx="128.43200000000002" cy="162.12800000000001" r="5" fill="#fff" opacity="0.35"/>
+<circle cx="228.87199999999999" cy="159.32" r="3" fill="#fff" opacity="0.35"/>
+<circle cx="177.248" cy="92.57600000000001" r="4" fill="#fff" opacity="0.35"/>
+  
+  <g transform="translate(119.68,117.072) rotate(0) scale(1.02904)">
+      <ellipse cx="0" cy="10" rx="32" ry="28" fill="#1e293b" stroke="#0f172a" stroke-width="2"/>
+      <ellipse cx="-36" cy="-14" rx="12" ry="18" fill="#1e293b"/><ellipse cx="36" cy="-14" rx="12" ry="18" fill="#1e293b"/>
+      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#fbbf24"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#fbbf24"/>
+      <ellipse cx="0" cy="6" rx="6" ry="4" fill="#f472b6"/>
+    </g>
+  <rect x="8" y="8" width="240" height="240" rx="14" fill="none" stroke="#60a5fa" stroke-width="3" opacity="0.7"/>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">巧克貓·黑貓夜行</text>
+</svg>

@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffedd5"/>
-      <stop offset="100%" stop-color="#fed7aa"/>
+      <stop offset="0%" stop-color="#dcfce7"/>
+      <stop offset="100%" stop-color="#bbf7d0"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -12,24 +12,13 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
-<circle cx="164.288" cy="164.288" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="112.664" cy="97.544" r="4" fill="#fff" opacity="0.35"/>
-<circle cx="213.104" cy="30.8" r="5" fill="#fff" opacity="0.35"/>
-<circle cx="97.544" cy="27.992" r="3" fill="#fff" opacity="0.35"/>
-<circle cx="45.92" cy="177.248" r="4" fill="#fff" opacity="0.35"/>
-  
-  
-    <g transform="translate(117.056,121.36) rotate(0) scale(1.0216)">
-      <ellipse cx="0" cy="18" rx="36" ry="30" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
-      <ellipse cx="-50" cy="-6" rx="20" ry="46" fill="#ffffff" stroke="#94a3b8" stroke-width="2" transform="rotate(-11.968)"/>
-      <ellipse cx="50" cy="-6" rx="20" ry="46" fill="#ffffff" stroke="#94a3b8" stroke-width="2" transform="rotate(11.968)"/>
-      
-      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#60a5fa"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
-      <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
-      <ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
-      <path d="M-5 14 Q0 19 5 14" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="0" cy="40" r="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <path d="M40 170 Q128 90 216 170" fill="none" stroke="#f472b6" stroke-width="5" opacity="0.5"/>
+  <g transform="translate(118.88,121.44) rotate(0) scale(1.00744)">
+      <polygon points="0,-40 28,20 -28,20" fill="#f472b6" stroke="#db2777" stroke-width="2"/>
+      <circle cx="0" cy="8" r="22" fill="#fda4af" stroke="#db2777" stroke-width="2"/>
+      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#1e293b"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#1e293b"/>
+      <polygon points="0,-50 -8,-38 8,-38" fill="#fef08a"/>
     </g>
-  <rect x="8" y="8" width="240" height="240" rx="14" fill="none" stroke="#60a5fa" stroke-width="3" opacity="0.7"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">Hello Kitty·微…</text>
+  <rect x="6" y="6" width="244" height="244" rx="16" fill="none" stroke="#c084fc" stroke-width="4" opacity="0.85"/>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">奇奇·彩虹橋</text>
 </svg>

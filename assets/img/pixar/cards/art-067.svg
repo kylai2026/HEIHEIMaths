@@ -2,24 +2,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fde68a"/>
-      <stop offset="100%" stop-color="#f59e0b"/>
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#991b1b"/>
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
   
-  <rect x="100" y="180" width="56" height="40" rx="6" fill="#d97706"/><circle cx="128" cy="170" r="18" fill="#fef3c7"/>
-  
-    <g transform="translate(128,125.02) scale(0.9014)">
-      <ellipse cx="0" cy="10" rx="32" ry="28" fill="#2563eb" opacity="0.9"/>
-      <ellipse cx="-40" cy="-5" rx="14" ry="28" fill="#2563eb" opacity="0.75" transform="rotate(-20)"/>
-      <ellipse cx="40" cy="-5" rx="14" ry="28" fill="#2563eb" opacity="0.75" transform="rotate(20)"/>
-      <ellipse cx="-12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <ellipse cx="12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <circle cx="-12" cy="2" r="3" fill="#1e293b"/>
-      <circle cx="12" cy="2" r="3" fill="#1e293b"/>
-      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#1e293b" stroke-width="2"/>
+  <g transform="translate(130.608,113.478) rotate(3.51) scale(0.93855)">
+      <rect x="-50" y="0" width="100" height="32" rx="14" fill="#ef4444" stroke="#991b1b" stroke-width="2"/>
+      <rect x="-30" y="-16" width="60" height="20" rx="8" fill="#ef4444"/>
+      <circle cx="-32" cy="32" r="12" fill="#1e293b"/><circle cx="32" cy="32" r="12" fill="#1e293b"/>
+      <text x="0" y="14" text-anchor="middle" font-size="14" fill="#fef08a" font-weight="bold">95</text>
+      <ellipse cx="-18" cy="-6" rx="5" ry="7" fill="#1e293b"/><ellipse cx="18" cy="-6" rx="5" ry="7" fill="#1e293b"/>
     </g>
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">玩具總動員·巴斯光年</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">小倩·閃電男孩</text>
 </svg>

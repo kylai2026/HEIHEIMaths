@@ -2,24 +2,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#4ade80"/>
-      <stop offset="100%" stop-color="#166534"/>
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#c2410c"/>
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
   
-  <ellipse cx="128" cy="100" rx="40" ry="35" fill="#22c55e"/><circle cx="108" cy="92" r="12" fill="#fff"/><circle cx="148" cy="92" r="12" fill="#fff"/>
-  
-    <g transform="translate(128,124.82) scale(0.9546)">
-      <ellipse cx="0" cy="10" rx="32" ry="28" fill="#1e40af" opacity="0.9"/>
-      <ellipse cx="-40" cy="-5" rx="14" ry="28" fill="#1e40af" opacity="0.75" transform="rotate(-20)"/>
-      <ellipse cx="40" cy="-5" rx="14" ry="28" fill="#1e40af" opacity="0.75" transform="rotate(20)"/>
-      <ellipse cx="-12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <ellipse cx="12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <circle cx="-12" cy="2" r="3" fill="#1e293b"/>
-      <circle cx="12" cy="2" r="3" fill="#1e293b"/>
-      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#1e293b" stroke-width="2"/>
+  <g transform="translate(123.28,114.514) rotate(3.4099999999999997) scale(0.97845)">
+      <ellipse cx="0" cy="14" rx="28" ry="32" fill="#f97316" opacity="0.9"/>
+      <ellipse cx="0" cy="-20" rx="24" ry="22" fill="#fef3c7"/>
+      <path d="M-22 -28 Q0 -48 22 -28" fill="#1e293b"/>
+      <ellipse cx="-8" cy="-18" rx="4" ry="6" fill="#1e293b"/><ellipse cx="8" cy="-18" rx="4" ry="6" fill="#1e293b"/>
     </g>
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">怪獸大學·毛怪</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">艾伯托·單車競速</text>
 </svg>

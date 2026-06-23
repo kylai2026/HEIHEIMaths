@@ -2,24 +2,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fde68a"/>
-      <stop offset="100%" stop-color="#f59e0b"/>
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#312e81"/>
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
   
-  <rect x="100" y="180" width="56" height="40" rx="6" fill="#d97706"/><circle cx="128" cy="170" r="18" fill="#fef3c7"/>
-  
-    <g transform="translate(128,117.04) scale(0.862)">
-      <ellipse cx="0" cy="10" rx="32" ry="28" fill="#2563eb" opacity="0.9"/>
-      <ellipse cx="-40" cy="-5" rx="14" ry="28" fill="#2563eb" opacity="0.75" transform="rotate(-20)"/>
-      <ellipse cx="40" cy="-5" rx="14" ry="28" fill="#2563eb" opacity="0.75" transform="rotate(20)"/>
-      <ellipse cx="-12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <ellipse cx="12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <circle cx="-12" cy="2" r="3" fill="#1e293b"/>
-      <circle cx="12" cy="2" r="3" fill="#1e293b"/>
-      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#1e293b" stroke-width="2"/>
+  <g transform="translate(130.688,117.888) rotate(-0.47999999999999987) scale(0.909)">
+      <ellipse cx="0" cy="16" rx="30" ry="34" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+      <ellipse cx="0" cy="-22" rx="24" ry="22" fill="#94a3b8"/>
+      <rect x="-8" y="-50" width="16" height="20" rx="4" fill="#64748b"/>
+      <rect x="-36" y="0" width="72" height="12" rx="4" fill="#64748b"/>
+      <circle cx="0" cy="-18" r="10" fill="#38bdf8" opacity="0.8"/>
+      <polygon points="0,-8 20,20 -20,20" fill="#fbbf24" opacity="0.9"/>
     </g>
   <rect x="4" y="4" width="248" height="248" rx="18" fill="none" stroke="#fbbf24" stroke-width="5"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">玩具總動員4·牧羊女</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">巴斯光年·激光劍</text>
 </svg>

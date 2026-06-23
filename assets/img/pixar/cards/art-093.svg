@@ -2,24 +2,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ef4444"/>
-      <stop offset="100%" stop-color="#991b1b"/>
+      <stop offset="0%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#15803d"/>
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
   
-  <rect x="88" y="175" width="80" height="28" rx="10" fill="#ef4444"/><circle cx="105" cy="210" r="10" fill="#1e293b"/><circle cx="151" cy="210" r="10" fill="#1e293b"/>
-  
-    <g transform="translate(128,126.02) scale(0.9314)">
-      <ellipse cx="0" cy="10" rx="32" ry="28" fill="#fbbf24" opacity="0.9"/>
-      <ellipse cx="-40" cy="-5" rx="14" ry="28" fill="#fbbf24" opacity="0.75" transform="rotate(-20)"/>
-      <ellipse cx="40" cy="-5" rx="14" ry="28" fill="#fbbf24" opacity="0.75" transform="rotate(20)"/>
-      <ellipse cx="-12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <ellipse cx="12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <circle cx="-12" cy="2" r="3" fill="#1e293b"/>
-      <circle cx="12" cy="2" r="3" fill="#1e293b"/>
-      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#1e293b" stroke-width="2"/>
+  <g transform="translate(134.608,117.034) rotate(4.01) scale(0.96105)">
+      <ellipse cx="0" cy="18" rx="28" ry="32" fill="#22c55e" opacity="0.85"/>
+      <ellipse cx="0" cy="-18" rx="24" ry="22" fill="#fef3c7"/>
+      <ellipse cx="-8" cy="-18" rx="4" ry="6" fill="#1e293b"/><ellipse cx="8" cy="-18" rx="4" ry="6" fill="#1e293b"/>
+      <text x="0" y="40" text-anchor="middle" font-size="16">🌿</text>
     </g>
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">汽車總動員·莎莉</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">阿甘·跑步冠軍</text>
 </svg>

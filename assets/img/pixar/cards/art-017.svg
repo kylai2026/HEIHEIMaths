@@ -2,24 +2,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#312e81"/>
-      <stop offset="100%" stop-color="#1e1b4b"/>
+      <stop offset="0%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#15803d"/>
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
   
-  <circle cx="128" cy="128" r="35" fill="none" stroke="#a78bfa" stroke-width="3" opacity="0.5"/><circle cx="128" cy="60" r="10" fill="#fef08a"/>
-  
-    <g transform="translate(128,127.53999999999999) scale(0.977)">
-      <ellipse cx="0" cy="10" rx="32" ry="28" fill="#a78bfa" opacity="0.9"/>
-      <ellipse cx="-40" cy="-5" rx="14" ry="28" fill="#a78bfa" opacity="0.75" transform="rotate(-20)"/>
-      <ellipse cx="40" cy="-5" rx="14" ry="28" fill="#a78bfa" opacity="0.75" transform="rotate(20)"/>
-      <ellipse cx="-12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <ellipse cx="12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <circle cx="-12" cy="2" r="3" fill="#1e293b"/>
-      <circle cx="12" cy="2" r="3" fill="#1e293b"/>
-      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#1e293b" stroke-width="2"/>
+  <g transform="translate(124.688,114.738) rotate(4.77) scale(0.99525)">
+      <ellipse cx="0" cy="20" rx="50" ry="32" fill="#22c55e" stroke="#15803d" stroke-width="2"/>
+      <ellipse cx="0" cy="-10" rx="28" ry="22" fill="#22c55e"/>
+      <circle cx="-12" cy="-8" r="6" fill="#1e293b"/><circle cx="12" cy="-8" r="6" fill="#1e293b"/>
+      <path d="M-50 20 Q-70 0 -50 -10" fill="none" stroke="#15803d" stroke-width="6"/>
+      <path d="M50 20 Q70 0 50 -10" fill="none" stroke="#15803d" stroke-width="6"/>
     </g>
   <rect x="6" y="6" width="244" height="244" rx="16" fill="none" stroke="#c084fc" stroke-width="4"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">靈魂奇遇記·22號</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">龜爺爺·海龜冲浪</text>
 </svg>

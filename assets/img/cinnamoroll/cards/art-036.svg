@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f8fafc"/>
-      <stop offset="100%" stop-color="#e2e8f0"/>
+      <stop offset="0%" stop-color="#e0f2fe"/>
+      <stop offset="100%" stop-color="#bae6fd"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -18,18 +18,12 @@
 <circle cx="144.2" cy="74.648" r="3" fill="#fff" opacity="0.35"/>
 <circle cx="92.57600000000001" cy="223.904" r="4" fill="#fff" opacity="0.35"/>
   
-  
-    <g transform="translate(118.976,138) rotate(-12) scale(1.0104)">
-      <ellipse cx="0" cy="18" rx="36" ry="30" fill="#fffbeb" stroke="#d6d3d1" stroke-width="2"/>
-      <ellipse cx="-50" cy="-6" rx="20" ry="46" fill="#fef3c7" stroke="#d6d3d1" stroke-width="2" transform="rotate(-6.783999999999999)"/>
-      <ellipse cx="50" cy="-6" rx="20" ry="46" fill="#fef3c7" stroke="#d6d3d1" stroke-width="2" transform="rotate(6.783999999999999)"/>
-      <circle cx="0" cy="8" r="7" fill="#fda4af" opacity="0.9"/><circle cx="0" cy="8" r="3" fill="#fff"/>
-      <path d="M-16 -2 Q-10 4 -4 -2" fill="none" stroke="#475569" stroke-width="2"/><path d="M4 -2 Q10 4 16 -2" fill="none" stroke="#475569" stroke-width="2"/>
-      <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
-      <ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
-      <path d="M-5 14 Q0 19 5 14" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="0" cy="40" r="9" fill="#fffbeb" stroke="#d6d3d1" stroke-width="1.5"/>
+  <g transform="translate(120.48,116.848) rotate(0) scale(0.99736)">
+      <ellipse cx="0" cy="14" rx="30" ry="26" fill="#a16207" stroke="#713f12" stroke-width="2"/>
+      <ellipse cx="-38" cy="0" rx="14" ry="20" fill="#a16207"/><ellipse cx="38" cy="0" rx="14" ry="20" fill="#a16207"/>
+      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#1e293b"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#1e293b"/>
+      <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/><ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
     </g>
-  <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">肉桂狗·牛奶·搖籃</text>
+  <rect x="8" y="8" width="240" height="240" rx="14" fill="none" stroke="#60a5fa" stroke-width="3" opacity="0.7"/>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">可可豆·熱可可</text>
 </svg>

@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#dcfce7"/>
-      <stop offset="100%" stop-color="#bbf7d0"/>
+      <stop offset="0%" stop-color="#134e4a"/>
+      <stop offset="100%" stop-color="#115e59"/>
     </linearGradient>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fcd34d"/>
@@ -12,27 +12,37 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
-<line x1="128" y1="128" x2="238" y2="128" stroke="#fff" stroke-width="1" opacity="0.15"/>
-<line x1="128" y1="128" x2="205.78174593052023" y2="205.78174593052023" stroke="#fff" stroke-width="1" opacity="0.15"/>
-<line x1="128" y1="128" x2="128" y2="238" stroke="#fff" stroke-width="1" opacity="0.15"/>
-<line x1="128" y1="128" x2="50.218254069479784" y2="205.78174593052023" stroke="#fff" stroke-width="1" opacity="0.15"/>
-<line x1="128" y1="128" x2="18" y2="128" stroke="#fff" stroke-width="1" opacity="0.15"/>
-<line x1="128" y1="128" x2="50.218254069479755" y2="50.218254069479784" stroke="#fff" stroke-width="1" opacity="0.15"/>
-<line x1="128" y1="128" x2="127.99999999999999" y2="18" stroke="#fff" stroke-width="1" opacity="0.15"/>
-<line x1="128" y1="128" x2="205.7817459305202" y2="50.218254069479755" stroke="#fff" stroke-width="1" opacity="0.15"/>
-  <ellipse cx="56" cy="200" rx="28" ry="14" fill="#fff" opacity="0.85"/><ellipse cx="200" cy="188" rx="24" ry="12" fill="#fff" opacity="0.75"/><ellipse cx="128" cy="210" rx="36" ry="16" fill="#fff" opacity="0.6"/>
-  
-    <g transform="translate(136.016,128.304) rotate(0) scale(1.0156)">
-      <ellipse cx="0" cy="18" rx="36" ry="30" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
-      <ellipse cx="-50" cy="-6" rx="20" ry="46" fill="#ffffff" stroke="#94a3b8" stroke-width="2" transform="rotate(-22.576)"/>
-      <ellipse cx="50" cy="-6" rx="20" ry="46" fill="#ffffff" stroke="#94a3b8" stroke-width="2" transform="rotate(22.576)"/>
-      
-      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#60a5fa"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#60a5fa"/>
-      <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
-      <ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
-      <path d="M-5 14 Q0 19 5 14" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="0" cy="40" r="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<circle cx="57.856" cy="27.12" r="1" fill="#fff" opacity="0.413"/>
+<circle cx="94.464" cy="90.12" r="2.5220000000000002" fill="#fff" opacity="0.7935"/>
+<circle cx="131.072" cy="33.120000000000005" r="1.452" fill="#fff" opacity="0.526"/>
+<circle cx="91.904" cy="96.12" r="2.974" fill="#fff" opacity="0.7585"/>
+<circle cx="128.512" cy="39.120000000000005" r="1.904" fill="#fff" opacity="0.639"/>
+<circle cx="165.12" cy="102.12" r="2.834" fill="#fff" opacity="0.3715"/>
+<circle cx="125.952" cy="45.12" r="2.356" fill="#fff" opacity="0.752"/>
+<circle cx="162.56" cy="108.12" r="1.286" fill="#fff" opacity="0.4845"/>
+<circle cx="199.168" cy="51.12" r="2.808" fill="#fff" opacity="0.717"/>
+<circle cx="160" cy="114.11999999999999" r="1.738" fill="#fff" opacity="0.5974999999999999"/>
+<circle cx="196.608" cy="57.12" r="2.668" fill="#fff" opacity="0.32999999999999996"/>
+<circle cx="233.216" cy="0.12" r="2.19" fill="#fff" opacity="0.5625"/>
+<circle cx="194.048" cy="63.120000000000005" r="1.12" fill="#fff" opacity="0.44299999999999995"/>
+<circle cx="230.656" cy="6.119999999999999" r="2.05" fill="#fff" opacity="0.6755"/>
+<circle cx="11.264" cy="69.11999999999999" r="1.572" fill="#fff" opacity="0.556"/>
+<circle cx="228.096" cy="12.120000000000001" r="2.502" fill="#fff" opacity="0.7885"/>
+<circle cx="8.704" cy="75.12" r="2.024" fill="#fff" opacity="0.521"/>
+<circle cx="45.312" cy="18.12" r="2.9539999999999997" fill="#fff" opacity="0.40149999999999997"/>
+  <ellipse cx="108" cy="88" rx="10" ry="7" fill="#f472b6"/><ellipse cx="148" cy="88" rx="10" ry="7" fill="#f472b6"/><circle cx="128" cy="88" r="5" fill="#ec4899"/>
+  <g transform="translate(134.68,127.516) rotate(0) scale(1.00204)">
+      <ellipse cx="0" cy="8" rx="34" ry="30" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+      <ellipse cx="-38" cy="-8" rx="10" ry="12" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+      <ellipse cx="38" cy="-8" rx="10" ry="12" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+      <ellipse cx="0" cy="-42" rx="18" ry="12" fill="#fbbf24"/>
+      <ellipse cx="-12" cy="-44" rx="10" ry="8" fill="#fbbf24"/>
+      <ellipse cx="12" cy="-44" rx="10" ry="8" fill="#fbbf24"/>
+      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#1e293b"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#1e293b"/>
+      <ellipse cx="-20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/><ellipse cx="20" cy="10" rx="8" ry="5" fill="#fda4af" opacity="0.65"/>
+      <ellipse cx="-6" cy="-6" r="2.5" fill="#1e293b"/><ellipse cx="6" cy="-6" r="2.5" fill="#1e293b"/>
     </g>
-  <rect x="6" y="6" width="244" height="244" rx="16" fill="none" stroke="#c084fc" stroke-width="4" opacity="0.85"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">肉桂狗·雲朵飄飄</text>
+  <rect x="3" y="3" width="250" height="250" rx="18" fill="none" stroke="#ef4444" stroke-width="6" opacity="0.9"/>
+      <rect x="9" y="9" width="238" height="238" rx="15" fill="none" stroke="url(#gold)" stroke-width="3"/>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">Hello Kitty·蝴…</text>
 </svg>

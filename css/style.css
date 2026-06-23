@@ -3958,11 +3958,13 @@ html[data-theme="dark"] .card-art-cinna .card-img {
 }
 
 /* 肉桂狗：禮物盒 + 雲朵 */
+.anim-sanrio .cinna-text,
 .anim-cinnamoroll .cinna-text {
   color: #fff;
   text-shadow: 0 0 10px #f9a8d4, 0 2px 4px rgba(0,0,0,0.2);
 }
 
+.anim-sanrio .cinna-flash,
 .anim-cinnamoroll .cinna-flash {
   animation: cinna-flash 3s ease forwards;
 }
@@ -4086,6 +4088,206 @@ html[data-theme="dark"] .card-art-cinna .card-img {
   text-shadow: 0 0 12px #ec4899, 0 0 24px #fbbf24;
   font-size: 1.05rem;
   animation: gacha-ssr-hint-pulse 0.5s ease-in-out infinite alternate;
+}
+
+/* PIXAR：電影首映 — 場記板 + 膠卷 + 聚光燈 */
+.pixar-cinema-bg {
+  background: radial-gradient(ellipse at 50% 30%, #1e293b 0%, #0f172a 45%, #020617 100%);
+}
+
+.pixar-aurora {
+  background: conic-gradient(from 200deg at 50% 80%, transparent, rgba(251, 191, 36, 0.12), transparent, rgba(239, 68, 68, 0.1), transparent);
+  animation: pixar-aurora-spin 6s linear infinite;
+}
+
+@keyframes pixar-aurora-spin {
+  to { transform: rotate(360deg); }
+}
+
+.pixar-rays {
+  background: repeating-conic-gradient(from 0deg at 50% 55%, transparent 0deg 14deg, rgba(254, 240, 138, 0.04) 14deg 16deg);
+  animation: pixar-rays-spin 10s linear infinite;
+}
+
+@keyframes pixar-rays-spin {
+  to { transform: rotate(360deg); }
+}
+
+.pixar-vignette {
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(0, 0, 0, 0.65) 100%);
+}
+
+.anim-pixar .pixar-text {
+  color: #fef08a;
+  text-shadow: 0 0 14px #f97316, 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.anim-pixar .pixar-flash {
+  animation: pixar-flash 3s ease forwards;
+}
+
+@keyframes pixar-flash {
+  0%, 72% { opacity: 0; background: transparent; }
+  80% { opacity: 1; background: rgba(254, 240, 138, 0.55); }
+  88% { opacity: 0; }
+  94% { opacity: 1; background: rgba(239, 68, 68, 0.45); }
+  100% { opacity: 0; }
+}
+
+.pixar-spotlight {
+  position: absolute;
+  top: -40%;
+  left: 50%;
+  width: 180px;
+  height: 200%;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(254, 240, 138, 0.35) 0%, rgba(254, 240, 138, 0.08) 40%, transparent 70%);
+  clip-path: polygon(42% 0%, 58% 0%, 100% 100%, 0% 100%);
+  animation: pixar-spot-sway 2.4s ease-in-out infinite alternate;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes pixar-spot-sway {
+  from { transform: translateX(-60%) rotate(-6deg); opacity: 0.7; }
+  to { transform: translateX(-40%) rotate(6deg); opacity: 1; }
+}
+
+.pixar-reel {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: #334155;
+  border: 6px solid #64748b;
+  animation: pixar-reel-spin 2.2s linear infinite;
+  z-index: 2;
+  box-shadow: 0 0 30px rgba(251, 191, 36, 0.35);
+}
+
+@keyframes pixar-reel-spin {
+  to { transform: rotate(360deg); }
+}
+
+.pixar-reel-hub {
+  position: absolute;
+  inset: 30%;
+  border-radius: 50%;
+  background: #1e293b;
+  border: 3px solid #94a3b8;
+}
+
+.pixar-reel-hole {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #0f172a;
+}
+
+.pixar-reel-hole.h1 { top: 8px; left: 50%; transform: translateX(-50%); }
+.pixar-reel-hole.h2 { bottom: 8px; left: 50%; transform: translateX(-50%); }
+.pixar-reel-hole.h3 { left: 8px; top: 50%; transform: translateY(-50%); }
+.pixar-reel-hole.h4 { right: 8px; top: 50%; transform: translateY(-50%); }
+
+.pixar-clapper {
+  position: absolute;
+  z-index: 4;
+  animation: pixar-clap 0.55s ease-in-out infinite;
+}
+
+@keyframes pixar-clap {
+  0%, 55% { transform: rotate(0deg) translateY(0); }
+  70% { transform: rotate(-18deg) translateY(-6px); }
+  100% { transform: rotate(0deg) translateY(0); }
+}
+
+.pixar-clapper-top {
+  width: 110px;
+  height: 28px;
+  background: repeating-linear-gradient(90deg, #1e293b 0 14px, #f8fafc 14px 28px);
+  border-radius: 4px 4px 0 0;
+  transform-origin: bottom left;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.pixar-clapper-bottom {
+  width: 110px;
+  height: 56px;
+  background: #1e293b;
+  border-radius: 0 0 6px 6px;
+  margin-top: -2px;
+  border: 2px solid #475569;
+}
+
+.pixar-film-strip {
+  position: absolute;
+  height: 18px;
+  background: #1e293b;
+  border-top: 3px dashed #fbbf24;
+  border-bottom: 3px dashed #fbbf24;
+  opacity: 0.7;
+  animation: pixar-film-scroll 1.8s linear infinite;
+}
+
+.pixar-film-strip.f1 { width: 140px; top: 18%; left: -20%; }
+.pixar-film-strip.f2 { width: 120px; bottom: 20%; right: -15%; animation-delay: 0.6s; }
+
+@keyframes pixar-film-scroll {
+  from { transform: translateX(-20px); }
+  to { transform: translateX(20px); }
+}
+
+.pixar-float-star {
+  position: absolute;
+  font-size: 1.4rem;
+  animation: pixar-star-float 1.6s ease-in-out infinite;
+  z-index: 3;
+}
+
+.pixar-float-star.fs1 { left: 16%; top: 20%; color: #fef08a; }
+.pixar-float-star.fs2 { right: 18%; top: 26%; animation-delay: 0.4s; }
+.pixar-float-star.fs3 { left: 22%; bottom: 22%; color: #fbbf24; animation-delay: 0.9s; }
+
+@keyframes pixar-star-float {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
+  50% { transform: translateY(-10px) scale(1.15); opacity: 1; }
+}
+
+.pixar-sub.ur-hint,
+.pixar-sub.sr-hint {
+  color: #fde68a;
+  text-shadow: 0 0 10px #f59e0b;
+}
+
+.pixar-sub.ssr-hint {
+  color: #fca5a5;
+  text-shadow: 0 0 12px #ef4444, 0 0 24px #fbbf24;
+  font-size: 1.05rem;
+  animation: gacha-ssr-hint-pulse 0.5s ease-in-out infinite alternate;
+}
+
+.pixar-core.burst-sr .pixar-clapper-bottom {
+  box-shadow: 0 0 24px rgba(192, 132, 252, 0.7);
+}
+
+.pixar-core.burst-ur .pixar-reel {
+  box-shadow: 0 0 40px rgba(251, 191, 36, 0.8);
+  animation-duration: 1.2s;
+}
+
+.pixar-core.burst-ssr .pixar-clapper-top {
+  animation: pixar-clap-fast 0.3s ease-in-out infinite;
+}
+
+@keyframes pixar-clap-fast {
+  0%, 50% { transform: rotate(0deg); }
+  70% { transform: rotate(-25deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.gacha-anim-stage.anim-tier-ssr .pixar-float-star {
+  animation-duration: 0.8s;
 }
 
 /* 結果揭曉 */

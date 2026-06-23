@@ -2,24 +2,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f472b6"/>
-      <stop offset="100%" stop-color="#a855f7"/>
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
   
-  <circle cx="80" cy="70" r="16" fill="#fbbf24"/><circle cx="128" cy="55" r="18" fill="#60a5fa"/><circle cx="176" cy="70" r="16" fill="#ef4444"/>
-  
-    <g transform="translate(128,114.72) scale(0.9332)">
-      <ellipse cx="0" cy="10" rx="32" ry="28" fill="#fbbf24" opacity="0.9"/>
-      <ellipse cx="-40" cy="-5" rx="14" ry="28" fill="#fbbf24" opacity="0.75" transform="rotate(-20)"/>
-      <ellipse cx="40" cy="-5" rx="14" ry="28" fill="#fbbf24" opacity="0.75" transform="rotate(20)"/>
-      <ellipse cx="-12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <ellipse cx="12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <circle cx="-12" cy="2" r="3" fill="#1e293b"/>
-      <circle cx="12" cy="2" r="3" fill="#1e293b"/>
-      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#1e293b" stroke-width="2"/>
+  <g transform="translate(132.672,119.736) rotate(-1.6399999999999997) scale(0.9624)">
+      <ellipse cx="0" cy="10" rx="30" ry="36" fill="#e7e5e4" stroke="#a8a29e"/>
+      <circle cx="0" cy="-20" r="24" fill="#e7e5e4" stroke="#a8a29e"/>
+      <ellipse cx="-10" cy="-22" rx="8" ry="10" fill="#1e293b"/><ellipse cx="10" cy="-22" rx="8" ry="10" fill="#1e293b"/>
+      <path d="M-16 -40 Q0 -55 16 -40" fill="none" stroke="#78716c" stroke-width="2"/>
     </g>
   <rect x="8" y="8" width="240" height="240" rx="14" fill="none" stroke="#60a5fa" stroke-width="3"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">玩轉腦朋友·驚驚</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">埃克托·吉他彈唱</text>
 </svg>

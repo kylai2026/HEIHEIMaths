@@ -2,24 +2,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f472b6"/>
-      <stop offset="100%" stop-color="#a855f7"/>
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
   
-  <circle cx="80" cy="70" r="16" fill="#fbbf24"/><circle cx="128" cy="55" r="18" fill="#60a5fa"/><circle cx="176" cy="70" r="16" fill="#ef4444"/>
-  
-    <g transform="translate(128,112.66) scale(0.9898)">
-      <ellipse cx="0" cy="10" rx="32" ry="28" fill="#fbbf24" opacity="0.9"/>
-      <ellipse cx="-40" cy="-5" rx="14" ry="28" fill="#fbbf24" opacity="0.75" transform="rotate(-20)"/>
-      <ellipse cx="40" cy="-5" rx="14" ry="28" fill="#fbbf24" opacity="0.75" transform="rotate(20)"/>
-      <ellipse cx="-12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <ellipse cx="12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <circle cx="-12" cy="2" r="3" fill="#1e293b"/>
-      <circle cx="12" cy="2" r="3" fill="#1e293b"/>
-      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#1e293b" stroke-width="2"/>
+  <g transform="translate(122.64,114.738) rotate(-2.67) scale(1.00485)">
+      <ellipse cx="0" cy="16" rx="26" ry="30" fill="#fbbf24"/>
+      <ellipse cx="0" cy="-18" rx="24" ry="22" fill="#fef3c7"/>
+      <polygon points="0,-42 -16,-28 16,-28" fill="#fbbf24"/>
+      <ellipse cx="-8" cy="-18" rx="4" ry="6" fill="#1e293b"/><ellipse cx="8" cy="-18" rx="4" ry="6" fill="#1e293b"/>
+      <text x="0" y="36" text-anchor="middle" font-size="14">🏕</text>
     </g>
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">玩轉腦朋友·怒怒</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">羅素·荒野探險</text>
 </svg>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f1f5f9"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcd34d"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#fcd34d"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" fill="url(#bg)"/>
+<circle cx="29.503999999999998" cy="29.503999999999998" r="3" fill="#fff" opacity="0.35"/>
+<circle cx="129.94400000000002" cy="178.76" r="4" fill="#fff" opacity="0.35"/>
+<circle cx="230.384" cy="112.01599999999999" r="5" fill="#fff" opacity="0.35"/>
+<circle cx="178.76" cy="45.272000000000006" r="3" fill="#fff" opacity="0.35"/>
+<circle cx="63.2" cy="194.52800000000002" r="4" fill="#fff" opacity="0.35"/>
+  
+  <g transform="translate(118.72,116.624) rotate(0) scale(0.9772000000000001)">
+      <ellipse cx="0" cy="18" rx="30" ry="34" fill="#1e293b" stroke="#0f172a" stroke-width="2"/>
+      <ellipse cx="0" cy="-30" rx="22" ry="20" fill="#1e293b" stroke="#0f172a" stroke-width="2"/>
+      <polygon points="-18,-48 -8,-58 8,-58 18,-48" fill="#f97316"/>
+      <ellipse cx="-14" cy="-2" rx="7" ry="10" fill="#fff"/><ellipse cx="14" cy="-2" rx="7" ry="10" fill="#fff"/>
+      <ellipse cx="0" cy="8" rx="10" ry="6" fill="#fff"/>
+    </g>
+  <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" fill="#64748b" opacity="0.9">唐企鵝·冰山企鵝</text>
+</svg>

@@ -2,24 +2,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fde68a"/>
-      <stop offset="100%" stop-color="#f59e0b"/>
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#6d28d9"/>
     </linearGradient>
   </defs>
   <rect width="256" height="256" fill="url(#bg)"/>
   
-  <rect x="100" y="180" width="56" height="40" rx="6" fill="#d97706"/><circle cx="128" cy="170" r="18" fill="#fef3c7"/>
-  
-    <g transform="translate(128,114.32) scale(1.0396)">
-      <ellipse cx="0" cy="10" rx="32" ry="28" fill="#2563eb" opacity="0.9"/>
-      <ellipse cx="-40" cy="-5" rx="14" ry="28" fill="#2563eb" opacity="0.75" transform="rotate(-20)"/>
-      <ellipse cx="40" cy="-5" rx="14" ry="28" fill="#2563eb" opacity="0.75" transform="rotate(20)"/>
-      <ellipse cx="-12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <ellipse cx="12" cy="0" rx="6" ry="8" fill="#fff"/>
-      <circle cx="-12" cy="2" r="3" fill="#1e293b"/>
-      <circle cx="12" cy="2" r="3" fill="#1e293b"/>
-      <path d="M-6 14 Q0 20 6 14" fill="none" stroke="#1e293b" stroke-width="2"/>
+  <g transform="translate(129.28,117.664) rotate(-1.8399999999999999) scale(1.0422)">
+      <ellipse cx="0" cy="16" rx="24" ry="30" fill="#a78bfa" opacity="0.85"/>
+      <ellipse cx="0" cy="-18" rx="22" ry="20" fill="#fef3c7"/>
+      <ellipse cx="-8" cy="-18" rx="6" ry="8" fill="#1e293b"/><ellipse cx="8" cy="-18" rx="6" ry="8" fill="#1e293b"/>
+      <path d="M-30 -10 Q0 20 30 -10" fill="#c4b5fd" opacity="0.4"/>
     </g>
   <rect x="10" y="10" width="236" height="236" rx="12" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">玩具總動員2·礦工</text>
+  <text x="128" y="246" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fff" opacity="0.85">小倩·嬰兒超能</text>
 </svg>
