@@ -146,9 +146,9 @@ const Storage = {
     try {
       const data = localStorage.getItem(this.KEY);
       const parsed = data ? JSON.parse(data) : this.defaultData();
-      return this.migrate(parsed);
+      return this.applyUnlimitedPoints(this.migrate(parsed));
     } catch {
-      return this.defaultData();
+      return this.applyUnlimitedPoints(this.defaultData());
     }
   },
 
@@ -255,16 +255,32 @@ const Storage = {
   },
 
   save(data) {
+    this.applyUnlimitedPoints(data);
     data._syncMeta = { updatedAt: new Date().toISOString() };
     this.saveLocal(data);
     if (typeof CloudSync !== 'undefined') CloudSync.schedulePush();
   },
 
   saveLocal(data) {
+    this.applyUnlimitedPoints(data);
     if (!data._syncMeta) {
       data._syncMeta = { updatedAt: new Date().toISOString() };
     }
     localStorage.setItem(this.KEY, JSON.stringify(data));
+  },
+
+  applyUnlimitedPoints(data) {
+    if (typeof getActiveUnlimitedPoints === 'function' && getActiveUnlimitedPoints()) {
+      data.points = UNLIMITED_POINTS_VALUE;
+    }
+    return data;
+  },
+
+  getPoints(data) {
+    if (typeof getActiveUnlimitedPoints === 'function' && getActiveUnlimitedPoints()) {
+      return UNLIMITED_POINTS_VALUE;
+    }
+    return data.points || 0;
   },
 
   recordAnswer(topicId, correct, extras = {}, dataRef = null) {

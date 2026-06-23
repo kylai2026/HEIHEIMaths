@@ -6,7 +6,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_uvWhBj7R-Kc2t8tubTRCiA_I0qsAYGC';
 const USER_ACCOUNTS = [
   { username: 'heihei', password: '2026' },
   { username: 'mother', password: '2026' },
-  { username: 'test', password: '2026' },
+  { username: 'test', password: '2026', unlimitedPoints: true },
   { username: 'father', password: '2026' },
   { username: 'chunchun', password: '2026' }
 ];
@@ -18,4 +18,18 @@ function validateAccount(username, password) {
     a => a.username.toLowerCase() === name && a.password === code
   );
   return match ? match.username : null;
+}
+
+const UNLIMITED_POINTS_VALUE = 999999;
+
+function hasUnlimitedPoints(studentName) {
+  if (!studentName) return false;
+  const name = studentName.trim().toLowerCase();
+  return USER_ACCOUNTS.some(a => a.username.toLowerCase() === name && a.unlimitedPoints);
+}
+
+function getActiveUnlimitedPoints() {
+  if (typeof CloudSync === 'undefined') return false;
+  const profile = CloudSync.getProfile();
+  return profile ? hasUnlimitedPoints(profile.studentName) : false;
 }

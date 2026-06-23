@@ -1447,6 +1447,19 @@ html[data-theme="dark"] .teach-hint {
   display: none;
 }
 
+.test-points-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.2rem 0.5rem;
+  border-radius: 99px;
+  background: rgba(251, 191, 36, 0.45);
+  color: #fff;
+}
+
+.test-points-badge.hidden {
+  display: none;
+}
+
 .btn-logout {
   border: 1px solid rgba(255, 255, 255, 0.45);
   background: rgba(255, 255, 255, 0.12);

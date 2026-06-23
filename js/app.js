@@ -262,7 +262,11 @@ const App = {
     const lvl = Scoring.getLevel(data.xp || 0);
     document.getElementById('hudLevel').textContent = lvl.level;
     document.getElementById('hudXp').textContent = lvl.xpInLevel;
-    document.getElementById('hudPoints').textContent = data.points || 0;
+    document.getElementById('hudPoints').textContent = Storage.getPoints(data);
+    const testBadge = document.getElementById('testPointsBadge');
+    if (testBadge) {
+      testBadge.classList.toggle('hidden', !getActiveUnlimitedPoints());
+    }
     document.getElementById('hudXpFill').style.width = `${lvl.progress}%`;
     document.getElementById('hudXpLabel').textContent =
       `Lv.${lvl.level} · 距離升級仲差 ${XP_PER_LEVEL - lvl.xpInLevel} XP`;
@@ -867,7 +871,7 @@ const App = {
     const lvl = Scoring.getLevel(data.xp || 0);
     const weekly = Scoring.getWeeklyStatus(data);
 
-    document.getElementById('rewardPoints').textContent = data.points || 0;
+    document.getElementById('rewardPoints').textContent = Storage.getPoints(data);
     document.getElementById('levelCard').innerHTML = `
       <img src="assets/img/tier-medium.png" alt="" class="level-hero-img">
       <div class="level-big">Lv.${lvl.level}</div>
@@ -901,7 +905,8 @@ const App = {
   },
 
   renderGachaPools(data) {
-    const points = data.points || 0;
+    const points = Storage.getPoints(data);
+    const unlimited = getActiveUnlimitedPoints();
     document.getElementById('gachaPools').innerHTML = CARD_POOLS.map(pool => {
       const stats = GachaSystem.getCollectionStats(data, pool.id);
       const pct = Math.round((stats.owned / stats.total) * 100);
@@ -925,11 +930,11 @@ const App = {
           </div>
           <div class="gacha-pool-actions">
             <button class="btn btn-primary gacha-pull-btn" data-pool="${pool.id}" data-count="1"
-              ${points >= GACHA_PULL_COST ? '' : 'disabled'}>
+              ${unlimited || points >= GACHA_PULL_COST ? '' : 'disabled'}>
               抽 1 次（${GACHA_PULL_COST} 分）
             </button>
             <button class="btn btn-secondary gacha-pull-btn" data-pool="${pool.id}" data-count="10"
-              ${points >= GACHA_PULL10_COST ? '' : 'disabled'}>
+              ${unlimited || points >= GACHA_PULL10_COST ? '' : 'disabled'}>
               十連抽（${GACHA_PULL10_COST} 分）
             </button>
           </div>
