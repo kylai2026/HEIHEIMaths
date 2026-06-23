@@ -84,6 +84,54 @@ const P12Questions = {
     return s + this._numToCn(rest);
   },
 
+  _p1Emoji(name) {
+    const map = {
+      '蘋果': '🍎', '橙': '🍊', '梨': '🍐', '車': '🚗', '球': '⚽',
+      '書': '📚', '花': '🌸', '筆': '✏️', '杯': '🥤', '熊': '🧸',
+      '星星': '⭐', '圓點': '🔵', '小鴨': '🐤', '積木': '🧱',
+      '花朵': '🌸', '糖果': '🍬', '氣球': '🎈',
+      '太陽': '☀️', '月亮': '🌙', '鳥': '🐦', '魚': '🐟', '雲': '☁️',
+      '樹': '🌳', '星': '⭐', '雨': '🌧️'
+    };
+    return map[name] || '🔹';
+  },
+
+  _renderCountGrid(n, obj) {
+    const emoji = this._p1Emoji(obj);
+    const cells = Array.from({ length: n }, () =>
+      `<span class="count-object-item">${emoji}</span>`
+    ).join('');
+    return `<div class="count-object-grid" aria-hidden="true">${cells}</div>`;
+  },
+
+  _renderLeftRightScene(left, right) {
+    const e = name => this._p1Emoji(name);
+    return `
+      <div class="pos-lr-scene" aria-hidden="true">
+        <div class="pos-lr-side pos-lr-left">
+          <span class="pos-lr-label">左</span>
+          <span class="pos-lr-item">${e(left)}<small>${left}</small></span>
+        </div>
+        <div class="pos-lr-person">🧒<small>小明</small></div>
+        <div class="pos-lr-side pos-lr-right">
+          <span class="pos-lr-label">右</span>
+          <span class="pos-lr-item">${e(right)}<small>${right}</small></span>
+        </div>
+      </div>`;
+  },
+
+  _renderUpDownScene(top, bottom) {
+    const e = name => this._p1Emoji(name);
+    return `
+      <div class="pos-ud-scene" aria-hidden="true">
+        <div class="pos-ud-item">${e(top)}<small>${top}</small></div>
+        <span class="pos-ud-label">上</span>
+        <div class="pos-ud-divider"></div>
+        <span class="pos-ud-label">下</span>
+        <div class="pos-ud-item">${e(bottom)}<small>${bottom}</small></div>
+      </div>`;
+  },
+
   // ── 小一：位置 ──
   posLeftRight() {
     const items = ['蘋果', '橙', '梨', '車', '球', '書', '花', '筆', '杯', '熊'];
@@ -93,8 +141,8 @@ const P12Questions = {
     const askLeft = MathUtils.randomChoice([true, false]);
     const correct = askLeft ? left : right;
     const qText = askLeft
-      ? `小明面向前方：左邊是${left}，右邊是${right}。哪一樣在<strong>左邊</strong>？`
-      : `小明面向前方：左邊是${left}，右邊是${right}。哪一樣在<strong>右邊</strong>？`;
+      ? `<p>小明面向前方，看圖回答：哪一樣在<strong>左邊</strong>？</p>${this._renderLeftRightScene(left, right)}`
+      : `<p>小明面向前方，看圖回答：哪一樣在<strong>右邊</strong>？</p>${this._renderLeftRightScene(left, right)}`;
     const wrong = items.filter(x => x !== correct);
     const options = MathUtils.shuffle([correct, ...MathUtils.shuffle(wrong).slice(0, 3)]);
     return this._mcq('p1-position', qText, options, correct,
@@ -110,8 +158,8 @@ const P12Questions = {
     const askUp = MathUtils.randomChoice([true, false]);
     const correct = askUp ? top : bottom;
     const qText = askUp
-      ? `看圖：${top}在上方，${bottom}在下方。哪一樣在<strong>上面</strong>？`
-      : `看圖：${top}在上方，${bottom}在下方。哪一樣在<strong>下面</strong>？`;
+      ? `<p>看圖：哪一樣在<strong>上面</strong>？</p>${this._renderUpDownScene(top, bottom)}`
+      : `<p>看圖：哪一樣在<strong>下面</strong>？</p>${this._renderUpDownScene(top, bottom)}`;
     const wrong = items.filter(x => x !== correct);
     const options = MathUtils.shuffle([correct, ...MathUtils.shuffle(wrong).slice(0, 3)]);
     return this._mcq('p1-position', qText, options, correct,
@@ -142,8 +190,8 @@ const P12Questions = {
   countObjects() {
     const n = MathUtils.randomInt(1, 20);
     const obj = MathUtils.randomChoice(['蘋果', '星星', '圓點', '小鴨', '積木', '花朵', '糖果', '氣球']);
-    return this.base('p1-numbers20',
-      `數一數，圖中有幾個${obj}？（${'●'.repeat(Math.min(n, 12))}${n > 12 ? '⋯' : ''}）`,
+    const qText = `<p>數一數，圖中有幾個${obj}？</p>${this._renderCountGrid(n, obj)}`;
+    return this.base('p1-numbers20', qText,
       { type: 'decimal', value: n }, String(n),
       '提示：用手指逐個數',
       `<h4>📖 解法</h4><p>共有 <strong>${n}</strong> 個</p>`);
