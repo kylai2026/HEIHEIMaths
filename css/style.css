@@ -612,7 +612,8 @@ body {
 }
 
 .grade-modal {
-  max-width: 420px;
+  max-width: 480px;
+  pointer-events: auto;
 }
 
 .grade-modal-intro {
@@ -1703,12 +1704,12 @@ body.card-viewer-open {
   display: none;
 }
 
-#profileModal {
-  z-index: 2100;
+#gradeModal {
+  z-index: 2200;
 }
 
-#gradeModal {
-  z-index: 2000;
+#profileModal {
+  z-index: 2100;
 }
 
 .btn-login {

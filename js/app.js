@@ -33,27 +33,37 @@ const App = {
     this.renderTierSections();
     this.renderSidebar();
     this.updateGradeLabels();
-    AudioManager.playSfx('click');
+    if (typeof AudioManager !== 'undefined') AudioManager.playSfx('click');
+    if (!CloudSync.getProfile()) {
+      this.showProfileSetup();
+    }
   },
 
   showGradeModalIfNeeded() {
-    if (!CloudSync.getProfile()) return;
     if (this.getSelectedGrade()) return;
-    const profileModal = document.getElementById('profileModal');
-    if (profileModal && !profileModal.classList.contains('hidden')) return;
+    document.getElementById('profileModal')?.classList.add('hidden');
     const modal = document.getElementById('gradeModal');
     if (!modal) return;
     this.renderGradeModalGrid();
     modal.classList.remove('hidden');
   },
 
+  bindGradeDelegation() {
+    if (this._gradeBound) return;
+    this._gradeBound = true;
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.grade-btn, .practice-grade-tab');
+      if (!btn?.dataset.grade) return;
+      e.preventDefault();
+      e.stopPropagation();
+      this.setSelectedGrade(btn.dataset.grade);
+    });
+  },
+
   renderGradeModalGrid() {
     const grid = document.getElementById('gradeModalGrid');
     if (!grid) return;
     grid.innerHTML = GRADE_ORDER.map(grade => this.gradeButtonHtml(grade, true)).join('');
-    grid.querySelectorAll('[data-grade]').forEach(btn => {
-      btn.addEventListener('click', () => this.setSelectedGrade(btn.dataset.grade));
-    });
   },
 
   gradeButtonHtml(grade, large = false) {
@@ -73,9 +83,6 @@ const App = {
     const bar = document.getElementById('practiceGradeBar');
     if (grid) {
       grid.innerHTML = GRADE_ORDER.map(grade => this.gradeButtonHtml(grade)).join('');
-      grid.querySelectorAll('[data-grade]').forEach(btn => {
-        btn.addEventListener('click', () => this.setSelectedGrade(btn.dataset.grade));
-      });
     }
     if (bar) {
       bar.innerHTML = `
@@ -88,9 +95,6 @@ const App = {
           `).join('')}
         </div>
       `;
-      bar.querySelectorAll('[data-grade]').forEach(btn => {
-        btn.addEventListener('click', () => this.setSelectedGrade(btn.dataset.grade));
-      });
     }
     this.updateGradeLabels();
   },
@@ -127,13 +131,10 @@ const App = {
     AudioManager.init();
     this.sanitizeLegacyUI();
     this.bindAuthButtons();
+    this.bindGradeDelegation();
 
     const syncResult = await CloudSync.init();
     this.updateAuthUI();
-
-    if (syncResult.needSetup) {
-      this.showProfileSetup();
-    }
 
     QuestionBank.init();
     this.state.selectedGrade = UserSettings.load().grade || null;
@@ -152,7 +153,13 @@ const App = {
     this.bindModal();
     this.bindCardZoomDelegation();
     this.bindSessionTracking();
-    this.showGradeModalIfNeeded();
+
+    if (!this.getSelectedGrade()) {
+      this.showGradeModalIfNeeded();
+    } else if (syncResult.needSetup) {
+      this.showProfileSetup();
+    }
+
     document.getElementById('resetProgress').addEventListener('click', async () => {
       if (confirm('確定要重設所有學習記錄嗎？（雲端記錄都會一併清除）')) {
         Storage.reset();
