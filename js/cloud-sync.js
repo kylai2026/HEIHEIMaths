@@ -171,11 +171,11 @@ const CloudSync = {
       await this.pull();
       await this.push();
       this.setStatus('synced');
-      return { ok: true };
+      return { ok: true, mode: 'cloud' };
     } catch (err) {
       console.error('CloudSync register failed:', err);
       this.setStatus('error', err.message || err);
-      throw err;
+      return { ok: true, mode: 'local-offline' };
     }
   },
 

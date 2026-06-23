@@ -132,12 +132,23 @@ const App = {
     this.sanitizeLegacyUI();
     this.bindAuthButtons();
     this.bindGradeDelegation();
+    this.bindModal();
+    this.bindCardZoomDelegation();
 
     const syncResult = await CloudSync.init();
     this.updateAuthUI();
-
-    QuestionBank.init();
     this.state.selectedGrade = UserSettings.load().grade || null;
+
+    if (!this.getSelectedGrade()) {
+      this.showGradeModalIfNeeded();
+    } else if (syncResult.needSetup) {
+      this.showProfileSetup();
+    }
+
+    setTimeout(() => this.bootstrapApp(), 0);
+  },
+
+  bootstrapApp() {
     this.bindNavigation();
     this.bindTierSelector();
     this.renderHUD();
@@ -150,25 +161,21 @@ const App = {
     this.bindPractice();
     this.bindQuiz();
     this.bindDaily();
-    this.bindModal();
-    this.bindCardZoomDelegation();
     this.bindSessionTracking();
 
-    if (!this.getSelectedGrade()) {
-      this.showGradeModalIfNeeded();
-    } else if (syncResult.needSetup) {
-      this.showProfileSetup();
+    const resetBtn = document.getElementById('resetProgress');
+    if (resetBtn && !resetBtn.dataset.bound) {
+      resetBtn.dataset.bound = '1';
+      resetBtn.addEventListener('click', async () => {
+        if (confirm('確定要重設所有學習記錄嗎？（雲端記錄都會一併清除）')) {
+          Storage.reset();
+          this.renderHUD();
+          this.renderHome();
+          this.renderProgress();
+          this.renderRewards();
+        }
+      });
     }
-
-    document.getElementById('resetProgress').addEventListener('click', async () => {
-      if (confirm('確定要重設所有學習記錄嗎？（雲端記錄都會一併清除）')) {
-        Storage.reset();
-        this.renderHUD();
-        this.renderHome();
-        this.renderProgress();
-        this.renderRewards();
-      }
-    });
   },
 
   bindAuthButtons() {
@@ -192,7 +199,7 @@ const App = {
         e.stopPropagation();
         this.logout();
       }
-    });
+    }, true);
   },
 
   updateAuthUI() {
@@ -260,15 +267,15 @@ const App = {
           this.updateAuthUI();
           this.renderHUD();
           this.renderGradePicker();
-          this.renderHome();
-          this.renderSidebar();
-          this.renderProgress();
-          this.renderRewards();
+          if (typeof this.renderHome === 'function') this.renderHome();
+          if (typeof this.renderSidebar === 'function') this.renderSidebar();
+          if (typeof this.renderProgress === 'function') this.renderProgress();
+          if (typeof this.renderRewards === 'function') this.renderRewards();
           this.showGradeModalIfNeeded();
           this._profileSetupResolve?.();
           this._profileSetupResolve = null;
         } catch (err) {
-          errEl.textContent = '連線失敗，請檢查密碼或網絡後再試。';
+          errEl.textContent = '登入失敗，請再試一次。';
           errEl.classList.remove('hidden');
         } finally {
           btn.disabled = false;
@@ -1520,6 +1527,8 @@ const App = {
     }
   }
 };
+
+window.App = App;
 
 document.addEventListener('DOMContentLoaded', () => {
   App.init().catch((err) => {
