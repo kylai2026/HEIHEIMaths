@@ -1620,18 +1620,27 @@ const App = {
       </div>
     `;
 
-    document.getElementById('topicProgressList').innerHTML = TOPICS.map(t => {
+    const grade = this.getSelectedGrade();
+    const topicList = grade && typeof getTopicsByGrade === 'function'
+      ? getTopicsByGrade(grade)
+      : TOPICS;
+
+    document.getElementById('topicProgressList').innerHTML = topicList.map(t => {
       const stats = data.topics[t.id] || { answered: 0, correct: 0 };
-      const acc = stats.answered > 0 ? Math.round((stats.correct / stats.answered) * 100) : 0;
-      const barClass = acc >= 70 ? '' : acc >= 50 ? 'mid' : 'low';
+      const hasData = stats.answered > 0;
+      const acc = hasData ? Math.round((stats.correct / stats.answered) * 100) : 0;
+      const barClass = !hasData ? 'empty' : acc >= 70 ? '' : acc >= 50 ? 'mid' : 'low';
+      const scoreText = hasData
+        ? `${stats.correct}/${stats.answered}（${acc}%）`
+        : '尚未練習';
       return `
         <div class="topic-progress-item">
           <div class="topic-progress-header">
             <span>${t.icon} ${t.name}</span>
-            <span>${stats.correct}/${stats.answered}（${acc}%）</span>
+            <span class="topic-progress-score ${hasData ? '' : 'topic-progress-score--empty'}">${scoreText}</span>
           </div>
           <div class="topic-progress-bar">
-            <div class="topic-progress-fill ${barClass}" style="width:${acc}%"></div>
+            <div class="topic-progress-fill ${barClass}" style="width:${hasData ? acc : 0}%"></div>
           </div>
         </div>
       `;

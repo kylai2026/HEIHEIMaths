@@ -1694,6 +1694,15 @@ html[data-theme="dark"] .teach-hint {
   background: var(--warning);
 }
 
+.topic-progress-fill.empty {
+  background: transparent;
+}
+
+.topic-progress-score--empty {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
 .quiz-history {
   display: flex;
   flex-direction: column;
@@ -2492,6 +2501,129 @@ html[data-theme="dark"] .option-btn {
 html[data-theme="dark"] .sidebar-item,
 html[data-theme="dark"] .stat-card {
   background: var(--card);
+}
+
+/* Dark mode: 分題練習 sidebar & 難度選擇 */
+html[data-theme="dark"] .topic-sidebar {
+  background: rgba(15, 23, 42, 0.45);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem;
+}
+
+html[data-theme="dark"] .sidebar-section {
+  color: #cbd5e1;
+}
+
+html[data-theme="dark"] .sidebar-item {
+  background: #1e293b;
+  border-color: #475569;
+  color: #f1f5f9;
+}
+
+html[data-theme="dark"] .sidebar-item:hover {
+  border-color: #60a5fa;
+  background: #273549;
+}
+
+html[data-theme="dark"] .sidebar-item.active {
+  background: #1e3a5f;
+  border-color: #60a5fa;
+  color: #bfdbfe;
+}
+
+html[data-theme="dark"] .practice-grade-tab {
+  background: #1e293b;
+  border-color: #475569;
+  color: #e2e8f0;
+}
+
+html[data-theme="dark"] .practice-grade-tab.active {
+  background: #1e3a5f;
+  border-color: #60a5fa;
+  color: #bfdbfe;
+}
+
+html[data-theme="dark"] .tier-btn {
+  background: #1e293b;
+  border-color: #475569;
+  color: #e2e8f0;
+}
+
+html[data-theme="dark"] .tier-btn.tier-easy.active {
+  border-color: #4ade80;
+  background: #14532d;
+  color: #bbf7d0;
+}
+
+html[data-theme="dark"] .tier-btn.tier-medium.active {
+  border-color: #60a5fa;
+  background: #1e3a5f;
+  color: #bfdbfe;
+}
+
+html[data-theme="dark"] .tier-btn.tier-hard.active {
+  border-color: #f87171;
+  background: #450a0a;
+  color: #fecaca;
+}
+
+html[data-theme="dark"] .placeholder-text,
+html[data-theme="dark"] .sidebar-placeholder {
+  color: #cbd5e1;
+}
+
+html[data-theme="dark"] .question-card .math-expr {
+  color: #93c5fd;
+}
+
+/* Dark mode: 學習紀錄 · 子女答錯題目 */
+html[data-theme="dark"] .parent-wrong-panel {
+  background: linear-gradient(135deg, #1c1917, #1e293b);
+  border-color: #78350f;
+  color: #f1f5f9;
+}
+
+html[data-theme="dark"] .parent-wrong-panel h3 {
+  color: #fde68a;
+}
+
+html[data-theme="dark"] .parent-wrong-intro {
+  color: #fcd34d;
+}
+
+html[data-theme="dark"] .parent-child-section {
+  border-top-color: #78350f;
+}
+
+html[data-theme="dark"] .parent-child-section h4 {
+  color: #fde68a;
+}
+
+html[data-theme="dark"] .parent-wrong-count {
+  background: #78350f;
+  color: #fde68a;
+}
+
+html[data-theme="dark"] .parent-wrong-item {
+  background: #0f172a;
+  border-color: #475569;
+  color: #f1f5f9;
+}
+
+html[data-theme="dark"] .parent-wrong-meta {
+  color: #cbd5e1;
+}
+
+html[data-theme="dark"] .parent-wrong-q {
+  color: #f8fafc;
+}
+
+html[data-theme="dark"] .parent-wrong-ans .wrong-user {
+  color: #fca5a5;
+}
+
+html[data-theme="dark"] .parent-wrong-ans .wrong-correct {
+  color: #86efac;
 }
 
 /* iPad & laptop responsive */
@@ -4631,15 +4763,18 @@ html[data-theme="dark"] .card-art-cinna .card-img {
   border-radius: 14px;
   background: linear-gradient(135deg, #fff7ed, #fef3c7);
   border: 1px solid #fed7aa;
+  color: #1e293b;
 }
 
 .parent-wrong-panel h3 {
   margin: 0 0 0.35rem;
+  color: #1e293b;
 }
 
 .parent-wrong-intro {
   margin: 0 0 0.85rem;
   font-size: 0.92rem;
+  color: #78350f;
 }
 
 .parent-child-section {
@@ -4659,6 +4794,7 @@ html[data-theme="dark"] .card-art-cinna .card-img {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  color: #9a3412;
 }
 
 .parent-wrong-count {
@@ -4677,10 +4813,11 @@ html[data-theme="dark"] .card-art-cinna .card-img {
 }
 
 .parent-wrong-item {
-  background: #fff;
+  background: var(--card);
   border: 1px solid #fed7aa;
   border-radius: 10px;
   padding: 0.55rem 0.7rem;
+  color: var(--text);
 }
 
 .parent-wrong-meta {
@@ -4695,6 +4832,8 @@ html[data-theme="dark"] .card-art-cinna .card-img {
   font-size: 0.95rem;
   line-height: 1.45;
   margin-bottom: 0.35rem;
+  color: var(--text);
+  font-weight: 600;
 }
 
 .parent-wrong-ans {
