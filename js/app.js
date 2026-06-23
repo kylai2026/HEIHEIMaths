@@ -39,6 +39,8 @@ const App = {
   showGradeModalIfNeeded() {
     if (!CloudSync.getProfile()) return;
     if (this.getSelectedGrade()) return;
+    const profileModal = document.getElementById('profileModal');
+    if (profileModal && !profileModal.classList.contains('hidden')) return;
     const modal = document.getElementById('gradeModal');
     if (!modal) return;
     this.renderGradeModalGrid();
@@ -124,11 +126,15 @@ const App = {
     UserSettings.init();
     AudioManager.init();
     this.sanitizeLegacyUI();
+    this.bindAuthButtons();
+
     const syncResult = await CloudSync.init();
-    if (syncResult.needSetup) {
-      await this.showProfileSetup();
-    }
     this.updateAuthUI();
+
+    if (syncResult.needSetup) {
+      this.showProfileSetup();
+    }
+
     QuestionBank.init();
     this.state.selectedGrade = UserSettings.load().grade || null;
     this.bindNavigation();
@@ -156,6 +162,11 @@ const App = {
         this.renderRewards();
       }
     });
+  },
+
+  bindAuthButtons() {
+    if (this._authBound) return;
+    this._authBound = true;
     document.getElementById('logoutBtn')?.addEventListener('click', () => this.logout());
     document.getElementById('loginBtn')?.addEventListener('click', () => this.showProfileSetup());
     document.getElementById('switchProfile')?.addEventListener('click', () => this.logout());
@@ -187,12 +198,18 @@ const App = {
   },
 
   showProfileSetup() {
+    document.getElementById('gradeModal')?.classList.add('hidden');
+    const modal = document.getElementById('profileModal');
+    const form = document.getElementById('profileForm');
+    const errEl = document.getElementById('profileError');
+    if (!modal || !form) return Promise.resolve();
+
+    form.reset();
+    errEl?.classList.add('hidden');
+    modal.classList.remove('hidden');
+
     return new Promise((resolve) => {
-      const modal = document.getElementById('profileModal');
-      const form = document.getElementById('profileForm');
-      const errEl = document.getElementById('profileError');
-      form.reset();
-      modal.classList.remove('hidden');
+      this._profileSetupResolve = resolve;
 
       form.onsubmit = async (e) => {
         e.preventDefault();
@@ -223,7 +240,8 @@ const App = {
           this.renderProgress();
           this.renderRewards();
           this.showGradeModalIfNeeded();
-          resolve();
+          this._profileSetupResolve?.();
+          this._profileSetupResolve = null;
         } catch (err) {
           errEl.textContent = '連線失敗，請檢查密碼或網絡後再試。';
           errEl.classList.remove('hidden');
