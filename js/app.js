@@ -910,33 +910,40 @@ const App = {
     document.getElementById('gachaPools').innerHTML = CARD_POOLS.map(pool => {
       const stats = GachaSystem.getCollectionStats(data, pool.id);
       const pct = Math.round((stats.owned / stats.total) * 100);
+      const previews = GachaSystem.getCardsByPool(pool.id).slice(0, 6);
       return `
         <div class="gacha-pool-card pool-${pool.id}">
-          <div class="gacha-pool-head">
-            <span class="gacha-pool-icon">${pool.icon}</span>
-            <div>
-              <h4>${pool.name}</h4>
-              <p>${pool.desc}</p>
+          <div class="gacha-pool-banner">
+            <img src="${pool.bannerImage}" alt="${pool.name}" class="gacha-banner-img">
+            <div class="gacha-pool-banner-overlay">
+              <span class="gacha-pool-badge">${pool.icon} ${pool.name}</span>
+              <p>${pool.banner}</p>
             </div>
           </div>
-          <div class="gacha-pool-meta">
-            <span>卡池 ${stats.total} 張</span>
-            <span>已收集 ${stats.owned}/${stats.total}（${pct}%）</span>
-          </div>
-          <div class="gacha-rates">
-            ${Object.values(GACHA_RARITIES).map(r =>
-              `<span class="rate-tag ${r.css}">${r.label} ${r.weight}%</span>`
-            ).join('')}
-          </div>
-          <div class="gacha-pool-actions">
-            <button class="btn btn-primary gacha-pull-btn" data-pool="${pool.id}" data-count="1"
-              ${unlimited || points >= GACHA_PULL_COST ? '' : 'disabled'}>
-              抽 1 次（${GACHA_PULL_COST} 分）
-            </button>
-            <button class="btn btn-secondary gacha-pull-btn" data-pool="${pool.id}" data-count="10"
-              ${unlimited || points >= GACHA_PULL10_COST ? '' : 'disabled'}>
-              十連抽（${GACHA_PULL10_COST} 分）
-            </button>
+          <div class="gacha-pool-body">
+            <p class="gacha-pool-desc">${pool.desc}</p>
+            <div class="gacha-preview-row">
+              ${previews.map(c => GachaSystem.cardArtHtml(c, true, 'sm')).join('')}
+            </div>
+            <div class="gacha-pool-progress">
+              <div class="gacha-progress-bar"><div style="width:${pct}%"></div></div>
+              <span>已收集 ${stats.owned} / ${stats.total}（${pct}%）</span>
+            </div>
+            <div class="gacha-rates">
+              ${Object.values(GACHA_RARITIES).map(r =>
+                `<span class="rate-tag ${r.css}">${r.label} ${r.weight}%</span>`
+              ).join('')}
+            </div>
+            <div class="gacha-pool-actions">
+              <button class="btn btn-primary gacha-pull-btn" data-pool="${pool.id}" data-count="1"
+                ${unlimited || points >= GACHA_PULL_COST ? '' : 'disabled'}>
+                ✨ 抽 1 次（${GACHA_PULL_COST} 分）
+              </button>
+              <button class="btn btn-gacha10 gacha-pull-btn" data-pool="${pool.id}" data-count="10"
+                ${unlimited || points >= GACHA_PULL10_COST ? '' : 'disabled'}>
+                🎴 十連抽（${GACHA_PULL10_COST} 分）
+              </button>
+            </div>
           </div>
         </div>
       `;
@@ -977,7 +984,7 @@ const App = {
       const r = GACHA_RARITIES[card.rarity];
       return `
         <div class="collect-card ${owned ? 'owned' : 'locked'} ${r.css}">
-          <div class="collect-emoji">${owned ? card.emoji : '❓'}</div>
+          ${GachaSystem.cardArtHtml(card, owned)}
           ${owned ? GachaSystem.starsHtml(card.rarity) : ''}
           <div class="collect-name">${owned ? card.name : '???'}</div>
           <div class="collect-rarity">${owned ? r.label : '未獲得'}</div>
@@ -1021,7 +1028,7 @@ const App = {
           const r = GACHA_RARITIES[item.rarity];
           return `
             <div class="gacha-result-card ${r.css}">
-              <div class="gacha-card-emoji">${item.card.emoji}</div>
+              ${GachaSystem.cardArtHtml(item.card, true, 'lg')}
               ${GachaSystem.starsHtml(item.rarity, 'lg')}
               <div class="gacha-card-name">${item.card.name}</div>
               <div class="gacha-card-rarity">${r.label}</div>

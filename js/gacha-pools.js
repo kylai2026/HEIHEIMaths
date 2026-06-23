@@ -9,12 +9,32 @@ const GACHA_RARITIES = {
 const GACHA_PULL_COST = 10;
 const GACHA_PULL10_COST = 90;
 
+const GACHA_IMAGE = {
+  pokemon: {
+    banner: 'assets/img/gacha-pool-pokemon.png',
+    style: 'bottts-neutral',
+    bg: 'b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf'
+  },
+  cinnamoroll: {
+    banner: 'assets/img/gacha-pool-cinnamoroll.png',
+    style: 'lorelei',
+    bg: 'b6e3f4,ffd5dc,fecaca,fde68a,e9d5ff'
+  }
+};
+
+function getCardImageUrl(poolId, cardId) {
+  const cfg = GACHA_IMAGE[poolId];
+  if (!cfg) return '';
+  return `https://api.dicebear.com/9.x/${cfg.style}/webp?seed=${encodeURIComponent(cardId)}&size=256&backgroundColor=${cfg.bg}`;
+}
+
 const CARD_POOLS = [
   {
     id: 'pokemon',
     name: '寵物小精靈',
     icon: '⚡',
     theme: 'pokemon',
+    bannerImage: GACHA_IMAGE.pokemon.banner,
     banner: '收集可愛小精靈，練數學賺積分抽卡！',
     desc: '火、水、草、雷…百種小精靈等你收服'
   },
@@ -23,6 +43,7 @@ const CARD_POOLS = [
     name: '肉桂狗',
     icon: '🐶',
     theme: 'cinnamoroll',
+    bannerImage: GACHA_IMAGE.cinnamoroll.banner,
     banner: '肉桂狗同朋友仔卡池',
     desc: '云朵、奶油、草莓…百款肉桂系卡片'
   }
@@ -114,7 +135,10 @@ function buildCinnamorollCards() {
   return cards;
 }
 
-const ALL_GACHA_CARDS = [...buildPokemonCards(), ...buildCinnamorollCards()];
+const ALL_GACHA_CARDS = [...buildPokemonCards(), ...buildCinnamorollCards()].map(card => ({
+  ...card,
+  imageUrl: getCardImageUrl(card.poolId, card.id)
+}));
 
 const GachaSystem = {
   getPool(poolId) {
@@ -205,5 +229,18 @@ const GachaSystem = {
     const r = GACHA_RARITIES[rarity];
     if (!r) return '';
     return `<span class="card-stars ${size}">${'★'.repeat(r.stars)}</span>`;
+  },
+
+  cardArtHtml(card, owned = true, size = '') {
+    const sizeClass = size ? ` card-art-${size}` : '';
+    if (!owned) {
+      return `<div class="card-art locked-art${sizeClass}"><div class="card-art-mystery">?</div></div>`;
+    }
+    return `
+      <div class="card-art${sizeClass}">
+        <img src="${card.imageUrl}" alt="${card.name}" class="card-img" loading="lazy"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="card-art-fallback" style="display:none">${card.emoji}</div>
+      </div>`;
   }
 };
