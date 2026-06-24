@@ -16,6 +16,7 @@ const AudioManager = {
     document.addEventListener('touchstart', () => this.ensureContext(), { once: true });
     const s = typeof UserSettings !== 'undefined' ? UserSettings.load() : {};
     this.syncFromSettings(s);
+    this.initSpeech();
   },
 
   syncFromSettings(settings) {
@@ -587,5 +588,130 @@ const AudioManager = {
       this.musicGain = null;
     }
     if (!this.muteMusic) this.startMusic();
+  },
+
+  _speechVoices: null,
+
+  initSpeech() {
+    if (!window.speechSynthesis) return;
+    const load = () => { this._speechVoices = speechSynthesis.getVoices(); };
+    load();
+    speechSynthesis.addEventListener('voiceschanged', load);
+  },
+
+  _cantoneseVoiceScore(v) {
+    const lang = (v.lang || '').toLowerCase().replace('_', '-');
+    const name = (v.name || '').toLowerCase();
+
+    if (lang === 'yue-hk' || lang.startsWith('yue-')) return 100;
+    if (lang === 'zh-hk') return 95;
+    if (/cantonese|hong\s*kong|粵語|广东话|廣東話|廣東|tracy|sin-ji|sinji/.test(name)) return 90;
+    if (/google/.test(name) && lang === 'zh-hk') return 92;
+
+    if (lang === 'zh-cn' || lang.startsWith('zh-cn')) return 0;
+    if (/huihui|kangkang|yaoyao|yunxi|xiaoxiao|mandarin|国语|國語|普通話|普通话|简体|簡體|mainland/.test(name)) return 0;
+    if (lang === 'zh-tw' && !/cantonese|hong\s*kong|粵|廣東|hk/.test(name)) return 0;
+
+    return 0;
+  },
+
+  refreshSpeechVoices() {
+    if (!window.speechSynthesis) return [];
+    this._speechVoices = speechSynthesis.getVoices();
+    return this._speechVoices;
+  },
+
+  getCantoneseVoice() {
+    const voices = this.refreshSpeechVoices();
+    const ranked = voices
+      .map(v => ({ v, score: this._cantoneseVoiceScore(v) }))
+      .filter(x => x.score > 0)
+      .sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        const pref = (v) => {
+          const n = (v.name || '').toLowerCase();
+          const lang = (v.lang || '').toLowerCase();
+          if (/google/.test(n) && lang === 'zh-hk') return 3;
+          if (lang.startsWith('yue')) return 2;
+          return v.localService ? 0 : 1;
+        };
+        return pref(b.v) - pref(a.v);
+      });
+    return ranked[0]?.v || null;
+  },
+
+  _cantoneseHintShown: false,
+
+  _showCantoneseVoiceHint() {
+    if (this._cantoneseHintShown) return;
+    this._cantoneseHintShown = true;
+    setTimeout(() => {
+      alert('搵唔到粵語語音。\n\n建議：\n1. 用 Microsoft Edge 瀏覽器\n2. 喺 Windows「設定 → 時間與語言 → 語音」安裝「中文（香港）」語音\n3. 重新整理頁面再試');
+    }, 300);
+  },
+
+  questionToSpeechText(html) {
+    let text = String(html || '');
+    text = text.replace(
+      /<span class="frac">\s*<span class="num">([^<]*)<\/span>\s*<span class="den">([^<]*)<\/span>\s*<\/span>/gi,
+      '$2分之$1'
+    );
+    text = text.replace(/<[^>]+>/g, ' ');
+    text = text.replace(/&nbsp;/g, ' ');
+    text = text.replace(/\s+/g, ' ').trim();
+    text = text.replace(/(\d+)\s*\/\s*(\d+)/g, '$2分之$1');
+    text = text.replace(/哪一/g, '邊一');
+    text = text.replace(/哪個/g, '邊個');
+    text = text.replace(/哪樣/g, '邊樣');
+    text = text.replace(/這是/g, '係');
+    text = text.replace(/这是/g, '係');
+    text = text.replace(/cm/gi, '厘米');
+    text = text.replace(/km/gi, '公里');
+    text = text.replace(/(\d)\s*米/g, '$1米');
+    text = text.replace(/×/g, '乘');
+    text = text.replace(/÷/g, '除');
+    text = text.replace(/\+/g, '加');
+    text = text.replace(/−|–|-/g, '減');
+    text = text.replace(/=/g, '等於');
+    text = text.replace(/\?/g, '？');
+    return text;
+  },
+
+  stopSpeaking() {
+    if (window.speechSynthesis) speechSynthesis.cancel();
+  },
+
+  speakQuestion(htmlOrText) {
+    if (!window.speechSynthesis) {
+      alert('你嘅瀏覽器唔支援朗讀功能');
+      return;
+    }
+    const text = this.questionToSpeechText(htmlOrText);
+    if (!text) return;
+
+    const start = () => {
+      this.stopSpeaking();
+      const voice = this.getCantoneseVoice();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 0.9;
+      utter.pitch = 1.02;
+
+      if (voice) {
+        utter.voice = voice;
+        utter.lang = voice.lang || 'zh-HK';
+      } else {
+        utter.lang = 'zh-HK';
+        this._showCantoneseVoiceHint();
+      }
+
+      speechSynthesis.speak(utter);
+    };
+
+    if (!this.refreshSpeechVoices().length) {
+      speechSynthesis.addEventListener('voiceschanged', () => start(), { once: true });
+      speechSynthesis.getVoices();
+      return;
+    }
+    start();
   }
 };

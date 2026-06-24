@@ -150,8 +150,9 @@ const P56Questions = {
     let height = MathUtils.randomInt(3, 24);
     if ((base * height) % 2 !== 0) height += 1;
     const ans = base * height / 2;
+    const chart = P34Questions._renderTriangleArea(base, height);
     return this.base('p5-tri-area',
-      `一個三角形，底 ${base} cm，高 ${height} cm，面積是多少 cm²？`,
+      `<p>看圖：三角形底和高如圖所示，面積是多少 cm²？</p>${chart}`,
       { type: 'decimal', value: ans }, String(ans),
       '提示：三角形面積 = 底 × 高 ÷ 2',
       `<h4>📖 解法</h4><p>${base} × ${height} ÷ 2 = <strong>${ans}</strong> cm²</p>`
@@ -167,8 +168,9 @@ const P56Questions = {
         const area = b * h / 2;
         const price = MathUtils.randomInt(5, 15);
         const ans = area * price;
+        const chart = P34Questions._renderTriangleArea(b, h, 'm');
         return {
-          q: `一塊三角形地皮，底 ${b} m，高 ${h} m，每平方米 ${price} 元，這塊地值多少元？`,
+          q: `<p>看圖：一塊三角形地皮，底 ${b} m，高 ${h} m，每平方米 ${price} 元，這塊地值多少元？</p>${chart}`,
           ans,
           sol: `面積 = ${b} × ${h} ÷ 2 = ${area} m²，費用 = ${area} × ${price} = ${ans} 元`
         };
@@ -178,8 +180,9 @@ const P56Questions = {
         let h = MathUtils.randomInt(5, 18);
         if ((b * h) % 2 !== 0) b += 1;
         const ans = b * h / 2;
+        const chart = P34Questions._renderTriangleArea(b, h);
         return {
-          q: `一個三角形廣告牌，底 ${b} cm，高 ${h} cm，面積是多少 cm²？`,
+          q: `<p>看圖：三角形廣告牌，面積是多少 cm²？</p>${chart}`,
           ans,
           sol: `${b} × ${h} ÷ 2 = ${ans} cm²`
         };
@@ -188,8 +191,9 @@ const P56Questions = {
         const area = MathUtils.randomInt(20, 80);
         const h = MathUtils.randomInt(5, 15);
         const b = area * 2 / h;
+        const chart = P34Questions._renderTriangleArea(b, h);
         return {
-          q: `一個三角形面積是 ${area} cm²，高 ${h} cm，底是多少 cm？`,
+          q: `<p>看圖：三角形面積是 ${area} cm²，高 ${h} cm，底是多少 cm？</p>${chart}`,
           ans: b,
           sol: `底 = 面積 × 2 ÷ 高 = ${area} × 2 ÷ ${h} = ${b} cm`
         };
@@ -209,7 +213,10 @@ const P56Questions = {
     const height = MathUtils.randomInt(4, 18);
     const ans = base * height;
     return this.base('p5-quad-area',
-      `一個平行四邊形，底 ${base} cm，高 ${height} cm，面積是多少 cm²？`,
+      QuestionVisuals.withVisual(
+        `一個平行四邊形，底 ${base} cm，高 ${height} cm，面積是多少 cm²？`,
+        QuestionVisuals.parallelogram(base, height)
+      ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：平行四邊形面積 = 底 × 高',
       `<h4>📖 解法</h4><p>${base} × ${height} = <strong>${ans}</strong> cm²</p>`
@@ -223,7 +230,10 @@ const P56Questions = {
     if ((top + bottom) * height % 2 !== 0) height += 1;
     const ans = (top + bottom) * height / 2;
     return this.base('p5-quad-area',
-      `一個梯形，上底 ${top} cm，下底 ${bottom} cm，高 ${height} cm，面積是多少 cm²？`,
+      QuestionVisuals.withVisual(
+        `一個梯形，上底 ${top} cm，下底 ${bottom} cm，高 ${height} cm，面積是多少 cm²？`,
+        QuestionVisuals.trapezoid(top, bottom, height)
+      ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：梯形面積 = (上底 + 下底) × 高 ÷ 2',
       `<h4>📖 解法</h4><p>(${top} + ${bottom}) × ${height} ÷ 2 = <strong>${ans}</strong> cm²</p>`
@@ -237,7 +247,10 @@ const P56Questions = {
       const w = MathUtils.randomInt(5, 12);
       const ans = l * w;
       return this.base('p5-quad-area',
-        `一塊平行四邊形花圃，底 ${l} m，高 ${w} m，面積是多少 m²？`,
+        QuestionVisuals.withVisual(
+          `一塊平行四邊形花圃，底 ${l} m，高 ${w} m，面積是多少 m²？`,
+          QuestionVisuals.parallelogram(l, w, 'm')
+        ),
         { type: 'decimal', value: ans }, String(ans),
         '提示：面積 = 底 × 高',
         `<h4>📖 解法</h4><p>${l} × ${w} = <strong>${ans}</strong> m²</p>`
@@ -249,7 +262,10 @@ const P56Questions = {
     if ((top + bottom) * height % 2 !== 0) height += 1;
     const ans = (top + bottom) * height / 2;
     return this.base('p5-quad-area',
-      `一個梯形水池，上底 ${top} m，下底 ${bottom} m，深 ${height} m（當高），面積是多少 m²？`,
+      QuestionVisuals.withVisual(
+        `一個梯形水池，上底 ${top} m，下底 ${bottom} m，深 ${height} m（當高），面積是多少 m²？`,
+        QuestionVisuals.trapezoid(top, bottom, height, 'm')
+      ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：梯形面積 = (上底 + 下底) × 高 ÷ 2',
       `<h4>📖 解法</h4><p>(${top} + ${bottom}) × ${height} ÷ 2 = <strong>${ans}</strong> m²</p>`
@@ -498,14 +514,20 @@ const P56Questions = {
     const d = r * 2;
     if (kind) {
       return this.base('p5-circle',
-        `一個圓的直徑是 ${d} cm，半徑是多少 cm？`,
+        QuestionVisuals.withVisual(
+          `一個圓的直徑是 ${d} cm，半徑是多少 cm？`,
+          QuestionVisuals.circle(r)
+        ),
         { type: 'decimal', value: r }, String(r),
         '提示：半徑 = 直徑 ÷ 2',
         `<h4>📖 解法</h4><p>${d} ÷ 2 = <strong>${r}</strong> cm</p>`
       );
     }
     return this.base('p5-circle',
-      `一個圓的半徑是 ${r} cm，直徑是多少 cm？`,
+      QuestionVisuals.withVisual(
+        `一個圓的半徑是 ${r} cm，直徑是多少 cm？`,
+        QuestionVisuals.circle(r)
+      ),
       { type: 'decimal', value: d }, String(d),
       '提示：直徑 = 半徑 × 2',
       `<h4>📖 解法</h4><p>${r} × 2 = <strong>${d}</strong> cm</p>`
@@ -519,7 +541,8 @@ const P56Questions = {
         return {
           q: `一個圓的半徑是 ${r} cm，直徑是多少 cm？`,
           ans: r * 2,
-          sol: `直徑 = 半徑 × 2 = ${r} × 2 = ${r * 2}`
+          sol: `直徑 = 半徑 × 2 = ${r} × 2 = ${r * 2}`,
+          visual: () => QuestionVisuals.circle(r)
         };
       },
       () => {
@@ -527,7 +550,8 @@ const P56Questions = {
         return {
           q: `一條直徑把圓分成兩部分，每部分是一個？（填半徑數量：一條直徑等於幾條半徑？）`,
           ans: 2,
-          sol: '一條直徑的長度等於兩條半徑'
+          sol: '一條直徑的長度等於兩條半徑',
+          visual: () => QuestionVisuals.circle(d / 2)
         };
       },
       () => {
@@ -535,7 +559,8 @@ const P56Questions = {
         return {
           q: `圓心到圓周一點的距離是 ${r} cm，這個圓的直徑是多少 cm？`,
           ans: r * 2,
-          sol: `圓心到圓周是半徑 ${r} cm，直徑 = ${r * 2} cm`
+          sol: `圓心到圓周是半徑 ${r} cm，直徑 = ${r * 2} cm`,
+          visual: () => QuestionVisuals.circle(r)
         };
       },
       () => {
@@ -544,12 +569,14 @@ const P56Questions = {
         return {
           q: `一個圓的直徑是 ${d} cm，半徑是多少 cm？`,
           ans: r,
-          sol: `半徑 = 直徑 ÷ 2 = ${d} ÷ 2 = ${r}`
+          sol: `半徑 = 直徑 ÷ 2 = ${d} ÷ 2 = ${r}`,
+          visual: () => QuestionVisuals.circle(r)
         };
       }
     ];
     const v = MathUtils.randomChoice(variants)();
-    return this.base('p5-circle', v.q,
+    return this.base('p5-circle',
+      QuestionVisuals.withVisual(v.q, v.visual()),
       { type: 'decimal', value: v.ans }, String(v.ans),
       '提示：半徑是圓心到圓周的距離，直徑是半徑的兩倍',
       `<h4>📖 解法</h4><p>${v.sol}，答案 = <strong>${v.ans}</strong></p>`
@@ -679,7 +706,10 @@ const P56Questions = {
     const h = MathUtils.randomInt(3, 10);
     const ans = l * w * h;
     return this.base('p5-volume',
-      `一個長方體，長 ${l} cm，闊 ${w} cm，高 ${h} cm，體積是多少 cm³？`,
+      QuestionVisuals.withVisual(
+        `一個長方體，長 ${l} cm，闊 ${w} cm，高 ${h} cm，體積是多少 cm³？`,
+        QuestionVisuals.cuboid(l, w, h)
+      ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：體積 = 長 × 闊 × 高',
       `<h4>📖 解法</h4><p>${l} × ${w} × ${h} = <strong>${ans}</strong> cm³</p>`
@@ -696,7 +726,8 @@ const P56Questions = {
         return {
           q: `一個紙箱長 ${l} cm、闊 ${w} cm、高 ${h} cm，體積是多少 cm³？`,
           ans,
-          sol: `${l} × ${w} × ${h} = ${ans}`
+          sol: `${l} × ${w} × ${h} = ${ans}`,
+          visual: () => QuestionVisuals.cuboid(l, w, h)
         };
       },
       () => {
@@ -705,7 +736,8 @@ const P56Questions = {
         return {
           q: `一個正方體邊長 ${edge} cm，體積是多少 cm³？`,
           ans,
-          sol: `${edge} × ${edge} × ${edge} = ${ans}`
+          sol: `${edge} × ${edge} × ${edge} = ${ans}`,
+          visual: () => QuestionVisuals.cuboid(edge, edge, edge)
         };
       },
       () => {
@@ -716,12 +748,14 @@ const P56Questions = {
         return {
           q: `一個長方體體積是 ${vol} cm³，長 ${l} cm，闊 ${w} cm，高是多少 cm？`,
           ans: h,
-          sol: `高 = ${vol} ÷ ${l} ÷ ${w} = ${h}`
+          sol: `高 = ${vol} ÷ ${l} ÷ ${w} = ${h}`,
+          visual: () => QuestionVisuals.cuboid(l, w, h)
         };
       }
     ];
     const t = MathUtils.randomChoice(templates)();
-    return this.base('p5-volume', t.q,
+    return this.base('p5-volume',
+      QuestionVisuals.withVisual(t.q, t.visual()),
       { type: 'decimal', value: t.ans }, String(t.ans),
       '提示：長方體體積 = 長 × 闊 × 高',
       `<h4>📖 解法</h4><p>${t.sol} cm³，答案 = <strong>${t.ans}</strong></p>`
@@ -993,7 +1027,10 @@ const P56Questions = {
       const r = MathUtils.randomChoice([7, 14, 21, 28, 35]);
       const ans = 2 * 22 / 7 * r;
       return this.base('p6-circumference',
-        `一個圓的半徑是 ${r} cm，圓周是多少 cm？（π 取 22/7）`,
+        QuestionVisuals.withVisual(
+          `一個圓的半徑是 ${r} cm，圓周是多少 cm？（π 取 22/7）`,
+          QuestionVisuals.circle(r)
+        ),
         { type: 'decimal', value: ans }, String(ans),
         '提示：圓周 = 2 × π × 半徑',
         `<h4>📖 解法</h4><p>2 × 22/7 × ${r} = <strong>${ans}</strong> cm</p>`
@@ -1002,7 +1039,10 @@ const P56Questions = {
     const r = MathUtils.randomInt(3, 15);
     const ans = MathUtils.roundTo(2 * 3.14 * r, 2);
     return this.base('p6-circumference',
-      `一個圓的半徑是 ${r} cm，圓周是多少 cm？（π 取 3.14，答案保留兩位小數）`,
+      QuestionVisuals.withVisual(
+        `一個圓的半徑是 ${r} cm，圓周是多少 cm？（π 取 3.14，答案保留兩位小數）`,
+        QuestionVisuals.circle(r)
+      ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：圓周 = 2 × π × 半徑 或 π × 直徑',
       `<h4>📖 解法</h4><p>2 × 3.14 × ${r} = <strong>${ans}</strong> cm</p>`
@@ -1015,7 +1055,10 @@ const P56Questions = {
     const rounds = MathUtils.randomInt(2, 5);
     const ans = MathUtils.roundTo(c * rounds, 2);
     return this.base('p6-circumference',
-      `一個圓形花壇半徑 ${r} m，圓周約 ${c} m（π=3.14）。小明繞花壇走 ${rounds} 圈，共走多少 m？`,
+      QuestionVisuals.withVisual(
+        `一個圓形花壇半徑 ${r} m，圓周約 ${c} m（π=3.14）。小明繞花壇走 ${rounds} 圈，共走多少 m？`,
+        QuestionVisuals.circle(r, 'm')
+      ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：一圈的距離 = 圓周',
       `<h4>📖 解法</h4><p>${c} × ${rounds} = <strong>${ans}</strong> m</p>`
@@ -1027,7 +1070,10 @@ const P56Questions = {
     const r = MathUtils.randomInt(3, 12);
     const ans = MathUtils.roundTo(3.14 * r * r, 2);
     return this.base('p6-circle-area',
-      `一個圓的半徑是 ${r} cm，面積是多少 cm²？（π 取 3.14，保留兩位小數）`,
+      QuestionVisuals.withVisual(
+        `一個圓的半徑是 ${r} cm，面積是多少 cm²？（π 取 3.14，保留兩位小數）`,
+        QuestionVisuals.circle(r)
+      ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：圓面積 = π × 半徑²',
       `<h4>📖 解法</h4><p>3.14 × ${r}² = 3.14 × ${r * r} = <strong>${ans}</strong> cm²</p>`
@@ -1040,7 +1086,10 @@ const P56Questions = {
     const price = MathUtils.randomInt(2, 8);
     const ans = MathUtils.roundTo(area * price, 2);
     return this.base('p6-circle-area',
-      `一個圓形花圃半徑 ${r} m，面積約 ${area} m²（π=3.14）。每平方米種植費 ${price} 元，共需多少元？`,
+      QuestionVisuals.withVisual(
+        `一個圓形花圃半徑 ${r} m，面積約 ${area} m²（π=3.14）。每平方米種植費 ${price} 元，共需多少元？`,
+        QuestionVisuals.circle(r, 'm')
+      ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：總費用 = 面積 × 每平方米費用',
       `<h4>📖 解法</h4><p>${area} × ${price} = <strong>${ans}</strong> 元</p>`
@@ -1049,22 +1098,23 @@ const P56Questions = {
 
   // ── 小六：角度 ──
   angleMeasure() {
+    const QV = QuestionVisuals;
     const templates = [
       () => {
         const a = MathUtils.randomInt(20, 70);
         const ans = 90 - a;
-        return { q: `一個直角三角形，其中一個銳角是 ${a}°，另一個銳角是多少度？`, ans, sol: `直角三角形兩銳角互餘：90° - ${a}° = ${ans}°` };
+        return { q: `一個直角三角形，其中一個銳角是 ${a}°，另一個銳角是多少度？`, ans, sol: `直角三角形兩銳角互餘：90° - ${a}° = ${ans}°`, visual: () => QV.triangleAngles(a, null) };
       },
       () => {
         const a = MathUtils.randomInt(100, 150);
         const ans = 180 - a;
-        return { q: `一條直線上兩角互補，其中一個角是 ${a}°，另一個角是多少度？`, ans, sol: `平角 = 180°，${180}° - ${a}° = ${ans}°` };
+        return { q: `一條直線上兩角互補，其中一個角是 ${a}°，另一個角是多少度？`, ans, sol: `平角 = 180°，${180}° - ${a}° = ${ans}°`, visual: () => QV.angleDiagram(a) };
       },
       () => {
         const a = MathUtils.randomInt(30, 60);
         const b = MathUtils.randomInt(30, 60);
         const ans = 180 - a - b;
-        return { q: `三角形其中兩個角分別是 ${a}° 和 ${b}°，第三個角是多少度？`, ans, sol: `三角形內角和 180°` };
+        return { q: `三角形其中兩個角分別是 ${a}° 和 ${b}°，第三個角是多少度？`, ans, sol: `三角形內角和 180°`, visual: () => QV.triangleAngles(a, b) };
       },
       () => {
         const types = [
@@ -1073,11 +1123,12 @@ const P56Questions = {
           { name: '周角', val: 360 }
         ];
         const t = MathUtils.randomChoice(types);
-        return { q: `一個${t.name}是多少度？`, ans: t.val, sol: `${t.name} = ${t.val}°` };
+        return { q: `一個${t.name}是多少度？`, ans: t.val, sol: `${t.name} = ${t.val}°`, visual: () => QV.angleDiagram(Math.min(t.val, 150), t.val === 90) };
       }
     ];
     const t = MathUtils.randomChoice(templates)();
-    return this.base('p6-angles-deg', t.q,
+    return this.base('p6-angles-deg',
+      QV.withVisual(t.q, t.visual()),
       { type: 'decimal', value: t.ans }, String(t.ans),
       '提示：直角 90°、平角 180°、三角形內角和 180°',
       `<h4>📖 解法</h4><p>${t.sol}，答案 = <strong>${t.ans}</strong>°</p>`
@@ -1085,33 +1136,35 @@ const P56Questions = {
   },
 
   angleSum() {
+    const QV = QuestionVisuals;
     const templates = [
       () => {
         const a = MathUtils.randomInt(50, 100);
         const b = MathUtils.randomInt(40, 90);
         const c = 180 - a - b;
-        return { q: `三角形三個角中，兩個角是 ${a}° 和 ${b}°，第三個角是多少度？`, ans: c, sol: `180° - ${a}° - ${b}° = ${c}°` };
+        return { q: `三角形三個角中，兩個角是 ${a}° 和 ${b}°，第三個角是多少度？`, ans: c, sol: `180° - ${a}° - ${b}° = ${c}°`, visual: () => QV.triangleAngles(a, b) };
       },
       () => {
         const a = MathUtils.randomInt(70, 110);
         const b = MathUtils.randomInt(70, 110);
         const c = MathUtils.randomInt(70, 110);
         const d = 360 - a - b - c;
-        return { q: `四邊形三個角是 ${a}°、${b}° 和 ${c}°，第四個角是多少度？`, ans: d, sol: `四邊形內角和 360°` };
+        return { q: `四邊形三個角是 ${a}°、${b}° 和 ${c}°，第四個角是多少度？`, ans: d, sol: `四邊形內角和 360°`, visual: () => QV.quadShape('長方形') };
       },
       () => {
         const known = MathUtils.randomInt(30, 80);
         const ans = 180 - known;
-        return { q: `兩條平行線被橫線所截，同側內角一個是 ${known}°，另一個是多少度？`, ans, sol: `同側內角互補，180° - ${known}° = ${ans}°` };
+        return { q: `兩條平行線被橫線所截，同側內角一個是 ${known}°，另一個是多少度？`, ans, sol: `同側內角互補，180° - ${known}° = ${ans}°`, visual: () => QV.angleDiagram(known) };
       },
       () => {
         const vertex = MathUtils.randomChoice([40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100]);
         const ans = (180 - vertex) / 2;
-        return { q: `等腰三角形頂角是 ${vertex}°，每個底角是多少度？`, ans, sol: `底角 = (180° - ${vertex}°) ÷ 2 = ${ans}°` };
+        return { q: `等腰三角形頂角是 ${vertex}°，每個底角是多少度？`, ans, sol: `底角 = (180° - ${vertex}°) ÷ 2 = ${ans}°`, visual: () => QV.triangleAngles(ans, ans) };
       }
     ];
     const t = MathUtils.randomChoice(templates)();
-    return this.base('p6-angles-deg', t.q,
+    return this.base('p6-angles-deg',
+      QV.withVisual(t.q, t.visual()),
       { type: 'decimal', value: t.ans }, String(t.ans),
       '提示：三角形內角和 180°，四邊形內角和 360°',
       `<h4>📖 解法</h4><p>${t.sol}，答案 = <strong>${t.ans}</strong>°</p>`
@@ -1163,10 +1216,12 @@ const P56Questions = {
 
   // ── 小六：圓形圖 ──
   pieChartRead() {
+    const QV = QuestionVisuals;
     const items = MathUtils.shuffle(['中文', '英文', '數學', '常識', '體育', '音樂', '視藝']).slice(0, 4);
     const data = {};
     items.forEach(name => { data[name] = MathUtils.randomInt(2, 12) * 5; });
     const names = Object.keys(data);
+    const chart = QV.pieChart(data);
     const types = [
       () => {
         const a = names[0];
@@ -1192,7 +1247,8 @@ const P56Questions = {
       }
     ];
     const t = MathUtils.randomChoice(types)();
-    return this.base('p6-pie-chart', t.q,
+    return this.base('p6-pie-chart',
+      QV.withVisual(t.q, chart),
       { type: 'decimal', value: t.ans }, String(t.ans),
       '提示：仔細閱讀圓形圖各扇形代表的數量',
       `<h4>📖 解法</h4><p>答案 = <strong>${t.ans}</strong></p>`
@@ -1200,6 +1256,7 @@ const P56Questions = {
   },
 
   pieChartPercent() {
+    const QV = QuestionVisuals;
     const total = MathUtils.randomChoice([100, 200, 360, 400, 500]);
     const pct = MathUtils.randomChoice([10, 15, 20, 25, 30, 40, 50]);
     const count = total * pct / 100;
@@ -1208,24 +1265,28 @@ const P56Questions = {
       () => ({
         q: `全校 ${total} 人，圓形圖顯示喜歡${items[0]}的佔 ${pct}%，有多少人喜歡${items[0]}？`,
         ans: count,
-        sol: `${total} × ${pct}% = ${count}`
+        sol: `${total} × ${pct}% = ${count}`,
+        visual: () => QV.pieChartPercent(items[0], pct)
       }),
       () => ({
         q: `圓形圖中${items[1]}佔 ${pct}%，代表 ${count} 人，全校共有多少人？`,
         ans: total,
-        sol: `${count} ÷ ${pct}% = ${total}`
+        sol: `${count} ÷ ${pct}% = ${total}`,
+        visual: () => QV.pieChartPercent(items[1], pct)
       }),
       () => {
         const other = 100 - pct;
         return {
           q: `圓形圖顯示${items[2]}佔 ${pct}%，其餘運動佔百分之幾？（只填數字）`,
           ans: other,
-          sol: `100% - ${pct}% = ${other}%`
+          sol: `100% - ${pct}% = ${other}%`,
+          visual: () => QV.pieChartPercent(items[2], pct)
         };
       }
     ];
     const t = MathUtils.randomChoice(templates)();
-    return this.base('p6-pie-chart', t.q,
+    return this.base('p6-pie-chart',
+      QV.withVisual(t.q, t.visual()),
       { type: 'decimal', value: t.ans }, String(t.ans),
       '提示：百分數 × 總數 = 部分數量',
       `<h4>📖 解法</h4><p>${t.sol}，答案 = <strong>${t.ans}</strong></p>`

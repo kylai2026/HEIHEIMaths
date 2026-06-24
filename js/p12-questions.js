@@ -1,7 +1,7 @@
 /* 心光數學小一、小二課題練習題 */
 const P12Questions = {
   TIER_POOLS: {
-    'p1-position': { easy: ['posLeftRight'], medium: ['posLeftRight', 'posUpDown', 'posBetween'], hard: ['posUpDown', 'posBetween'] },
+    'p1-position': { easy: ['posLeftRight', 'posUpDown'], medium: ['posLeftRight', 'posUpDown', 'posBetween'], hard: ['posLeftRight', 'posUpDown', 'posBetween'] },
     'p1-numbers20': { easy: ['countObjects'], medium: ['countObjects', 'compareWithin20', 'orderWithin20'], hard: ['compareWithin20', 'orderWithin20'] },
     'p1-decompose': { easy: ['bondsTo10'], medium: ['bondsTo10', 'bondsMake10', 'bondsTeens'], hard: ['bondsMake10', 'bondsTeens'] },
     'p1-length': { easy: ['compareLength'], medium: ['compareLength', 'longerShorter'], hard: ['longerShorter'] },
@@ -91,9 +91,97 @@ const P12Questions = {
       '星星': '⭐', '圓點': '🔵', '小鴨': '🐤', '積木': '🧱',
       '花朵': '🌸', '糖果': '🍬', '氣球': '🎈',
       '太陽': '☀️', '月亮': '🌙', '鳥': '🐦', '魚': '🐟', '雲': '☁️',
-      '樹': '🌳', '星': '⭐', '雨': '🌧️'
+      '樹': '🌳', '星': '⭐', '雨': '🌧️',
+      '鉛筆': '✏️', '尺子': '📏', '繩子': '🪢', '絲帶': '🎀', '筷子': '🥢', '蠟筆': '🖍️',
+      '紅繩': '🟥', '藍繩': '🟦', '書本': '📖', '梳子': '🪮', '膠尺': '📏', '畫筆': '🖌️'
     };
     return map[name] || '🔹';
+  },
+
+  _clockAngles(hour, minute = 0) {
+    const h = hour % 12;
+    return {
+      hourDeg: h * 30 + minute * 0.5,
+      minuteDeg: minute * 6
+    };
+  },
+
+  _renderClock(hour, minute = 0) {
+    const { hourDeg, minuteDeg } = this._clockAngles(hour, minute);
+    const nums = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    const marks = nums.map((n, i) =>
+      `<span class="clock-n" style="--i:${i}">${n}</span>`
+    ).join('');
+    return `
+      <div class="clock-scene" aria-hidden="true">
+        <div class="clock-face">
+          <div class="clock-nums">${marks}</div>
+          <div class="clock-hand clock-minute" style="--deg:${minuteDeg}"></div>
+          <div class="clock-hand clock-hour" style="--deg:${hourDeg}"></div>
+          <div class="clock-center"></div>
+        </div>
+      </div>`;
+  },
+
+  _rulerObjectKind(label) {
+    const map = {
+      '尺子': 'ruler', '膠尺': 'ruler',
+      '絲帶': 'ribbon',
+      '繩子': 'rope', '紅繩': 'rope-red', '藍繩': 'rope-blue',
+      '鉛筆': 'pencil', '蠟筆': 'crayon', '畫筆': 'brush', '筷子': 'chopstick'
+    };
+    return map[label] || 'default';
+  },
+
+  _renderObjectOnRuler(label, lenCm, maxCm, opts = {}) {
+    const emoji = this._p1Emoji(label);
+    const kind = this._rulerObjectKind(label);
+    const cells = Array.from({ length: maxCm }, (_, i) => {
+      const filled = i < lenCm;
+      return `<div class="ruler-scale-cell${filled ? ' ruler-scale-cell--mark' : ''}"></div>`;
+    }).join('');
+    const nums = Array.from({ length: maxCm + 1 }, (_, i) =>
+      `<span class="ruler-scale-num" style="--i:${i}">${i}</span>`
+    ).join('');
+    const cmLabel = opts.hideCm ? '' : `<div class="ruler-row-cm">${lenCm} cm</div>`;
+    return `
+      <div class="ruler-on-scale-row">
+        <div class="ruler-on-scale-label">${emoji}<span>${label}</span></div>
+        <div class="ruler-scale-panel" style="--max-cells:${maxCm}">
+          <div class="ruler-scale-bed">
+            <div class="ruler-scale-cells">${cells}</div>
+            <div class="ruler-object-on-scale ruler-object-on-scale--${kind}" style="--len:${lenCm};--max:${maxCm}">
+              <span class="ruler-object-icon" aria-hidden="true">${emoji}</span>
+              <div class="ruler-object-body"></div>
+            </div>
+          </div>
+          <div class="ruler-scale-nums">${nums}</div>
+        </div>
+        ${cmLabel}
+      </div>`;
+  },
+
+  _renderRulerRow(label, lenCm, maxCm, opts = {}) {
+    return this._renderObjectOnRuler(label, lenCm, maxCm, opts);
+  },
+
+  _renderLengthCompare(itemA, lenA, itemB, lenB, opts = {}) {
+    const maxCm = Math.min(22, Math.max(lenA, lenB, 8) + 2);
+    return `
+      <div class="length-compare-scene" aria-hidden="true">
+        ${this._renderObjectOnRuler(itemA, lenA, maxCm, opts)}
+        ${this._renderObjectOnRuler(itemB, lenB, maxCm, opts)}
+      </div>`;
+  },
+
+  _renderRulerMeasure(obj, lenCm) {
+    const maxCm = Math.min(22, Math.max(lenCm + 2, 12));
+    const row = this._renderObjectOnRuler(obj, lenCm, maxCm, { hideCm: true });
+    return `
+      <div class="ruler-measure-scene" aria-hidden="true">
+        ${row}
+        <p class="ruler-measure-hint">看間尺上物件的長度，數一數有幾格</p>
+      </div>`;
   },
 
   _renderCountGrid(n, obj) {
@@ -125,9 +213,7 @@ const P12Questions = {
     return `
       <div class="pos-ud-scene" aria-hidden="true">
         <div class="pos-ud-item">${e(top)}<small>${top}</small></div>
-        <span class="pos-ud-label">上</span>
         <div class="pos-ud-divider"></div>
-        <span class="pos-ud-label">下</span>
         <div class="pos-ud-item">${e(bottom)}<small>${bottom}</small></div>
       </div>`;
   },
@@ -171,19 +257,29 @@ const P12Questions = {
     const items = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
     const trio = MathUtils.shuffle(items).slice(0, 3);
     const [left, mid, right] = trio;
+    const askTypes = [
+      { q: '最左邊的是哪一個？', answer: left, hint: '最左邊係排第一個' },
+      { q: '最右邊的是哪一個？', answer: right, hint: '最右邊係排最後一個' },
+      { q: '中間的是哪一個？', answer: mid, hint: '中間唔係最左，亦唔係最右' },
+      { q: `哪一個在 ${left} 的右邊？`, answer: mid, hint: '由左邊數過去，緊鄰的下一個' },
+      { q: `哪一個在 ${right} 的左邊？`, answer: mid, hint: '由右邊數過去，緊鄰的前一個' },
+      { q: `哪一個在 ${mid} 的左邊？`, answer: left, hint: '中間那一個的左邊鄰居' },
+      { q: `哪一個在 ${mid} 的右邊？`, answer: right, hint: '中間那一個的右邊鄰居' }
+    ];
+    const chosen = MathUtils.randomChoice(askTypes);
     const qText = `
       <p><strong>${left}</strong>、<strong>${mid}</strong>、<strong>${right}</strong> 三個字母由左至右排成一行：</p>
       <div class="pos-between-row" aria-hidden="true">
         <span class="pos-between-item">${left}</span>
-        <span class="pos-between-item pos-between-mid">${mid}</span>
+        <span class="pos-between-item">${mid}</span>
         <span class="pos-between-item">${right}</span>
       </div>
-      <p>中間的是哪一個？</p>`;
-    const wrong = items.filter(x => x !== mid);
-    const options = MathUtils.shuffle([mid, ...MathUtils.shuffle(wrong).slice(0, 3)]);
-    return this._mcq('p1-position', qText, options, mid,
-      '提示：中間唔係最左，亦唔係最右',
-      `<h4>📖 解法</h4><p>由左至右係 <strong>${left}</strong> → <strong>${mid}</strong> → <strong>${right}</strong>，中間的是 <strong>${mid}</strong></p>`);
+      <p>${chosen.q}</p>`;
+    const wrong = items.filter(x => x !== chosen.answer);
+    const options = MathUtils.shuffle([chosen.answer, ...MathUtils.shuffle(wrong).slice(0, 3)]);
+    return this._mcq('p1-position', qText, options, chosen.answer,
+      `提示：${chosen.hint}`,
+      `<h4>📖 解法</h4><p>由左至右係 <strong>${left}</strong> → <strong>${mid}</strong> → <strong>${right}</strong>，答案是 <strong>${chosen.answer}</strong></p>`);
   },
 
   // ── 小一：20以內的數 ──
@@ -293,8 +389,9 @@ const P12Questions = {
     let b = MathUtils.randomInt(3, 18);
     while (b === a) b = MathUtils.randomInt(3, 18);
     const longer = Math.max(a, b);
+    const visual = this._renderLengthCompare('紅繩', a, '藍繩', b);
     return this.base('p1-length',
-      `紅繩長 ${a} cm，藍繩長 ${b} cm。較長的是多少 cm？（只填較長的長度）`,
+      `<p>看圖：紅繩長 ${a} cm，藍繩長 ${b} cm。較長的是多少 cm？（只填較長的長度）</p>${visual}`,
       { type: 'decimal', value: longer }, String(longer),
       '提示：數字大通常代表較長',
       `<h4>📖 解法</h4><p>較長的是 <strong>${longer}</strong> cm</p>`);
@@ -309,11 +406,12 @@ const P12Questions = {
     let lenB = MathUtils.randomInt(5, 20);
     while (lenA === lenB) lenB = MathUtils.randomInt(5, 20);
     const longer = lenA > lenB ? a : b;
-    const qText = `${a}長 ${lenA} cm，${b}長 ${lenB} cm。哪一樣較長？`;
+    const visual = this._renderLengthCompare(a, lenA, b, lenB, { hideCm: true });
+    const qText = `<p>看圖比較長度：哪一樣較長？</p>${visual}`;
     const wrong = items.filter(x => x !== longer);
     const options = MathUtils.shuffle([longer, ...MathUtils.shuffle(wrong).slice(0, 3)]);
     return this._mcq('p1-length', qText, options, longer,
-      '提示：比較兩個長度數字',
+      '提示：比較尺上兩條的長度',
       `<h4>📖 解法</h4><p>${lenA > lenB ? a : b} 較長（<strong>${longer}</strong>）</p>`);
   },
 
@@ -444,12 +542,13 @@ const P12Questions = {
   // ── 小一：時間 ──
   clockHour() {
     const h = MathUtils.randomInt(1, 12);
+    const clock = this._renderClock(h, 0);
     const variants = [
-      `時鐘顯示 ${h} 點正，這是幾點？`,
-      `長針指着 12，短針指着 ${h}，是幾點？`,
-      `短針指着 ${h}，長針指着 12，現在是幾點？`,
-      `學校 ${h} 點上課，時鐘短針應指着幾？`,
-      `「${h} 點」時，短針指着數字幾？`
+      `<p>看圖：時鐘顯示 <strong>${h} 點正</strong>，這是幾點？</p>${clock}`,
+      `<p>看圖：長針指着 12，短針指着 ${h}，是幾點？</p>${clock}`,
+      `<p>看圖：短針指着 ${h}，長針指着 12，現在是幾點？</p>${clock}`,
+      `<p>看圖：學校 ${h} 點上課，時鐘應該顯示幾點？</p>${clock}`,
+      `<p>看圖：「${h} 點」時，短針指着數字幾？</p>${clock}`
     ];
     const qText = MathUtils.randomChoice(variants);
     return this.base('p1-time', qText,
@@ -461,11 +560,12 @@ const P12Questions = {
   clockHalf() {
     const h = MathUtils.randomInt(1, 11);
     const display = `${h} 點半`;
+    const clock = this._renderClock(h, 30);
     const variants = [
-      `長針指着 6，短針在 ${h} 和 ${h + 1} 之間，是幾點幾分？（只填「點」前的數字）`,
-      `時鐘顯示 ${display}，「點」前面的數字是？`,
-      `短針過了 ${h} 少少，長針指着 6，是幾點半？（填 ${h}）`,
-      `${h}:30 是幾點幾分？（只填小時 ${h}）`
+      `<p>看圖：長針指着 6，短針在 ${h} 和 ${h + 1} 之間，是幾點幾分？（只填「點」前的數字）</p>${clock}`,
+      `<p>看圖：時鐘顯示 <strong>${display}</strong>，「點」前面的數字是？</p>${clock}`,
+      `<p>看圖：短針過了 ${h} 少少，長針指着 6，是幾點半？（填 ${h}）</p>${clock}`,
+      `<p>看圖：${h}:30 是幾點幾分？（只填小時 ${h}）</p>${clock}`
     ];
     return this.base('p1-time', MathUtils.randomChoice(variants),
       { type: 'decimal', value: h }, String(h),
@@ -503,17 +603,19 @@ const P12Questions = {
 
   // ── 小一：圖形 ──
   shapeName() {
+    const QV = QuestionVisuals;
     const shapes = [
       { name: '圓形', clues: ['沒有角，圓圓的', '所有點到中心距離相等', '像車輪一樣圓圓', '滾動時很順暢的圖形'] },
       { name: '三角形', clues: ['有三條邊和三個角', '有三個頂點', '邊數目是 3', '積木塔常見的圖形'] },
       { name: '正方形', clues: ['四條邊一樣長，四個直角', '四邊相等且四個直角', '像方格紙上的一格', '四條邊都一樣長'] },
       { name: '長方形', clues: ['四個角都是直角，對邊一樣長', '對邊相等，四個直角', '像門或書本的面', '不是正方形但四個直角'] }
     ];
+    const gallery = QV.shapesRow(shapes.map(s => s.name));
     const mode = MathUtils.randomChoice(['clue', 'match', 'circle']);
     if (mode === 'circle') {
       const options = MathUtils.shuffle(shapes.map(s => s.name));
       return this._mcq('p1-shapes',
-        '哪個圖形沒有直邊？',
+        QV.withVisual('哪個圖形沒有直邊？', gallery),
         options, '圓形',
         '提示：圓形是圓圓的，沒有直的邊',
         '<h4>📖 解法</h4><p>答案是 <strong>圓形</strong></p>');
@@ -524,7 +626,7 @@ const P12Questions = {
       const wrong = shapes.filter(s => s.name !== correct.name).map(s => s.name);
       const options = MathUtils.shuffle([correct.name, ...MathUtils.shuffle(wrong).slice(0, 3)]);
       return this._mcq('p1-shapes',
-        `哪個圖形有${props[correct.name]}？`,
+        QV.withVisual(`哪個圖形有${props[correct.name]}？`, gallery),
         options, correct.name,
         '提示：數一數邊的數目',
         `<h4>📖 解法</h4><p>答案是 <strong>${correct.name}</strong></p>`);
@@ -533,13 +635,14 @@ const P12Questions = {
     const wrong = shapes.filter(s => s.name !== correct.name).map(s => s.name);
     const options = MathUtils.shuffle([correct.name, ...MathUtils.shuffle(wrong).slice(0, 3)]);
     return this._mcq('p1-shapes',
-      `哪個圖形${clue}？`,
+      QV.withVisual(`哪個圖形${clue}？`, gallery + QV.shapeIcon(correct.name)),
       options, correct.name,
       '提示：觀察邊和角的數量',
       `<h4>📖 解法</h4><p>答案是 <strong>${correct.name}</strong></p>`);
   },
 
   shapeSides() {
+    const QV = QuestionVisuals;
     const shapes = [
       { name: '三角形', sides: 3, corners: 3 },
       { name: '正方形', sides: 4, corners: 4 },
@@ -549,6 +652,7 @@ const P12Questions = {
       { name: '八邊形', sides: 8, corners: 8 }
     ];
     const s = MathUtils.randomChoice(shapes);
+    const visual = s.sides <= 4 ? QV.shapeIcon(s.name) : QV.polygon(s.sides, s.name);
     const ask = MathUtils.randomChoice(['sides', 'corners']);
     if (ask === 'corners') {
       const templates = [
@@ -556,7 +660,7 @@ const P12Questions = {
         `${s.name}共有多少個頂點？`,
         `數一數${s.name}的角，有幾個？`
       ];
-      return this.base('p1-shapes', MathUtils.randomChoice(templates),
+      return this.base('p1-shapes', QuestionVisuals.withVisual(MathUtils.randomChoice(templates), visual),
         { type: 'decimal', value: s.corners }, String(s.corners),
         '提示：角和頂點數目通常等於邊數',
         `<h4>📖 解法</h4><p>${s.name}有 <strong>${s.corners}</strong> 個角</p>`);
@@ -568,7 +672,7 @@ const P12Questions = {
       `一個${s.name}的邊數是？`,
       `用棒拼成一個${s.name}，最少要幾條棒？`
     ];
-    return this.base('p1-shapes', MathUtils.randomChoice(templates),
+    return this.base('p1-shapes', QuestionVisuals.withVisual(MathUtils.randomChoice(templates), visual),
       { type: 'decimal', value: s.sides }, String(s.sides),
       '提示：沿圖形外圍數邊',
       `<h4>📖 解法</h4><p>${s.name}有 <strong>${s.sides}</strong> 條邊</p>`);
@@ -652,8 +756,9 @@ const P12Questions = {
   cmMeasure() {
     const len = MathUtils.randomInt(3, 20);
     const obj = MathUtils.randomChoice(['鉛筆', '書本', '梳子', '膠尺', '畫筆']);
+    const visual = this._renderRulerMeasure(obj, len);
     return this.base('p1-money',
-      `用尺子量一量，${obj}大約長 ${len} 個厘米格。${obj}長多少 cm？`,
+      `<p>看圖：用尺子量一量，${obj}長多少 cm？</p>${visual}`,
       { type: 'decimal', value: len }, String(len),
       '提示：數一數厘米格',
       `<h4>📖 解法</h4><p>長度是 <strong>${len}</strong> cm</p>`);
@@ -781,52 +886,58 @@ const P12Questions = {
 
   // ── 小二：角 ──
   rightAngle() {
+    const QV = QuestionVisuals;
     const items = [
-      { q: '直角等於多少度？', a: '90', ans: 90 },
-      { q: '三角尺上的直角是幾度？', a: '90', ans: 90 },
-      { q: '半個直角是多少度？', a: '45', ans: 45 },
-      { q: '兩個直角合起來是多少度？', a: '180', ans: 180 },
-      { q: '直角比 89° 大還是細？（填較大的度數 90）', a: '90', ans: 90 },
-      { q: '一個正方形的每個角是什麼角？', a: '直角', ans: null },
-      { q: '長方形的四個角各是什麼角？', a: '直角', ans: null },
-      { q: '門框的角通常是什麼角？', a: '直角', ans: null }
+      { q: '直角等於多少度？', a: '90', ans: 90, visual: () => QV.angleDiagram(90, true) },
+      { q: '三角尺上的直角是幾度？', a: '90', ans: 90, visual: () => QV.angleDiagram(90, true) },
+      { q: '半個直角是多少度？', a: '45', ans: 45, visual: () => QV.angleDiagram(45) },
+      { q: '兩個直角合起來是多少度？', a: '180', ans: 180, visual: () => QV.angleDiagram(90, true) },
+      { q: '直角比 89° 大還是細？（填較大的度數 90）', a: '90', ans: 90, visual: () => QV.angleDiagram(90, true) },
+      { q: '一個正方形的每個角是什麼角？', a: '直角', ans: null, visual: () => QV.square(6) },
+      { q: '長方形的四個角各是什麼角？', a: '直角', ans: null, visual: () => QV.rectangle(8, 5) },
+      { q: '門框的角通常是什麼角？', a: '直角', ans: null, visual: () => QV.angleDiagram(90, true) }
     ];
     const v = MathUtils.randomChoice(items);
+    const qText = QV.withVisual(v.q, v.visual());
     if (v.ans !== null) {
-      return this.base('p2-angles', v.q,
+      return this.base('p2-angles', qText,
         { type: 'decimal', value: v.ans }, v.a,
         '提示：直角係 90 度',
         `<h4>📖 解法</h4><p>答案是 <strong>${v.a}</strong></p>`);
     }
     const options = MathUtils.shuffle(['直角', '銳角', '鈍角', '平角']);
-    return this._mcq('p2-angles', v.q, options, v.a,
+    return this._mcq('p2-angles', qText, options, v.a,
       '提示：正方形四個角都一樣',
       `<h4>📖 解法</h4><p>答案是 <strong>${v.a}</strong></p>`);
   },
 
   acuteObtuse() {
+    const QV = QuestionVisuals;
     const items = [
-      { q: '比直角小的角叫什麼角？', a: '銳角' },
-      { q: '比直角大的角叫什麼角？', a: '鈍角' },
-      { q: '30° 是什麼角？', a: '銳角' },
-      { q: '100° 是什麼角？', a: '鈍角' },
-      { q: '89° 是什麼角？', a: '銳角' },
-      { q: '95° 是什麼角？', a: '鈍角' },
-      { q: '60° 是什麼角？', a: '銳角' },
-      { q: '120° 是什麼角？', a: '鈍角' },
-      { q: '45° 是什麼角？', a: '銳角' },
-      { q: '150° 是什麼角？', a: '鈍角' },
-      { q: '1° 是什麼角？', a: '銳角' },
-      { q: '179° 是什麼角？', a: '鈍角' }
+      { q: '比直角小的角叫什麼角？', a: '銳角', deg: 45 },
+      { q: '比直角大的角叫什麼角？', a: '鈍角', deg: 120 },
+      { q: '30° 是什麼角？', a: '銳角', deg: 30 },
+      { q: '100° 是什麼角？', a: '鈍角', deg: 100 },
+      { q: '89° 是什麼角？', a: '銳角', deg: 89 },
+      { q: '95° 是什麼角？', a: '鈍角', deg: 95 },
+      { q: '60° 是什麼角？', a: '銳角', deg: 60 },
+      { q: '120° 是什麼角？', a: '鈍角', deg: 120 },
+      { q: '45° 是什麼角？', a: '銳角', deg: 45 },
+      { q: '150° 是什麼角？', a: '鈍角', deg: 150 },
+      { q: '1° 是什麼角？', a: '銳角', deg: 1 },
+      { q: '179° 是什麼角？', a: '鈍角', deg: 179 }
     ];
     const v = MathUtils.randomChoice(items);
     const options = MathUtils.shuffle(['銳角', '直角', '鈍角', '平角']);
-    return this._mcq('p2-angles', v.q, options, v.a,
+    return this._mcq('p2-angles',
+      QV.withVisual(v.q, QV.angleDiagram(v.deg)),
+      options, v.a,
       '提示：直角是 90°，細過 90° 係銳角，大過 90° 係鈍角',
       `<h4>📖 解法</h4><p>答案是 <strong>${v.a}</strong></p>`);
   },
 
   compareAngles() {
+    const QV = QuestionVisuals;
     const pool = [15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85];
     const deg1 = MathUtils.randomChoice(pool);
     let deg2 = MathUtils.randomChoice(pool);
@@ -834,7 +945,10 @@ const P12Questions = {
     const bigger = Math.max(deg1, deg2);
     const labels = MathUtils.shuffle(['A', 'B']);
     return this.base('p2-angles',
-      `角 ${labels[0]} 是 ${deg1}°，角 ${labels[1]} 是 ${deg2}°。較大的角是多少度？`,
+      QV.withVisual(
+        `角 ${labels[0]} 是 ${deg1}°，角 ${labels[1]} 是 ${deg2}°。較大的角是多少度？`,
+        QV.angleCompare(deg1, deg2, labels[0], labels[1])
+      ),
       { type: 'decimal', value: bigger }, String(bigger),
       '提示：度數大代表角較大',
       `<h4>📖 解法</h4><p>較大的角是 <strong>${bigger}</strong>°</p>`);
@@ -842,6 +956,7 @@ const P12Questions = {
 
   // ── 小二：方向 ──
   fourDirections() {
+    const QV = QuestionVisuals;
     const facing = MathUtils.randomChoice(['北', '南', '東', '西']);
     const map = {
       '北': { right: '東', left: '西', back: '南', front: '北' },
@@ -857,14 +972,16 @@ const P12Questions = {
     const wrong = all.filter(d => d !== correct);
     const options = MathUtils.shuffle([correct, ...MathUtils.shuffle(wrong).slice(0, 3)]);
     const scenes = ['站着', '面向操場', '看地圖時', '依照指南針'];
+    const visual = QV.compassRose() + QV.facingPerson(`${facing}方`);
     return this._mcq('p2-direction',
-      `${MathUtils.randomChoice(scenes)}，面向${facing}方，${labels[ask]}是什麼方向？`,
+      QV.withVisual(`${MathUtils.randomChoice(scenes)}，面向${facing}方，${labels[ask]}是什麼方向？`, visual),
       options, correct,
       '提示：面向北時，右邊是東',
       `<h4>📖 解法</h4><p>面向${facing}方，${labels[ask]}是 <strong>${correct}</strong>方</p>`);
   },
 
   compassDir() {
+    const QV = QuestionVisuals;
     const items = [
       { q: '指南針紅色指針通常指向哪個方向？', a: '北' },
       { q: '指南針白色指針通常指向哪個方向？', a: '南' },
@@ -883,7 +1000,9 @@ const P12Questions = {
     const all = ['東', '南', '西', '北'];
     const wrong = all.filter(d => d !== v.a);
     const options = MathUtils.shuffle([v.a, ...MathUtils.shuffle(wrong).slice(0, 3)]);
-    return this._mcq('p2-direction', v.q, options, v.a,
+    return this._mcq('p2-direction',
+      QV.withVisual(v.q, QV.compassRose()),
+      options, v.a,
       '提示：記住「上北下南，左西右東」',
       `<h4>📖 解法</h4><p>答案是 <strong>${v.a}</strong>方</p>`);
   },
@@ -935,16 +1054,17 @@ const P12Questions = {
     const h = MathUtils.randomInt(1, 11);
     const m = MathUtils.randomChoice([5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]);
     const display = `${h}:${String(m).padStart(2, '0')}`;
+    const clock = this._renderClock(h, m);
     const ask = MathUtils.randomChoice(['hour', 'min']);
     if (ask === 'hour') {
       return this.base('p2-time',
-        `時鐘顯示 ${display}，是幾點？（只填小時數）`,
+        `<p>看圖：時鐘顯示 ${display}，是幾點？（只填小時數）</p>${clock}`,
         { type: 'decimal', value: h }, String(h),
         '提示：看短針',
         `<h4>📖 解法</h4><p>小時是 <strong>${h}</strong> 點</p>`);
     }
     return this.base('p2-time',
-      `時鐘顯示 ${display}，是幾分？（只填分鐘數）`,
+      `<p>看圖：時鐘顯示 ${display}，是幾分？（只填分鐘數）</p>${clock}`,
       { type: 'decimal', value: m }, String(m),
       '提示：看長針',
       `<h4>📖 解法</h4><p>分鐘是 <strong>${m}</strong> 分</p>`);
@@ -957,8 +1077,9 @@ const P12Questions = {
     const endH = mins === 60 ? startH + 1 : startH;
     const startStr = `${startH}:00`;
     const endStr = `${endH}:${String(endM).padStart(2, '0')}`;
+    const clocks = `<div class="triangle-double">${this._renderClock(startH, 0)}${this._renderClock(endH, endM)}</div>`;
     return this.base('p2-time',
-      `由 ${startStr} 到 ${endStr}，經過了多少分鐘？`,
+      QuestionVisuals.withVisual(`由 ${startStr} 到 ${endStr}，經過了多少分鐘？`, clocks),
       { type: 'decimal', value: mins }, String(mins),
       '提示：數一數時針走了多少格',
       `<h4>📖 解法</h4><p>經過 <strong>${mins}</strong> 分鐘</p>`);
@@ -1095,16 +1216,17 @@ const P12Questions = {
   },
 
   pictographRead() {
+    const QV = QuestionVisuals;
     const symbol = MathUtils.randomChoice(['★', '●', '▲', '■']);
     const perSymbol = MathUtils.randomChoice([2, 5, 10]);
     const count = MathUtils.randomInt(2, 8);
     const total = count * perSymbol;
     const category = MathUtils.randomChoice(['蘋果', '橙', '圖書', '玩具', '學生']);
-    const symbols = symbol.repeat(count);
+    const chart = QV.pictograph(symbol, perSymbol, count, category);
     const ask = MathUtils.randomChoice(['total', 'count']);
     if (ask === 'total') {
       return this.base('p2-divide',
-        `象形圖中，每個${symbol}代表 ${perSymbol} 個${category}。${category}一行有 ${count} 個${symbol}（${symbols}），共有多少個？`,
+        QV.withVisual(`象形圖中，每個${symbol}代表 ${perSymbol} 個${category}。${category}一行有 ${count} 個${symbol}，共有多少個？`, chart),
         { type: 'decimal', value: total }, String(total),
         '提示：圖案數量 × 每個代表的值',
         `<h4>📖 解法</h4><p>${count} × ${perSymbol} = <strong>${total}</strong> 個</p>`);
@@ -1112,7 +1234,7 @@ const P12Questions = {
     const given = total;
     const symCount = given / perSymbol;
     return this.base('p2-divide',
-      `象形圖中，每個${symbol}代表 ${perSymbol} 個${category}。共有 ${given} 個${category}，要畫幾個${symbol}？`,
+      QV.withVisual(`象形圖中，每個${symbol}代表 ${perSymbol} 個${category}。共有 ${given} 個${category}，要畫幾個${symbol}？`, chart),
       { type: 'decimal', value: symCount }, String(symCount),
       '提示：總數 ÷ 每個代表的值',
       `<h4>📖 解法</h4><p>${given} ÷ ${perSymbol} = <strong>${symCount}</strong> 個</p>`);

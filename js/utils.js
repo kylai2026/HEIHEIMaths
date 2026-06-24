@@ -169,6 +169,7 @@ const Storage = {
     }
     if (!data.dailyLog) data.dailyLog = {};
     if (!data.wrongLog) data.wrongLog = {};
+    if (!data.correctLog) data.correctLog = {};
     if (!data.cardCollection) data.cardCollection = { pokemon: {}, sanrio: {}, pixar: {}, disney: {}, marvel: {} };
     if (!data.gachaStats) data.gachaStats = { totalPulls: 0, pokemon: 0, sanrio: 0, pixar: 0, disney: 0, marvel: 0 };
     if (!data.cardCollection.disney) data.cardCollection.disney = {};
@@ -267,6 +268,7 @@ const Storage = {
       lastDailyDate: null,
       dailyLog: {},
       wrongLog: {},
+      correctLog: {},
       cardCollection: { pokemon: {}, sanrio: {}, pixar: {}, disney: {}, marvel: {} },
       gachaStats: { totalPulls: 0, pokemon: 0, sanrio: 0, pixar: 0, disney: 0, marvel: 0 },
       tierCompleted: { easy: [], medium: [], hard: [] },
@@ -396,6 +398,74 @@ const Storage = {
 
   getWrongLogForDate(data, dateKey = this.getDateKey()) {
     return (data.wrongLog && data.wrongLog[dateKey]) ? data.wrongLog[dateKey] : [];
+  },
+
+  _formatAnswerDisplay(q) {
+    if (q?.answerDisplay) return String(q.answerDisplay);
+    if (q?.options && q.correctIndex != null) return String(q.options[q.correctIndex] ?? '');
+    if (q?.answer?.type === 'fraction') return `${q.answer.num}/${q.answer.den}`;
+    if (q?.answer?.type === 'decimal') return String(q.answer.value);
+    return String(q?.answer ?? '');
+  },
+
+  _stripQuestionHtml(question) {
+    return String(question || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 300);
+  },
+
+  recordCorrectLog(data, q, mode = 'practice') {
+    if (!q) return;
+    const key = this.getDateKey();
+    if (!data.correctLog) data.correctLog = {};
+    if (!data.correctLog[key]) data.correctLog[key] = [];
+
+    const topic = typeof TOPICS !== 'undefined' ? TOPICS.find(t => t.id === q.topicId) : null;
+    const tierCfg = typeof DIFFICULTY_TIERS !== 'undefined' ? DIFFICULTY_TIERS[q.tier] : null;
+
+    data.correctLog[key].push({
+      time: Date.now(),
+      mode,
+      topicId: q.topicId,
+      topicName: q.topicName || topic?.name || q.topicId || '練習',
+      tier: q.tier,
+      tierLabel: tierCfg?.name || q.tier,
+      question: this._stripQuestionHtml(q.question),
+      correctAnswer: this._formatAnswerDisplay(q),
+      poolKey: q.poolKey || null
+    });
+
+    if (data.correctLog[key].length > 50) {
+      data.correctLog[key] = data.correctLog[key].slice(-50);
+    }
+    const keys = Object.keys(data.correctLog).sort();
+    if (keys.length > 30) {
+      keys.slice(0, keys.length - 30).forEach(k => delete data.correctLog[k]);
+    }
+  },
+
+  getCorrectLogForDate(data, dateKey = this.getDateKey()) {
+    if (!data) return [];
+    const logged = (data.correctLog && data.correctLog[dateKey]) ? [...data.correctLog[dateKey]] : [];
+    if (logged.length) return logged;
+
+    const bank = data.correctBank || {};
+    return Object.values(bank)
+      .filter(entry => entry.savedAt && this.getDateKey(new Date(entry.savedAt)) === dateKey)
+      .map(entry => {
+        const topic = typeof TOPICS !== 'undefined' ? TOPICS.find(t => t.id === entry.topicId) : null;
+        const tierCfg = typeof DIFFICULTY_TIERS !== 'undefined' ? DIFFICULTY_TIERS[entry.tier] : null;
+        return {
+          time: entry.savedAt,
+          mode: 'practice',
+          topicId: entry.topicId,
+          topicName: topic?.name || entry.topicId || '練習',
+          tier: entry.tier,
+          tierLabel: tierCfg?.name || entry.tier,
+          question: this._stripQuestionHtml(entry.question),
+          correctAnswer: this._formatAnswerDisplay(entry),
+          poolKey: entry.poolKey || null
+        };
+      })
+      .sort((a, b) => (b.time || 0) - (a.time || 0));
   },
 
   recordQuiz(score, total, weakTopics) {

@@ -260,7 +260,34 @@ const App = {
     this.bindQuiz();
     this.bindDaily();
     this.bindBossBattle();
+    this.bindReadQuestion();
     this.bindSessionTracking();
+  },
+
+  readQuestionBtnHtml() {
+    return '<button type="button" class="btn-read-question" title="朗讀題目" aria-label="朗讀題目">🔊 朗讀題目</button>';
+  },
+
+  bindReadQuestion() {
+    if (this._readQuestionBound) return;
+    this._readQuestionBound = true;
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-read-question');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      let html = '';
+      if (this.state.currentView === 'quiz' && this.state.quizQuestions?.length) {
+        html = this.state.quizQuestions[this.state.quizIndex]?.question;
+      } else if (this.state.currentQuestion?.question) {
+        html = this.state.currentQuestion.question;
+      }
+      if (!html) return;
+      if (typeof AudioManager !== 'undefined') {
+        AudioManager.speakQuestion(html);
+        AudioManager.playSfx('click');
+      }
+    });
   },
 
   bindAuthButtons() {
@@ -596,6 +623,7 @@ const App = {
   },
 
   switchView(view) {
+    if (typeof AudioManager !== 'undefined') AudioManager.stopSpeaking();
     if (this.state.bossMode && view !== 'practice') {
       this.endBossBattle(false);
     }
@@ -1010,6 +1038,7 @@ const App = {
   },
 
   showPracticeQuestion() {
+    if (typeof AudioManager !== 'undefined') AudioManager.stopSpeaking();
     const q = this.state.practiceQuestions[this.state.practiceIndex];
     const total = this.state.practiceQuestions.length;
     const current = this.state.practiceIndex + 1;
@@ -1024,10 +1053,13 @@ const App = {
     document.getElementById('practiceCount').textContent = `${current} / ${total}`;
     const topicName = q.topicId ? (TOPICS.find(t => t.id === q.topicId)?.name || '') : '';
     document.getElementById('questionCard').innerHTML = `
-      <p>第 ${current} 題
-        ${pointsBadge}
-        ${topicName ? `<span class="badge">${topicName}</span>` : ''}
-      </p>
+      <div class="question-head">
+        <p>第 ${current} 題
+          ${pointsBadge}
+          ${topicName ? `<span class="badge">${topicName}</span>` : ''}
+        </p>
+        ${this.readQuestionBtnHtml()}
+      </div>
       <div class="math-expr">${q.question}</div>
     `;
 
@@ -1081,6 +1113,12 @@ const App = {
     });
   },
 
+  getPracticeMode() {
+    if (this.state.bossMode) return 'boss';
+    if (this.state.dailyMode) return 'daily';
+    return 'practice';
+  },
+
   processAnswer(correct, topicId, tier, userAnswer = '') {
     this.trackSessionTime();
     AudioManager.playSfx(correct ? 'correct' : 'wrong');
@@ -1092,11 +1130,14 @@ const App = {
     const scoreResult = Scoring.awardAnswer(data, correct, tier, { noPoints });
 
     if (!correct && q) {
-      Storage.recordWrongAnswer(data, q, userAnswer, this.state.dailyMode ? 'daily' : 'practice');
+      Storage.recordWrongAnswer(data, q, userAnswer, this.getPracticeMode());
     }
 
     if (q?.poolKey) Scoring.markQuestionCompleted(data, tier, q.poolKey);
-    if (correct && !noPoints && q) Storage.saveCorrectQuestion(data, q);
+    if (correct && !noPoints && q) {
+      Storage.saveCorrectQuestion(data, q);
+      Storage.recordCorrectLog(data, q, this.getPracticeMode());
+    }
     if (correct && q) this.state.sessionCorrect.push({ ...q });
 
     Storage.recordAnswer(topicId, correct, {
@@ -1379,6 +1420,7 @@ const App = {
   },
 
   showQuizQuestion() {
+    if (typeof AudioManager !== 'undefined') AudioManager.stopSpeaking();
     document.getElementById('quizTeachBox')?.classList.add('hidden');
     const q = this.state.quizQuestions[this.state.quizIndex];
     const total = this.state.quizQuestions.length;
@@ -1387,8 +1429,11 @@ const App = {
     document.getElementById('quizProgress').textContent = `第 ${current} / ${total} 題`;
     document.getElementById('quizProgressFill').style.width = `${(current / total) * 100}%`;
     document.getElementById('quizQuestion').innerHTML = `
-      <span class="badge">${q.topicName}</span>
-      <div class="math-expr" style="margin-top:0.75rem">${q.question}</div>
+      <div class="question-head">
+        <span class="badge">${q.topicName}</span>
+        ${this.readQuestionBtnHtml()}
+      </div>
+      <div class="math-expr">${q.question}</div>
     `;
 
     const optionsEl = document.getElementById('quizOptions');
@@ -1416,14 +1461,16 @@ const App = {
       this.state.quizScore++;
     } else {
       this.state.quizWeak[q.topicName] = (this.state.quizWeak[q.topicName] || 0) + 1;
-      const qData = Storage.load();
-      Storage.recordWrongAnswer(qData, q, q.options?.[selectedIndex] ?? '', 'quiz');
-      Storage.save(qData);
     }
 
     this.trackSessionTime();
     AudioManager.playSfx(correct ? 'correct' : 'wrong');
     const qData = Storage.load();
+    if (correct) {
+      Storage.recordCorrectLog(qData, q, 'quiz');
+    } else {
+      Storage.recordWrongAnswer(qData, q, q.options?.[selectedIndex] ?? '', 'quiz');
+    }
     Storage.updateDailyLog(qData, { answered: 1, correct: correct ? 1 : 0 });
     Storage.save(qData);
     this.renderDailyProgress();
@@ -1831,10 +1878,11 @@ const App = {
     const dateKey = Storage.getDateKey();
     const childNames = typeof getWatchChildren === 'function' ? getWatchChildren() : ['heihei', 'chunchun'];
     const labels = { heihei: '晞晞 (heihei)', chunchun: '雋雋 (chunchun)' };
+    const modeLabel = { practice: '練習', daily: '今日挑戰', quiz: '小測', boss: 'BOSS' };
 
     panel.innerHTML = `
-      <h3>👨‍👩‍👧 子女今日答錯題目</h3>
-      <p class="parent-wrong-intro muted-text">查看 ${childNames.map(n => labels[n] || n).join('、')} 今日做錯嘅題目，方便跟進溫習。</p>
+      <h3>👨‍👩‍👧 子女今日學習記錄</h3>
+      <p class="parent-wrong-intro muted-text">查看 ${childNames.map(n => labels[n] || n).join('、')} 今日答對同答錯嘅題目。</p>
       <div class="parent-wrong-loading">載入中…</div>
     `;
 
@@ -1851,37 +1899,51 @@ const App = {
         console.warn('fetch child data failed:', child, err);
       }
 
+      const corrects = childData ? Storage.getCorrectLogForDate(childData, dateKey) : [];
       const wrongs = childData ? Storage.getWrongLogForDate(childData, dateKey) : [];
       const displayName = labels[child] || child;
 
-      if (!wrongs.length) {
-        sections.push(`
-          <div class="parent-child-section">
-            <h4>${displayName}</h4>
-            <p class="muted-text">今日暫時冇答錯記錄 🎉</p>
-          </div>
-        `);
-        continue;
-      }
+      const correctHtml = corrects.length
+        ? corrects.slice().reverse().map(c => `
+            <div class="parent-correct-item">
+              <div class="parent-wrong-meta">
+                <span class="badge">${c.tierLabel || c.tier || '練習'}</span>
+                <span>${c.topicName || ''}</span>
+                <span class="muted-text">${modeLabel[c.mode] || c.mode || '練習'}</span>
+              </div>
+              <div class="parent-wrong-q">${c.question || '（題目）'}</div>
+              <div class="parent-correct-ans">✅ 答對：${c.correctAnswer || '—'}</div>
+            </div>
+          `).join('')
+        : '<p class="muted-text parent-sub-empty">今日暫時冇答對記錄</p>';
+
+      const wrongHtml = wrongs.length
+        ? wrongs.slice().reverse().map(w => `
+            <div class="parent-wrong-item">
+              <div class="parent-wrong-meta">
+                <span class="badge">${w.tierLabel || w.tier || '練習'}</span>
+                <span>${w.topicName || ''}</span>
+                <span class="muted-text">${modeLabel[w.mode] || w.mode || '練習'}</span>
+              </div>
+              <div class="parent-wrong-q">${w.question || '（題目）'}</div>
+              <div class="parent-wrong-ans">
+                <span class="wrong-user">答：${w.userAnswer || '—'}</span>
+                <span class="wrong-correct">正確：${w.correctAnswer || '—'}</span>
+              </div>
+            </div>
+          `).join('')
+        : '<p class="muted-text parent-sub-empty">今日暫時冇答錯記錄 🎉</p>';
 
       sections.push(`
         <div class="parent-child-section">
-          <h4>${displayName} <span class="parent-wrong-count">${wrongs.length} 題</span></h4>
-          <div class="parent-wrong-list">
-            ${wrongs.slice().reverse().map(w => `
-              <div class="parent-wrong-item">
-                <div class="parent-wrong-meta">
-                  <span class="badge">${w.tierLabel || w.tier || '練習'}</span>
-                  <span>${w.topicName || ''}</span>
-                  <span class="muted-text">${w.mode === 'quiz' ? '小測' : '練習'}</span>
-                </div>
-                <div class="parent-wrong-q">${w.question || '（題目）'}</div>
-                <div class="parent-wrong-ans">
-                  <span class="wrong-user">答：${w.userAnswer || '—'}</span>
-                  <span class="wrong-correct">正確：${w.correctAnswer || '—'}</span>
-                </div>
-              </div>
-            `).join('')}
+          <h4>${displayName}</h4>
+          <div class="parent-child-subsection">
+            <h5>✅ 答對 <span class="parent-correct-count">${corrects.length} 題</span></h5>
+            <div class="parent-correct-list">${correctHtml}</div>
+          </div>
+          <div class="parent-child-subsection">
+            <h5>❌ 答錯 <span class="parent-wrong-count">${wrongs.length} 題</span></h5>
+            <div class="parent-wrong-list">${wrongHtml}</div>
           </div>
         </div>
       `);

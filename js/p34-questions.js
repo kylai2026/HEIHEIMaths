@@ -56,6 +56,181 @@ const P34Questions = {
 
   pick(fns) { return MathUtils.randomChoice(fns)(); },
 
+  _renderBarChart(data, unit = '', opts = {}) {
+    const cellUnit = opts.cellUnit ?? 1;
+    const showValues = opts.showValues === true;
+    const entries = Object.entries(data);
+    if (!entries.length) return '';
+    const colors = ['#3b82f6', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899', '#64748b'];
+    const values = entries.map(([, v]) => Number(v) || 0);
+    const maxValue = Math.max(...values, cellUnit);
+    const maxCells = Math.ceil(maxValue / cellUnit);
+    const yTicks = Array.from({ length: maxCells + 1 }, (_, i) => i * cellUnit);
+    const yAxis = yTicks.slice().reverse().map(tick =>
+      `<span class="bar-chart-ytick">${tick}</span>`
+    ).join('');
+    const bars = entries.map(([label, value], i) => {
+      const num = Number(value) || 0;
+      const filledCells = Math.round(num / cellUnit);
+      const color = colors[i % colors.length];
+      const cells = Array.from({ length: maxCells }, (_, row) => {
+        const level = row + 1;
+        const filled = level <= filledCells;
+        return `<div class="bar-chart-cell${filled ? ' bar-chart-cell--filled' : ''}" style="--cell-color:${color}"></div>`;
+      }).join('');
+      return `
+        <div class="bar-chart-col">
+          ${showValues ? `<div class="bar-chart-value">${num}</div>` : ''}
+          <div class="bar-chart-grid" style="--max-cells:${maxCells}">
+            <div class="bar-chart-cells">${cells}</div>
+          </div>
+          <div class="bar-chart-label">${label}</div>
+        </div>`;
+    }).join('');
+    const scaleNote = cellUnit > 1
+      ? `<div class="bar-chart-scale">每格代表 ${cellUnit} ${unit || '格'}</div>`
+      : '';
+    return `
+      <div class="bar-chart-scene" aria-hidden="true">
+        <div class="bar-chart-wrap">
+          <div class="bar-chart-yaxis" style="--max-cells:${maxCells}">${yAxis}</div>
+          <div class="bar-chart-bars">${bars}</div>
+        </div>
+        ${scaleNote}
+        ${unit ? `<div class="bar-chart-unit">（單位：${unit}）</div>` : ''}
+      </div>`;
+  },
+
+  _computeTriangleLayout(sides) {
+    const s = sides.map(Number);
+    const baseVal = Math.max(...s);
+    const bi = s.indexOf(baseVal);
+    const leftVal = s[(bi + 1) % 3];
+    const rightVal = s[(bi + 2) % 3];
+    const x = (baseVal * baseVal + leftVal * leftVal - rightVal * rightVal) / (2 * baseVal);
+    const y = Math.sqrt(Math.max(0.01, leftVal * leftVal - x * x));
+    const pad = 34;
+    const vw = 250;
+    const vh = 175;
+    const scale = Math.min((vw - pad * 2) / baseVal, (vh - pad * 2) / y) * 0.82;
+    const A = { x: pad, y: vh - pad };
+    const B = { x: pad + baseVal * scale, y: vh - pad };
+    const C = { x: pad + x * scale, y: vh - pad - y * scale };
+    const edgeLabels = [
+      { p1: A, p2: C, label: `${leftVal}` },
+      { p1: C, p2: B, label: `${rightVal}` },
+      { p1: A, p2: B, label: `${baseVal}` }
+    ];
+    return { A, B, C, edgeLabels, vw, vh };
+  },
+
+  _triangleEdgeLabel(p1, p2, text, offset = 14) {
+    const mx = (p1.x + p2.x) / 2;
+    const my = (p1.y + p2.y) / 2;
+    const dx = p2.x - p1.x;
+    const dy = p2.y - p1.y;
+    const len = Math.hypot(dx, dy) || 1;
+    const nx = -dy / len;
+    const ny = dx / len;
+    const lx = mx + nx * offset;
+    const ly = my + ny * offset;
+    return `<text x="${lx}" y="${ly}" class="triangle-edge-label" text-anchor="middle" dominant-baseline="middle">${text}</text>`;
+  },
+
+  _renderTriangleSides(sides, unit = 'cm') {
+    const layout = this._computeTriangleLayout(sides);
+    const { A, B, C, edgeLabels, vw, vh } = layout;
+    const labels = edgeLabels.map(e =>
+      this._triangleEdgeLabel(e.p1, e.p2, `${e.label} ${unit}`)
+    ).join('');
+    return `
+      <div class="triangle-scene" aria-hidden="true">
+        <svg class="triangle-svg" viewBox="0 0 ${vw} ${vh}" role="img" aria-label="三角形圖">
+          <polygon points="${A.x},${A.y} ${C.x},${C.y} ${B.x},${B.y}" class="triangle-shape" />
+          ${labels}
+        </svg>
+      </div>`;
+  },
+
+  _renderTriangleSimple() {
+    return `
+      <div class="triangle-scene" aria-hidden="true">
+        <svg class="triangle-svg" viewBox="0 0 250 175" role="img" aria-label="三角形圖">
+          <polygon points="125,30 35,145 215,145" class="triangle-shape" />
+        </svg>
+      </div>`;
+  },
+
+  _renderIsoscelesTriangle() {
+    return `
+      <div class="triangle-scene" aria-hidden="true">
+        <svg class="triangle-svg" viewBox="0 0 250 175" role="img" aria-label="等腰三角形圖">
+          <polygon points="125,28 45,145 205,145" class="triangle-shape" />
+          <text x="78" y="118" class="triangle-edge-label">等邊</text>
+          <text x="158" y="118" class="triangle-edge-label">等邊</text>
+        </svg>
+      </div>`;
+  },
+
+  _renderRightTriangle() {
+    return `
+      <div class="triangle-scene" aria-hidden="true">
+        <svg class="triangle-svg" viewBox="0 0 250 175" role="img" aria-label="直角三角形圖">
+          <polygon points="45,145 45,45 205,145" class="triangle-shape" />
+          <rect x="45" y="133" width="12" height="12" class="triangle-right-angle" />
+        </svg>
+      </div>`;
+  },
+
+  _renderEquilateralTriangle(side, unit = 'cm') {
+    const s = Number(side);
+    const vw = 250;
+    const vh = 175;
+    const pad = 34;
+    const scale = (vw - pad * 2) / s;
+    const h = (Math.sqrt(3) / 2) * s * scale;
+    const cx = vw / 2;
+    const top = { x: cx, y: pad };
+    const left = { x: cx - (s * scale) / 2, y: pad + h };
+    const right = { x: cx + (s * scale) / 2, y: pad + h };
+    const label = `${s} ${unit}`;
+    const labels = [
+      this._triangleEdgeLabel(top, left, label, 16),
+      this._triangleEdgeLabel(top, right, label, 16),
+      this._triangleEdgeLabel(left, right, label, -18)
+    ].join('');
+    return `
+      <div class="triangle-scene" aria-hidden="true">
+        <svg class="triangle-svg" viewBox="0 0 ${vw} ${vh}" role="img" aria-label="等邊三角形圖">
+          <polygon points="${top.x},${top.y} ${left.x},${left.y} ${right.x},${right.y}" class="triangle-shape" />
+          ${labels}
+        </svg>
+      </div>`;
+  },
+
+  _renderTriangleArea(base, height, unit = 'cm') {
+    const b = Number(base);
+    const h = Number(height);
+    const vw = 250;
+    const vh = 175;
+    const pad = 30;
+    const scale = Math.min((vw - pad * 2) / b, (vh - pad * 2) / h) * 0.78;
+    const A = { x: pad, y: vh - pad };
+    const B = { x: pad + b * scale, y: vh - pad };
+    const C = { x: pad + (b * scale) / 2, y: vh - pad - h * scale };
+    const foot = { x: C.x, y: A.y };
+    return `
+      <div class="triangle-scene" aria-hidden="true">
+        <svg class="triangle-svg" viewBox="0 0 ${vw} ${vh}" role="img" aria-label="三角形面積圖">
+          <polygon points="${A.x},${A.y} ${C.x},${C.y} ${B.x},${B.y}" class="triangle-shape" />
+          <line x1="${C.x}" y1="${C.y}" x2="${foot.x}" y2="${foot.y}" class="triangle-height-line" />
+          <rect x="${foot.x}" y="${foot.y - 8}" width="8" height="8" class="triangle-right-angle" />
+          ${this._triangleEdgeLabel(A, B, `底 ${b} ${unit}`, -16)}
+          <text x="${C.x + 12}" y="${(C.y + foot.y) / 2}" class="triangle-edge-label" dominant-baseline="middle">高 ${h} ${unit}</text>
+        </svg>
+      </div>`;
+  },
+
   // ── 小三：五位數 ──
   fiveDigitRead() {
     const n = MathUtils.randomInt(10000, 99999);
@@ -261,7 +436,10 @@ const P34Questions = {
     const den = MathUtils.randomChoice([2, 3, 4, 5, 6, 8]);
     const num = MathUtils.randomInt(1, den - 1);
     return this.base('p3-frac-basic',
-      `一個圓形平均分成 ${den} 份，塗了 ${num} 份。塗色部分佔整個圓形的幾分之幾？（格式：分子/分母）`,
+      QuestionVisuals.withVisual(
+        `一個圓形平均分成 ${den} 份，塗了 ${num} 份。塗色部分佔整個圓形的幾分之幾？（格式：分子/分母）`,
+        QuestionVisuals.fractionCircle(num, den)
+      ),
       { type: 'fraction', num, den },
       `${num}/${den}`,
       '提示：分母=總份數，分子=塗了幾份',
@@ -336,7 +514,10 @@ const P34Questions = {
     const bigger = aM > b ? aM : b;
     const display = bigger === aM ? `${a}公里` : `${b}米`;
     return this.base('p3-length',
-      `${a} 公里和 ${b} 米，哪一個較長？（填較長的數值，單位用米）`,
+      QuestionVisuals.withVisual(
+        `${a} 公里和 ${b} 米，哪一個較長？（填較長的數值，單位用米）`,
+        QuestionVisuals.lengthCompare(a, '公里', b, '米')
+      ),
       { type: 'decimal', value: bigger }, String(bigger),
       '提示：先把公里化成米',
       `<h4>📖 解法</h4><p>${a} 公里 = ${aM} 米，較長是 <strong>${bigger}</strong> 米（${display}）</p>`
@@ -362,7 +543,10 @@ const P34Questions = {
     const aMl = a * 1000;
     const bigger = Math.max(aMl, b);
     return this.base('p3-capacity',
-      `${a} 升和 ${b} 毫升，哪一個較多？（填較多的毫升數）`,
+      QuestionVisuals.withVisual(
+        `${a} 升和 ${b} 毫升，哪一個較多？（填較多的毫升數）`,
+        QuestionVisuals.capacityJugs(a, b)
+      ),
       { type: 'decimal', value: bigger }, String(bigger),
       '提示：1 升 = 1000 毫升',
       `<h4>📖 解法</h4><p>${a} 升 = ${aMl} 毫升，較多是 <strong>${bigger}</strong> 毫升</p>`
@@ -374,7 +558,10 @@ const P34Questions = {
     const b = MathUtils.randomInt(200, 800);
     const ans = a * 1000 + b;
     return this.base('p3-capacity',
-      `${a} 升 ${b} 毫升 = ? 毫升`,
+      QuestionVisuals.withVisual(
+        `${a} 升 ${b} 毫升 = ? 毫升`,
+        QuestionVisuals.capacityJugs(a, b)
+      ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：先把升化成毫升',
       `<h4>📖 解法</h4><p>${a} × 1000 + ${b} = <strong>${ans}</strong> 毫升</p>`
@@ -402,7 +589,11 @@ const P34Questions = {
       { q: '一個三角形最少有幾條邊？', a: 3, hint: '三角形一定有三條邊' }
     ];
     const v = MathUtils.randomChoice(variants);
-    return this.base('p3-triangle', v.q,
+    const chart = v.a === 6
+      ? `<div class="triangle-double">${this._renderTriangleSimple()}${this._renderTriangleSimple()}</div>`
+      : this._renderTriangleSimple();
+    return this.base('p3-triangle',
+      `<p>看圖：${v.q}</p>${chart}`,
       { type: 'decimal', value: v.a }, String(v.a),
       `提示：${v.hint}`,
       `<h4>📖 解法</h4><p>答案 = <strong>${v.a}</strong></p>`
@@ -410,8 +601,9 @@ const P34Questions = {
   },
 
   triangleEdgeCount() {
+    const chart = this._renderTriangleSimple();
     return this.base('p3-triangle',
-      '一個三角形有幾條邊？',
+      `<p>看圖：一個三角形有幾條邊？</p>${chart}`,
       { type: 'decimal', value: 3 }, '3',
       '提示：三角形「三」角形，有三條邊',
       '<h4>📖 解法</h4><p>三角形有 <strong>3</strong> 條邊</p>'
@@ -421,8 +613,9 @@ const P34Questions = {
   triangleEquilateralPerim() {
     const side = MathUtils.randomInt(3, 15);
     const ans = side * 3;
+    const chart = this._renderEquilateralTriangle(side);
     return this.base('p3-triangle',
-      `一個等邊三角形每邊長 ${side} cm，周界是多少 cm？`,
+      `<p>看圖：一個等邊三角形，周界是多少 cm？</p>${chart}`,
       { type: 'decimal', value: ans }, String(ans),
       '提示：等邊三角形三邊相等',
       `<h4>📖 解法</h4><p>${side} × 3 = <strong>${ans}</strong> cm</p>`
@@ -431,15 +624,16 @@ const P34Questions = {
 
   triangleType() {
     const types = [
-      { name: '等邊三角形', desc: '三邊相等' },
-      { name: '等腰三角形', desc: '兩邊相等' },
-      { name: '直角三角形', desc: '有一個直角' }
+      { name: '等邊三角形', desc: '三邊相等', chart: () => this._renderEquilateralTriangle(8) },
+      { name: '等腰三角形', desc: '兩邊相等', chart: () => this._renderIsoscelesTriangle() },
+      { name: '直角三角形', desc: '有一個直角', chart: () => this._renderRightTriangle() }
     ];
     const correct = MathUtils.randomChoice(types);
     const options = MathUtils.shuffle(types.map(t => t.name));
+    const chart = correct.chart();
     return {
       topicId: 'p3-triangle',
-      question: `哪種三角形${correct.desc}？`,
+      question: `<p>看圖：哪種三角形${correct.desc}？</p>${chart}`,
       type: 'mcq',
       options,
       correctIndex: options.indexOf(correct.name),
@@ -451,12 +645,16 @@ const P34Questions = {
   },
 
   triangleSides() {
-    const a = MathUtils.randomInt(3, 10);
-    const b = MathUtils.randomInt(3, 10);
-    const c = MathUtils.randomInt(3, 10);
+    let a, b, c;
+    do {
+      a = MathUtils.randomInt(3, 12);
+      b = MathUtils.randomInt(3, 12);
+      c = MathUtils.randomInt(3, 12);
+    } while (a + b <= c || a + c <= b || b + c <= a);
     const ans = a + b + c;
+    const chart = this._renderTriangleSides([a, b, c]);
     return this.base('p3-triangle',
-      `一個三角形三邊長分別是 ${a} cm、${b} cm 和 ${c} cm，周界是多少 cm？`,
+      `<p>看圖：三角形三邊長如圖所示，周界是多少 cm？</p>${chart}`,
       { type: 'decimal', value: ans }, String(ans),
       '提示：周界 = 三邊相加',
       `<h4>📖 解法</h4><p>${a} + ${b} + ${c} = <strong>${ans}</strong> cm</p>`
@@ -477,7 +675,7 @@ const P34Questions = {
     const options = MathUtils.shuffle([s.a, ...MathUtils.shuffle(wrong).slice(0, 3)]);
     return {
       topicId: 'p3-quad',
-      question: s.q,
+      question: QuestionVisuals.withVisual(s.q, QuestionVisuals.quadShape(s.a)),
       type: 'mcq',
       options,
       correctIndex: options.indexOf(s.a),
@@ -497,7 +695,7 @@ const P34Questions = {
     ];
     const s = MathUtils.randomChoice(items);
     return this.base('p3-quad',
-      `一個${s.shape}有幾組平行邊？`,
+      QuestionVisuals.withVisual(`一個${s.shape}有幾組平行邊？`, QuestionVisuals.quadShape(s.shape)),
       { type: 'decimal', value: s.pairs }, String(s.pairs),
       '提示：留意對邊是否平行',
       `<h4>📖 解法</h4><p>${s.shape}有 <strong>${s.pairs}</strong> 組平行邊</p>`
@@ -508,7 +706,7 @@ const P34Questions = {
     const shapes = ['平行四邊形', '梯形', '長方形', '正方形', '菱形'];
     const shape = MathUtils.randomChoice(shapes);
     return this.base('p3-quad',
-      `一個${shape}有幾條邊？`,
+      QuestionVisuals.withVisual(`一個${shape}有幾條邊？`, QuestionVisuals.quadShape(shape)),
       { type: 'decimal', value: 4 }, '4',
       '提示：四邊形都有四條邊',
       `<h4>📖 解法</h4><p>${shape}有 <strong>4</strong> 條邊</p>`
@@ -521,8 +719,11 @@ const P34Questions = {
     const ans = 2 * (l + w);
     const shapes = ['長方形', '平行四邊形'];
     const shape = MathUtils.randomChoice(shapes);
+    const visual = shape === '長方形'
+      ? QuestionVisuals.rectangle(l, w)
+      : QuestionVisuals.parallelogram(l, w);
     return this.base('p3-quad',
-      `一個${shape}，長 ${l} cm，闊 ${w} cm，周界是多少 cm？`,
+      QuestionVisuals.withVisual(`一個${shape}，長 ${l} cm，闊 ${w} cm，周界是多少 cm？`, visual),
       { type: 'decimal', value: ans }, String(ans),
       '提示：周界 = 2 × (長 + 闊)',
       `<h4>📖 解法</h4><p>2 × (${l} + ${w}) = <strong>${ans}</strong> cm</p>`
@@ -536,40 +737,43 @@ const P34Questions = {
   // ── 小三：棒形圖 ──
   barChart() {
     const items = MathUtils.shuffle(['蘋果', '橙', '香蕉', '葡萄', '西瓜', '芒果', '梨', '草莓']).slice(0, 4);
+    const cellUnit = MathUtils.randomChoice([1, 2, 5]);
+    const maxCells = MathUtils.randomInt(8, 12);
     const data = {};
-    items.forEach(name => { data[name] = MathUtils.randomInt(10, 50) * MathUtils.randomChoice([1, 2, 5]); });
+    items.forEach(name => { data[name] = MathUtils.randomInt(2, maxCells) * cellUnit; });
+    const chart = this._renderBarChart(data, '個', { cellUnit });
     const names = Object.keys(data);
     const vals = names.map(n => data[n]);
     const a = names[0]; const b = names[1]; const c = names[2]; const d = names[3];
     const types = [
       () => {
         const ans = data[d] - data[c];
-        return { q: `棒形圖顯示銷量：${names.map(n => `${n} ${data[n]} 個`).join('、')}。${d}比${c}多賣多少個？`, a: ans };
+        return { q: `<p>看圖：棒形圖顯示各水果銷量。${d}比${c}多賣多少個？</p>${chart}`, a: ans };
       },
       () => {
         const ans = vals.reduce((s, n) => s + n, 0);
-        return { q: `棒形圖顯示：${names.map(n => `${n} ${data[n]} 個`).join('、')}。共賣出多少個？`, a: ans };
+        return { q: `<p>看圖：棒形圖顯示各水果銷量。共賣出多少個？</p>${chart}`, a: ans };
       },
       () => {
         const item = MathUtils.randomChoice(names);
         const price = MathUtils.randomChoice([2, 3, 5, 8, 10]);
         const ans = data[item] * price;
-        return { q: `棒形圖顯示${item}賣了 ${data[item]} 個，每個 ${price} 元，${item}共賣了多少元？`, a: ans };
+        return { q: `<p>看圖：棒形圖顯示各水果銷量。${item}每個 ${price} 元，${item}共賣了多少元？</p>${chart}`, a: ans };
       },
       () => {
         const ans = Math.max(...vals) - Math.min(...vals);
-        return { q: `棒形圖顯示：${names.map(n => `${n} ${data[n]}`).join('、')}。最多同最少相差多少？`, a: ans };
+        return { q: `<p>看圖：棒形圖顯示各水果銷量。最多同最少相差多少個？</p>${chart}`, a: ans };
       },
       () => {
         const ans = data[a] + data[b];
-        return { q: `棒形圖顯示：${a} ${data[a]} 個、${b} ${data[b]} 個。${a}和${b}共賣了多少個？`, a: ans };
+        return { q: `<p>看圖：棒形圖顯示各水果銷量。${a}和${b}共賣了多少個？</p>${chart}`, a: ans };
       }
     ];
     const t = MathUtils.randomChoice(types)();
     return this.base('p3-barchart', t.q,
       { type: 'decimal', value: t.a }, String(t.a),
       '提示：仔細閱讀棒形圖數據',
-      `<h4>📖 解法</h4><p>答案 = <strong>${t.a}</strong></p>`
+      `<h4>📖 解法</h4><p>${cellUnit > 1 ? `每格代表 ${cellUnit} 個，先數格再計算。` : '逐格數出各水果的格數。'}答案 = <strong>${t.a}</strong></p>`
     );
   },
 
@@ -888,7 +1092,10 @@ const P34Questions = {
     const w = MathUtils.randomInt(3, 15);
     const ans = l * w;
     return this.base('p4-area',
-      `一個長方形，長 ${l} cm，闊 ${w} cm，面積是多少 cm²？`,
+      QuestionVisuals.withVisual(
+        `一個長方形，長 ${l} cm，闊 ${w} cm，面積是多少 cm²？`,
+        QuestionVisuals.rectangle(l, w)
+      ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：面積 = 長 × 闊',
       `<h4>📖 解法</h4><p>${l} × ${w} = <strong>${ans}</strong> cm²</p>`
@@ -899,7 +1106,10 @@ const P34Questions = {
     const side = MathUtils.randomInt(4, 15);
     const ans = side * side;
     return this.base('p4-area',
-      `一個正方形邊長 ${side} cm，面積是多少 cm²？`,
+      QuestionVisuals.withVisual(
+        `一個正方形邊長 ${side} cm，面積是多少 cm²？`,
+        QuestionVisuals.square(side)
+      ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：正方形面積 = 邊長 × 邊長',
       `<h4>📖 解法</h4><p>${side} × ${side} = <strong>${ans}</strong> cm²</p>`
@@ -912,7 +1122,10 @@ const P34Questions = {
     const price = MathUtils.randomInt(5, 20);
     const ans = l * w * price;
     return this.base('p4-area',
-      `一塊長 ${l} m、闊 ${w} m 的地毯，每平方米 ${price} 元，鋪滿要多少元？`,
+      QuestionVisuals.withVisual(
+        `一塊長 ${l} m、闊 ${w} m 的地毯，每平方米 ${price} 元，鋪滿要多少元？`,
+        QuestionVisuals.rectangle(l, w, 'm')
+      ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：先算面積，再乘單價',
       `<h4>📖 解法</h4><p>面積 = ${l * w} m²，費用 = ${l * w} × ${price} = <strong>${ans}</strong> 元</p>`
@@ -923,7 +1136,10 @@ const P34Questions = {
     const side = MathUtils.randomInt(4, 12);
     const area = side * side;
     return this.base('p4-area',
-      `一個正方形面積是 ${area} cm²，邊長是多少 cm？`,
+      QuestionVisuals.withVisual(
+        `一個正方形面積是 ${area} cm²，邊長是多少 cm？`,
+        QuestionVisuals.square(side, 'cm', `${area} cm²`)
+      ),
       { type: 'decimal', value: side }, String(side),
       '提示：邊長 × 邊長 = 面積',
       `<h4>📖 解法</h4><p>${side} × ${side} = ${area}，邊長 = <strong>${side}</strong> cm</p>`
@@ -934,9 +1150,13 @@ const P34Questions = {
   mapDirection() {
     const bank = this.getDirectionBank();
     const q = MathUtils.randomChoice(bank);
+    const QV = QuestionVisuals;
+    let visual = QV.compassRose();
+    if (q.map) visual += QV.directionMap(q.map.center, q.map.places);
+    else if (q.facing) visual += QV.facingPerson(q.facing);
     return {
       topicId: 'p4-direction',
-      question: q.q,
+      question: QV.withVisual(q.q, visual),
       type: 'mcq',
       options: q.options,
       correctIndex: q.correct,
@@ -964,6 +1184,7 @@ const P34Questions = {
         const options = MathUtils.shuffle(['東方', '西方', '南方', '北方']);
         bank.push({
           q: `小光面向${face}，他的${labels[side]}是哪個方向？`,
+          facing: face,
           options,
           correct: options.indexOf(correct),
           solution: `面向${face}時，${labels[side]}是${correct}。`
@@ -971,11 +1192,11 @@ const P34Questions = {
       });
     });
     const relQuestions = [
-      { q: '圖書館在學校的東面，公園在學校的北面。圖書館在公園的哪個方向？', options: ['東北面', '東南面', '西北面', '西南面'], correct: 0, solution: '圖書館在學校東面，公園在學校北面，所以圖書館在公園的東北面。' },
-      { q: '商店在中心的東面，泳池在中心的西北面。商店在泳池的哪個方向？', options: ['東南面', '東北面', '西北面', '西南面'], correct: 0, solution: '商店在中心東面，泳池在中心西北面，商店在泳池的東南面。' },
-      { q: 'A在B的北面，C在B的東面。A在C的哪個方向？', options: ['西北面', '東北面', '西南面', '東南面'], correct: 0, solution: 'A在B北，C在B東，A在C的西北面。' },
-      { q: '郵局在車站的西面，醫院在車站的南面。郵局在醫院的哪個方向？', options: ['西北面', '西南面', '東北面', '東南面'], correct: 0, solution: '郵局在車站西，醫院在車站南，郵局在醫院西北面。' },
-      { q: '從中心向北走可到公園，向東走可到圖書館。圖書館在公園的哪個方向？', options: ['東南面', '東北面', '西北面', '西南面'], correct: 0, solution: '圖書館在中心東，公園在中心北，圖書館在公園東南面。' },
+      { q: '圖書館在學校的東面，公園在學校的北面。圖書館在公園的哪個方向？', options: ['東北面', '東南面', '西北面', '西南面'], correct: 0, solution: '圖書館在學校東面，公園在學校北面，所以圖書館在公園的東北面。', map: { center: '學校', places: { '東': '圖書館', '北': '公園' } } },
+      { q: '商店在中心的東面，泳池在中心的西北面。商店在泳池的哪個方向？', options: ['東南面', '東北面', '西北面', '西南面'], correct: 0, solution: '商店在中心東面，泳池在中心西北面，商店在泳池的東南面。', map: { center: '中心', places: { '東': '商店', '西北': '泳池' } } },
+      { q: 'A在B的北面，C在B的東面。A在C的哪個方向？', options: ['西北面', '東北面', '西南面', '東南面'], correct: 0, solution: 'A在B北，C在B東，A在C的西北面。', map: { center: 'B', places: { '北': 'A', '東': 'C' } } },
+      { q: '郵局在車站的西面，醫院在車站的南面。郵局在醫院的哪個方向？', options: ['西北面', '西南面', '東北面', '東南面'], correct: 0, solution: '郵局在車站西，醫院在車站南，郵局在醫院西北面。', map: { center: '車站', places: { '西': '郵局', '南': '醫院' } } },
+      { q: '從中心向北走可到公園，向東走可到圖書館。圖書館在公園的哪個方向？', options: ['東南面', '東北面', '西北面', '西南面'], correct: 0, solution: '圖書館在中心東，公園在中心北，圖書館在公園東南面。', map: { center: '中心', places: { '北': '公園', '東': '圖書館' } } },
       { q: '小明面向南方，向左轉後面向哪個方向？', options: ['東方', '西方', '北方', '南方'], correct: 0, solution: '面向南向左轉，面向東方。' },
       { q: '小明面向西方，向右轉後面向哪個方向？', options: ['北方', '南方', '東方', '西方'], correct: 0, solution: '面向西向右轉，面向北方。' },
       { q: '由北向南走，右面是哪個方向？', options: ['西方', '東方', '南方', '北方'], correct: 0, solution: '面向南方時，右面是西方。' },
@@ -1003,6 +1224,7 @@ const P34Questions = {
         const options = MathUtils.shuffle(['東北面', '東南面', '西南面', '西北面']);
         bank.push({
           q: `${a}在${base}的${d1}面，${b}在${base}的${d2}面。${a}在${b}的哪個方向？`,
+          map: { center: base, places: { [d1]: a, [d2]: b } },
           options,
           correct: options.indexOf(ans),
           solution: `${a}在${d1}面，${b}在${d2}面，所以${a}在${b}的${ans}。`
@@ -1084,7 +1306,10 @@ const P34Questions = {
     const w = MathUtils.randomInt(5, 10);
     const perim = 2 * (l + w);
     return this.base('p4-word-logic',
-      `一條繩子圍成一個長 ${l} cm、闊 ${w} cm 的長方形，繩子長多少 cm？`,
+      QuestionVisuals.withVisual(
+        `一條繩子圍成一個長 ${l} cm、闊 ${w} cm 的長方形，繩子長多少 cm？`,
+        QuestionVisuals.rectangle(l, w)
+      ),
       { type: 'decimal', value: perim }, String(perim),
       '提示：繩子長 = 周界',
       `<h4>📖 解法</h4><p>周界 = 2 × (${l} + ${w}) = <strong>${perim}</strong> cm</p>`

@@ -618,26 +618,32 @@ const ExamQuestions = {
   },
 
   barChart() {
-    const data = { 一: 30, 二: 40, 三: 100, 四: 90, 五: 80, 六: 110 };
+    const data = {
+      '一年級': 30, '二年級': 40, '三年級': 100,
+      '四年級': 90, '五年級': 80, '六年級': 110
+    };
+    const chart = typeof P34Questions !== 'undefined'
+      ? P34Questions._renderBarChart(data, '人', { cellUnit: 10 })
+      : '';
     const types = [
       () => {
-        const ans = data.五 / data.二;
+        const ans = data['五年級'] / data['二年級'];
         return {
-          q: `棒形圖顯示：一年級 30 人、二年級 40 人、三年級 100 人、四年級 90 人、五年級 80 人、六年級 110 人參加晚宴。五年級人數是二年級的多少倍？`,
+          q: `<p>看圖：棒形圖顯示各年級參加晚宴人數。五年級人數是二年級的多少倍？</p>${chart}`,
           a: ans, display: String(ans)
         };
       },
       () => {
         const total = Object.values(data).reduce((s, n) => s + n, 0);
         return {
-          q: `（同上棒形圖）參加晚宴的總人數是多少？`,
+          q: `<p>看圖：棒形圖顯示各年級參加晚宴人數。參加晚宴的總人數是多少？</p>${chart}`,
           a: total, display: String(total)
         };
       },
       () => {
-        const ans = data.四 * 45;
+        const ans = data['四年級'] * 45;
         return {
-          q: `（同上棒形圖）入場費每人 45 元，四年級共收了多少元？`,
+          q: `<p>看圖：棒形圖顯示各年級參加晚宴人數。入場費每人 45 元，四年級共收了多少元？</p>${chart}`,
           a: ans, display: String(ans)
         };
       }
