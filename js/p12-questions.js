@@ -543,14 +543,20 @@ const P12Questions = {
   clockHour() {
     const h = MathUtils.randomInt(1, 12);
     const clock = this._renderClock(h, 0);
-    const variants = [
-      `<p>看圖：時鐘顯示 <strong>${h} 點正</strong>，這是幾點？</p>${clock}`,
-      `<p>看圖：長針指着 12，短針指着 ${h}，是幾點？</p>${clock}`,
-      `<p>看圖：短針指着 ${h}，長針指着 12，現在是幾點？</p>${clock}`,
-      `<p>看圖：學校 ${h} 點上課，時鐘應該顯示幾點？</p>${clock}`,
-      `<p>看圖：「${h} 點」時，短針指着數字幾？</p>${clock}`
+    const readVariants = [
+      `<p>看圖：時鐘顯示幾點？</p>${clock}`,
+      `<p>看圖：長針指着 12，短針指着幾？</p>${clock}`,
+      `<p>看圖：短針指着數字幾？</p>${clock}`,
+      `<p>看圖：現在是幾點正？</p>${clock}`
     ];
-    const qText = MathUtils.randomChoice(variants);
+    const contextVariants = [
+      `<p>學校 ${h} 點上課，時鐘應該顯示幾點？</p>`,
+      `<p>媽媽說 ${h} 點食飯，時鐘應該顯示幾點？</p>`,
+      `<p>故事 ${h} 點開始，時鐘應該顯示幾點？</p>`
+    ];
+    const qText = Math.random() > 0.35
+      ? MathUtils.randomChoice(readVariants)
+      : MathUtils.randomChoice(contextVariants);
     return this.base('p1-time', qText,
       { type: 'decimal', value: h }, String(h),
       '提示：短針指着幾就是幾點',
@@ -561,13 +567,19 @@ const P12Questions = {
     const h = MathUtils.randomInt(1, 11);
     const display = `${h} 點半`;
     const clock = this._renderClock(h, 30);
-    const variants = [
-      `<p>看圖：長針指着 6，短針在 ${h} 和 ${h + 1} 之間，是幾點幾分？（只填「點」前的數字）</p>${clock}`,
-      `<p>看圖：時鐘顯示 <strong>${display}</strong>，「點」前面的數字是？</p>${clock}`,
-      `<p>看圖：短針過了 ${h} 少少，長針指着 6，是幾點半？（填 ${h}）</p>${clock}`,
-      `<p>看圖：${h}:30 是幾點幾分？（只填小時 ${h}）</p>${clock}`
+    const readVariants = [
+      `<p>看圖：長針指着 6，短針在兩個數字之間，是幾點幾分？（只填「點」前的數字）</p>${clock}`,
+      `<p>看圖：時鐘顯示幾點幾分？（只填小時數）</p>${clock}`,
+      `<p>看圖：現在是幾點半？（只填小時數）</p>${clock}`
     ];
-    return this.base('p1-time', MathUtils.randomChoice(variants),
+    const contextVariants = [
+      `<p>學校 ${display} 下課，時鐘應該顯示幾點？（只填小時數）</p>`,
+      `<p>媽媽說 ${display} 食飯，時鐘應該顯示幾點？（只填小時數）</p>`
+    ];
+    const qText = Math.random() > 0.35
+      ? MathUtils.randomChoice(readVariants)
+      : MathUtils.randomChoice(contextVariants);
+    return this.base('p1-time', qText,
       { type: 'decimal', value: h }, String(h),
       '提示：長針指着 6 表示半點',
       `<h4>📖 解法</h4><p>這是 <strong>${display}</strong>，填 <strong>${h}</strong></p>`);
