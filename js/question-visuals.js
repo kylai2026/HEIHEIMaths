@@ -34,9 +34,7 @@ const QuestionVisuals = {
     return this.scene(`
       <svg class="geo-svg" viewBox="0 0 180 180" role="img" aria-label="分數圓圖">
         ${slices.join('')}
-        <text x="${cx}" y="${cy + 5}" text-anchor="middle" class="geo-label">${n}/${d}</text>
       </svg>
-      <p class="geo-caption">圓形平均分成 ${d} 份，塗了 ${n} 份</p>
     `);
   },
 
@@ -57,33 +55,41 @@ const QuestionVisuals = {
     `);
   },
 
-  square(side, unit = 'cm', areaLabel = '') {
+  square(side, unit = 'cm', opts = {}) {
     const s = Number(side);
-    const scale = 100 / s;
+    const scale = 100 / Math.max(s, 1);
     const sz = s * scale;
     const x = (200 - sz) / 2;
     const y = (120 - sz) / 2 + 10;
+    const areaLabel = opts.areaLabel || '';
+    const hideSide = opts.hideSide;
     return this.scene(`
       <svg class="geo-svg" viewBox="0 0 200 135" role="img" aria-label="正方形圖">
         <rect x="${x}" y="${y}" width="${sz}" height="${sz}" class="geo-rect"/>
-        <text x="${x + sz / 2}" y="${y + sz + 18}" text-anchor="middle" class="geo-label">邊長 ${s} ${unit}</text>
+        ${!hideSide ? `<text x="${x + sz / 2}" y="${y + sz + 18}" text-anchor="middle" class="geo-label">邊長 ${s} ${unit}</text>` : ''}
         ${areaLabel ? `<text x="${x + sz / 2}" y="${y + sz / 2}" text-anchor="middle" class="geo-label">面積 ${areaLabel}</text>` : ''}
       </svg>
     `);
   },
 
-  circle(radius, unit = 'cm', label = '') {
+  circle(radius, unit = 'cm', opts = {}) {
     const r = Number(radius);
     const cx = 100;
     const cy = 95;
     const scale = 70 / Math.max(r, 1);
     const rr = r * scale;
+    const hideRadius = opts.hideRadius;
+    const diameter = opts.diameter;
+    const dLine = diameter ? `
+        <line x1="${cx - rr}" y1="${cy}" x2="${cx + rr}" y2="${cy}" class="geo-radius-line"/>
+        <text x="${cx}" y="${cy - 10}" text-anchor="middle" class="geo-label">直徑 ${diameter} ${unit}</text>` : '';
     return this.scene(`
       <svg class="geo-svg" viewBox="0 0 200 170" role="img" aria-label="圓形圖">
         <circle cx="${cx}" cy="${cy}" r="${rr}" class="geo-circle"/>
-        <line x1="${cx}" y1="${cy}" x2="${cx + rr}" y2="${cy}" class="geo-radius-line"/>
-        <text x="${cx + rr / 2}" y="${cy - 6}" text-anchor="middle" class="geo-label">半徑 ${r} ${unit}</text>
-        ${label ? `<text x="${cx}" y="${cy + 5}" text-anchor="middle" class="geo-label">${label}</text>` : ''}
+        ${!hideRadius ? `<line x1="${cx}" y1="${cy}" x2="${cx + rr}" y2="${cy}" class="geo-radius-line"/>
+        <text x="${cx + rr / 2}" y="${cy - 6}" text-anchor="middle" class="geo-label">半徑 ${r} ${unit}</text>` : ''}
+        ${dLine}
+        ${opts.label ? `<text x="${cx}" y="${cy + 5}" text-anchor="middle" class="geo-label">${opts.label}</text>` : ''}
       </svg>
     `);
   },
@@ -290,16 +296,26 @@ const QuestionVisuals = {
     `);
   },
 
-  triangleAngles(a, b) {
+  triangleAngles(a, b, opts = {}) {
     const A = { x: 30, y: 120 };
     const B = { x: 150, y: 120 };
     const C = { x: 90, y: 25 };
+    let labels;
+    if (opts.mode === 'vertex') {
+      labels = `
+        <text x="42" y="112" class="geo-label">?</text>
+        <text x="118" y="112" class="geo-label">?</text>
+        <text x="84" y="48" class="geo-label">${a}°</text>`;
+    } else {
+      labels = `
+        ${a != null ? `<text x="42" y="112" class="geo-label">${a}°</text>` : ''}
+        ${b != null ? `<text x="118" y="112" class="geo-label">${b}°</text>` : ''}
+        <text x="84" y="48" class="geo-label">?</text>`;
+    }
     return this.scene(`
       <svg class="geo-svg" viewBox="0 0 180 135" role="img" aria-label="三角形角度圖">
         <polygon points="${A.x},${A.y} ${C.x},${C.y} ${B.x},${B.y}" class="geo-poly"/>
-        ${a != null ? `<text x="42" y="112" class="geo-label">${a}°</text>` : ''}
-        ${b != null ? `<text x="118" y="112" class="geo-label">${b}°</text>` : ''}
-        <text x="84" y="48" class="geo-label">?</text>
+        ${labels}
       </svg>
     `);
   },

@@ -50,11 +50,11 @@ const P12Questions = {
 
   pick(fns) { return MathUtils.randomChoice(fns)(); },
 
-  _mcq(topicId, question, options, correct, hint, solution) {
+  _mcq(topicId, question, options, correct, hint, solution, tier = 'medium') {
     const correctIndex = options.indexOf(correct);
     return this.base(topicId, question,
       { type: 'decimal', value: correctIndex }, correct,
-      hint, solution, 'medium',
+      hint, solution, tier,
       { type: 'mcq', options, correctIndex });
   },
 
@@ -389,11 +389,11 @@ const P12Questions = {
     let b = MathUtils.randomInt(3, 18);
     while (b === a) b = MathUtils.randomInt(3, 18);
     const longer = Math.max(a, b);
-    const visual = this._renderLengthCompare('紅繩', a, '藍繩', b);
+    const visual = this._renderLengthCompare('紅繩', a, '藍繩', b, { hideCm: true });
     return this.base('p1-length',
-      `<p>看圖：紅繩長 ${a} cm，藍繩長 ${b} cm。較長的是多少 cm？（只填較長的長度）</p>${visual}`,
+      `<p>看圖：紅繩和藍繩哪一條較長？較長的是多少 cm？（只填較長的長度）</p>${visual}`,
       { type: 'decimal', value: longer }, String(longer),
-      '提示：數字大通常代表較長',
+      '提示：在間尺上數一數較長那條有幾格',
       `<h4>📖 解法</h4><p>較長的是 <strong>${longer}</strong> cm</p>`);
   },
 
@@ -543,20 +543,13 @@ const P12Questions = {
   clockHour() {
     const h = MathUtils.randomInt(1, 12);
     const clock = this._renderClock(h, 0);
-    const readVariants = [
+    const variants = [
       `<p>看圖：時鐘顯示幾點？</p>${clock}`,
       `<p>看圖：長針指着 12，短針指着幾？</p>${clock}`,
       `<p>看圖：短針指着數字幾？</p>${clock}`,
       `<p>看圖：現在是幾點正？</p>${clock}`
     ];
-    const contextVariants = [
-      `<p>學校 ${h} 點上課，時鐘應該顯示幾點？</p>`,
-      `<p>媽媽說 ${h} 點食飯，時鐘應該顯示幾點？</p>`,
-      `<p>故事 ${h} 點開始，時鐘應該顯示幾點？</p>`
-    ];
-    const qText = Math.random() > 0.35
-      ? MathUtils.randomChoice(readVariants)
-      : MathUtils.randomChoice(contextVariants);
+    const qText = MathUtils.randomChoice(variants);
     return this.base('p1-time', qText,
       { type: 'decimal', value: h }, String(h),
       '提示：短針指着幾就是幾點',
@@ -567,18 +560,12 @@ const P12Questions = {
     const h = MathUtils.randomInt(1, 11);
     const display = `${h} 點半`;
     const clock = this._renderClock(h, 30);
-    const readVariants = [
+    const variants = [
       `<p>看圖：長針指着 6，短針在兩個數字之間，是幾點幾分？（只填「點」前的數字）</p>${clock}`,
       `<p>看圖：時鐘顯示幾點幾分？（只填小時數）</p>${clock}`,
       `<p>看圖：現在是幾點半？（只填小時數）</p>${clock}`
     ];
-    const contextVariants = [
-      `<p>學校 ${display} 下課，時鐘應該顯示幾點？（只填小時數）</p>`,
-      `<p>媽媽說 ${display} 食飯，時鐘應該顯示幾點？（只填小時數）</p>`
-    ];
-    const qText = Math.random() > 0.35
-      ? MathUtils.randomChoice(readVariants)
-      : MathUtils.randomChoice(contextVariants);
+    const qText = MathUtils.randomChoice(variants);
     return this.base('p1-time', qText,
       { type: 'decimal', value: h }, String(h),
       '提示：長針指着 6 表示半點',
@@ -647,7 +634,7 @@ const P12Questions = {
     const wrong = shapes.filter(s => s.name !== correct.name).map(s => s.name);
     const options = MathUtils.shuffle([correct.name, ...MathUtils.shuffle(wrong).slice(0, 3)]);
     return this._mcq('p1-shapes',
-      QV.withVisual(`哪個圖形${clue}？`, gallery + QV.shapeIcon(correct.name)),
+      QV.withVisual(`哪個圖形${clue}？`, gallery),
       options, correct.name,
       '提示：觀察邊和角的數量',
       `<h4>📖 解法</h4><p>答案是 <strong>${correct.name}</strong></p>`);
@@ -769,7 +756,7 @@ const P12Questions = {
     const len = MathUtils.randomInt(3, 20);
     const obj = MathUtils.randomChoice(['鉛筆', '書本', '梳子', '膠尺', '畫筆']);
     const visual = this._renderRulerMeasure(obj, len);
-    return this.base('p1-money',
+    return this.base('p1-length',
       `<p>看圖：用尺子量一量，${obj}長多少 cm？</p>${visual}`,
       { type: 'decimal', value: len }, String(len),
       '提示：數一數厘米格',
@@ -789,7 +776,7 @@ const P12Questions = {
         `<h4>📖 解法</h4><p>答案 = <strong>${n}</strong></p>`);
     }
     return this.base('p2-hundreds',
-      `數字 ${n} 讀作什麼？（填百位數字）`,
+      `數字 ${n} 的百位是幾？`,
       { type: 'decimal', value: Math.floor(n / 100) }, String(Math.floor(n / 100)),
       '提示：最左邊是百位',
       `<h4>📖 解法</h4><p>${n} 的百位是 <strong>${Math.floor(n / 100)}</strong></p>`);
@@ -904,7 +891,7 @@ const P12Questions = {
       { q: '三角尺上的直角是幾度？', a: '90', ans: 90, visual: () => QV.angleDiagram(90, true) },
       { q: '半個直角是多少度？', a: '45', ans: 45, visual: () => QV.angleDiagram(45) },
       { q: '兩個直角合起來是多少度？', a: '180', ans: 180, visual: () => QV.angleDiagram(90, true) },
-      { q: '直角比 89° 大還是細？（填較大的度數 90）', a: '90', ans: 90, visual: () => QV.angleDiagram(90, true) },
+      { q: '直角比 89° 大還是細？（填較大的度數）', a: '90', ans: 90, visual: () => QV.angleDiagram(90, true) },
       { q: '一個正方形的每個角是什麼角？', a: '直角', ans: null, visual: () => QV.square(6) },
       { q: '長方形的四個角各是什麼角？', a: '直角', ans: null, visual: () => QV.rectangle(8, 5) },
       { q: '門框的角通常是什麼角？', a: '直角', ans: null, visual: () => QV.angleDiagram(90, true) }
@@ -1065,18 +1052,17 @@ const P12Questions = {
   timeMin() {
     const h = MathUtils.randomInt(1, 11);
     const m = MathUtils.randomChoice([5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]);
-    const display = `${h}:${String(m).padStart(2, '0')}`;
     const clock = this._renderClock(h, m);
     const ask = MathUtils.randomChoice(['hour', 'min']);
     if (ask === 'hour') {
       return this.base('p2-time',
-        `<p>看圖：時鐘顯示 ${display}，是幾點？（只填小時數）</p>${clock}`,
+        `<p>看圖：時鐘顯示幾點幾分？（只填小時數）</p>${clock}`,
         { type: 'decimal', value: h }, String(h),
         '提示：看短針',
         `<h4>📖 解法</h4><p>小時是 <strong>${h}</strong> 點</p>`);
     }
     return this.base('p2-time',
-      `<p>看圖：時鐘顯示 ${display}，是幾分？（只填分鐘數）</p>${clock}`,
+      `<p>看圖：時鐘顯示幾點幾分？（只填分鐘數）</p>${clock}`,
       { type: 'decimal', value: m }, String(m),
       '提示：看長針',
       `<h4>📖 解法</h4><p>分鐘是 <strong>${m}</strong> 分</p>`);
@@ -1091,7 +1077,7 @@ const P12Questions = {
     const endStr = `${endH}:${String(endM).padStart(2, '0')}`;
     const clocks = `<div class="triangle-double">${this._renderClock(startH, 0)}${this._renderClock(endH, endM)}</div>`;
     return this.base('p2-time',
-      QuestionVisuals.withVisual(`由 ${startStr} 到 ${endStr}，經過了多少分鐘？`, clocks),
+      QuestionVisuals.withVisual('看圖：由左邊時鐘到右邊時鐘，經過了多少分鐘？', clocks),
       { type: 'decimal', value: mins }, String(mins),
       '提示：數一數時針走了多少格',
       `<h4>📖 解法</h4><p>經過 <strong>${mins}</strong> 分鐘</p>`);
@@ -1246,7 +1232,7 @@ const P12Questions = {
     const given = total;
     const symCount = given / perSymbol;
     return this.base('p2-divide',
-      QV.withVisual(`象形圖中，每個${symbol}代表 ${perSymbol} 個${category}。共有 ${given} 個${category}，要畫幾個${symbol}？`, chart),
+      `象形圖中，每個${symbol}代表 ${perSymbol} 個${category}。共有 ${given} 個${category}，要畫幾個${symbol}？`,
       { type: 'decimal', value: symCount }, String(symCount),
       '提示：總數 ÷ 每個代表的值',
       `<h4>📖 解法</h4><p>${given} ÷ ${perSymbol} = <strong>${symCount}</strong> 個</p>`);

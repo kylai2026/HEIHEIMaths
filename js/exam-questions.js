@@ -72,6 +72,12 @@ const ExamQuestions = {
     return q;
   },
 
+  generateRaw(topicId, tier = 'medium') {
+    const q = this.generate(topicId, tier);
+    q.topicId = topicId;
+    return q;
+  },
+
   pick(fns) {
     return MathUtils.randomChoice(fns)();
   },
@@ -104,11 +110,15 @@ const ExamQuestions = {
   },
 
   mixedOps() {
-    const a = MathUtils.randomInt(10, 50);
-    const b = MathUtils.randomInt(5, 15);
-    const c = MathUtils.randomInt(20, 100);
-    const d = MathUtils.randomChoice([2, 4, 7, 14]);
-    const result = a * b - c / d;
+    let a; let b; let c; let d; let result;
+    do {
+      a = MathUtils.randomInt(10, 50);
+      b = MathUtils.randomInt(5, 15);
+      c = MathUtils.randomInt(20, 100);
+      d = MathUtils.randomChoice([2, 4, 7, 14]);
+      if (c % d !== 0) continue;
+      result = a * b - c / d;
+    } while (!Number.isInteger(result));
     return this.base('exam-calc',
       `計算：${a} × ${b} - ${c} ÷ ${d} = ?`,
       { type: 'decimal', value: result },
@@ -491,8 +501,12 @@ const ExamQuestions = {
     const width = perimeter / (2 * (ratio + 1));
     const length = width * ratio;
     const area = length * width;
+    const QV = QuestionVisuals;
     return this.base('exam-measure',
-      `一條 ${perimeter} cm 的繩圍成一個長方形，長是闊的 ${ratio} 倍，面積是多少 cm²？`,
+      QV.withVisual(
+        `一條 ${perimeter} cm 的繩圍成一個長方形，長是闊的 ${ratio} 倍，面積是多少 cm²？`,
+        QV.rectangle(length, width)
+      ),
       { type: 'decimal', value: area },
       String(area),
       '提示：周界 = 2 × (長 + 闊)，長 = 3 × 闊',
@@ -509,8 +523,12 @@ const ExamQuestions = {
     const height = 12;
     const length = top + bottom;
     const perimeter = 2 * (length + height);
+    const QV = QuestionVisuals;
     return this.base('exam-perimeter',
-      `兩個相同的梯形（上底 ${top} cm、下底 ${bottom} cm、高 ${height} cm）拼成一個長方形，長方形周界是多少 cm？`,
+      QV.withVisual(
+        `兩個相同的梯形（上底 ${top} cm、下底 ${bottom} cm、高 ${height} cm）拼成一個長方形，長方形周界是多少 cm？`,
+        QV.trapezoid(top, bottom, height)
+      ),
       { type: 'decimal', value: perimeter },
       String(perimeter),
       '提示：拼成後長 = 上底 + 下底，闊 = 高',
@@ -589,8 +607,12 @@ const ExamQuestions = {
     const side = MathUtils.randomChoice([9, 11, 13]);
     const area = side * side;
     const perim = side * 4;
+    const QV = QuestionVisuals;
     return this.base('exam-measure',
-      `一個正方形面積是 ${area} cm²，周界是多少 cm？`,
+      QV.withVisual(
+        `一個正方形面積是 ${area} cm²，周界是多少 cm？`,
+        QV.square(side, 'cm', { areaLabel: `${area} cm²`, hideSide: true })
+      ),
       { type: 'decimal', value: perim },
       String(perim),
       '提示：面積 = 邊長 × 邊長，先搵邊長',
@@ -657,6 +679,26 @@ const ExamQuestions = {
   },
 
   mapDirection() {
+    if (typeof P34Questions !== 'undefined' && P34Questions.getDirectionBank) {
+      const bank = P34Questions.getDirectionBank();
+      const q = MathUtils.randomChoice(bank);
+      const QV = QuestionVisuals;
+      let visual = QV.compassRose();
+      if (q.map) visual += QV.directionMap(q.map.center, q.map.places);
+      else if (q.facing) visual += QV.facingPerson(q.facing);
+      return {
+        topicId: 'exam-space',
+        question: QV.withVisual(q.q, visual),
+        type: 'mcq',
+        options: q.options,
+        correctIndex: q.correct,
+        answer: { type: 'decimal', value: q.correct },
+        answerDisplay: q.options[q.correct],
+        hint: '提示：對照指南針八個方向',
+        solution: `<h4>📖 解法（試卷第36-38題類型）</h4><p>${q.solution}</p>`,
+        examStyle: true
+      };
+    }
     const questions = [
       {
         q: '足球場在城堡的東南方。小食亭在城堡的東面。魚池在城堡的東南方，也在小食亭的南面。魚池在足球場的哪個方向？',

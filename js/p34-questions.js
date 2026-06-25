@@ -166,8 +166,8 @@ const P34Questions = {
       <div class="triangle-scene" aria-hidden="true">
         <svg class="triangle-svg" viewBox="0 0 250 175" role="img" aria-label="等腰三角形圖">
           <polygon points="125,28 45,145 205,145" class="triangle-shape" />
-          <text x="78" y="118" class="triangle-edge-label">等邊</text>
-          <text x="158" y="118" class="triangle-edge-label">等邊</text>
+          <text x="78" y="118" class="triangle-edge-label">等長</text>
+          <text x="158" y="118" class="triangle-edge-label">等長</text>
         </svg>
       </div>`;
   },
@@ -208,7 +208,7 @@ const P34Questions = {
       </div>`;
   },
 
-  _renderTriangleArea(base, height, unit = 'cm') {
+  _renderTriangleArea(base, height, unit = 'cm', opts = {}) {
     const b = Number(base);
     const h = Number(height);
     const vw = 250;
@@ -219,16 +219,22 @@ const P34Questions = {
     const B = { x: pad + b * scale, y: vh - pad };
     const C = { x: pad + (b * scale) / 2, y: vh - pad - h * scale };
     const foot = { x: C.x, y: A.y };
+    const baseLabel = opts.hideBase ? '' : this._triangleEdgeLabel(A, B, `底 ${b} ${unit}`, -16);
+    const heightLabel = opts.hideHeight ? '' : `<text x="${C.x + 12}" y="${(C.y + foot.y) / 2}" class="triangle-edge-label" dominant-baseline="middle">高 ${h} ${unit}</text>`;
     return `
       <div class="triangle-scene" aria-hidden="true">
         <svg class="triangle-svg" viewBox="0 0 ${vw} ${vh}" role="img" aria-label="三角形面積圖">
           <polygon points="${A.x},${A.y} ${C.x},${C.y} ${B.x},${B.y}" class="triangle-shape" />
           <line x1="${C.x}" y1="${C.y}" x2="${foot.x}" y2="${foot.y}" class="triangle-height-line" />
           <rect x="${foot.x}" y="${foot.y - 8}" width="8" height="8" class="triangle-right-angle" />
-          ${this._triangleEdgeLabel(A, B, `底 ${b} ${unit}`, -16)}
-          <text x="${C.x + 12}" y="${(C.y + foot.y) / 2}" class="triangle-edge-label" dominant-baseline="middle">高 ${h} ${unit}</text>
+          ${baseLabel}
+          ${heightLabel}
         </svg>
       </div>`;
+  },
+
+  _renderTriangleTypeGallery() {
+    return `<div class="triangle-triple">${this._renderEquilateralTriangle(8)}${this._renderIsoscelesTriangle()}${this._renderRightTriangle()}</div>`;
   },
 
   // ── 小三：五位數 ──
@@ -437,7 +443,7 @@ const P34Questions = {
     const num = MathUtils.randomInt(1, den - 1);
     return this.base('p3-frac-basic',
       QuestionVisuals.withVisual(
-        `一個圓形平均分成 ${den} 份，塗了 ${num} 份。塗色部分佔整個圓形的幾分之幾？（格式：分子/分母）`,
+        `一個圓形平均分成 ${den} 份。看圖：塗色部分佔整個圓形的幾分之幾？（格式：分子/分母）`,
         QuestionVisuals.fractionCircle(num, den)
       ),
       { type: 'fraction', num, den },
@@ -602,11 +608,17 @@ const P34Questions = {
 
   triangleEdgeCount() {
     const chart = this._renderTriangleSimple();
+    const asks = [
+      { q: '一個三角形有幾條邊？', hint: '三角形「三」角形，有三條邊', sol: '三角形有 <strong>3</strong> 條邊' },
+      { q: '一個三角形有幾個角？', hint: '數一數圖中的角', sol: '三角形有 <strong>3</strong> 個角' },
+      { q: '一個三角形有幾個頂點？', hint: '頂點就是角的尖端', sol: '三角形有 <strong>3</strong> 個頂點' }
+    ];
+    const ask = MathUtils.randomChoice(asks);
     return this.base('p3-triangle',
-      `<p>看圖：一個三角形有幾條邊？</p>${chart}`,
+      `<p>看圖：${ask.q}</p>${chart}`,
       { type: 'decimal', value: 3 }, '3',
-      '提示：三角形「三」角形，有三條邊',
-      '<h4>📖 解法</h4><p>三角形有 <strong>3</strong> 條邊</p>'
+      `提示：${ask.hint}`,
+      `<h4>📖 解法</h4><p>${ask.sol}</p>`
     );
   },
 
@@ -624,16 +636,16 @@ const P34Questions = {
 
   triangleType() {
     const types = [
-      { name: '等邊三角形', desc: '三邊相等', chart: () => this._renderEquilateralTriangle(8) },
-      { name: '等腰三角形', desc: '兩邊相等', chart: () => this._renderIsoscelesTriangle() },
-      { name: '直角三角形', desc: '有一個直角', chart: () => this._renderRightTriangle() }
+      { name: '等邊三角形', desc: '三邊相等' },
+      { name: '等腰三角形', desc: '兩邊相等' },
+      { name: '直角三角形', desc: '有一個直角' }
     ];
     const correct = MathUtils.randomChoice(types);
     const options = MathUtils.shuffle(types.map(t => t.name));
-    const chart = correct.chart();
+    const chart = this._renderTriangleTypeGallery();
     return {
       topicId: 'p3-triangle',
-      question: `<p>看圖：哪種三角形${correct.desc}？</p>${chart}`,
+      question: `<p>看圖：圖中有三種三角形。哪種${correct.desc}？</p>${chart}`,
       type: 'mcq',
       options,
       correctIndex: options.indexOf(correct.name),
@@ -675,7 +687,7 @@ const P34Questions = {
     const options = MathUtils.shuffle([s.a, ...MathUtils.shuffle(wrong).slice(0, 3)]);
     return {
       topicId: 'p3-quad',
-      question: QuestionVisuals.withVisual(s.q, QuestionVisuals.quadShape(s.a)),
+      question: s.q,
       type: 'mcq',
       options,
       correctIndex: options.indexOf(s.a),
@@ -1138,7 +1150,7 @@ const P34Questions = {
     return this.base('p4-area',
       QuestionVisuals.withVisual(
         `一個正方形面積是 ${area} cm²，邊長是多少 cm？`,
-        QuestionVisuals.square(side, 'cm', `${area} cm²`)
+        QuestionVisuals.square(side, 'cm', { areaLabel: `${area} cm²`, hideSide: true })
       ),
       { type: 'decimal', value: side }, String(side),
       '提示：邊長 × 邊長 = 面積',

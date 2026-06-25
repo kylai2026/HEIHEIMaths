@@ -1327,20 +1327,39 @@ body {
   flex: 1 1 auto;
 }
 
+.question-read-row {
+  display: flex;
+  justify-content: center;
+  margin: 0.75rem 0 0.25rem;
+}
+
 .btn-read-question {
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.35rem 0.7rem;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.1rem;
+  min-height: 44px;
   border-radius: 999px;
-  border: 1px solid #93c5fd;
+  border: 2px solid #93c5fd;
   background: #eff6ff;
   color: #1d4ed8;
-  font-size: 0.82rem;
+  font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.15s, transform 0.1s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.btn-read-icon {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.btn-read-label {
+  line-height: 1.2;
 }
 
 .btn-read-question:hover {
@@ -1359,6 +1378,25 @@ html[data-theme="dark"] .btn-read-question {
 
 html[data-theme="dark"] .btn-read-question:hover {
   background: #1e40af;
+}
+
+@media (hover: none) and (pointer: coarse), (max-width: 1024px) {
+  .question-read-row {
+    position: sticky;
+    bottom: 0.5rem;
+    z-index: 20;
+    margin: 1rem 0 0.5rem;
+    padding: 0.35rem 0;
+  }
+
+  .btn-read-question {
+    width: 100%;
+    max-width: 100%;
+    font-size: 1.05rem;
+    padding: 0.75rem 1.25rem;
+    min-height: 48px;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2);
+  }
 }
 
 .pos-between-row {
@@ -1891,6 +1929,21 @@ html[data-theme="dark"] .btn-read-question:hover {
   margin: 0;
   flex: 1 1 10rem;
   max-width: 14rem;
+}
+
+.triangle-triple {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 1rem 0 0.25rem;
+}
+
+.triangle-triple .triangle-scene {
+  margin: 0;
+  flex: 1 1 7rem;
+  max-width: 9rem;
+  padding: 0.4rem;
 }
 
 /* ── 圖形題共用視覺 ── */

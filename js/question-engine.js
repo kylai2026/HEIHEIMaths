@@ -1,6 +1,7 @@
 /* 按課題 ID 路由到對應年級題庫 */
 const QuestionEngine = {
   forTopic(topicId) {
+    if (/^exam-/.test(topicId)) return ExamQuestions;
     if (/^p[12]-/.test(topicId)) return P12Questions;
     if (/^p[56]-/.test(topicId)) return P56Questions;
     return P34Questions;

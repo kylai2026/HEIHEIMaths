@@ -265,17 +265,20 @@ const App = {
   },
 
   readQuestionBtnHtml() {
-    return '<button type="button" class="btn-read-question" title="朗讀題目" aria-label="朗讀題目">🔊 朗讀題目</button>';
+    return '<div class="question-read-row"><button type="button" class="btn-read-question" title="朗讀題目" aria-label="朗讀題目"><span class="btn-read-icon" aria-hidden="true">🔊</span><span class="btn-read-label">朗讀題目</span></button></div>';
   },
 
   bindReadQuestion() {
     if (this._readQuestionBound) return;
     this._readQuestionBound = true;
-    document.addEventListener('click', (e) => {
+    let lastReadAt = 0;
+    const run = (e) => {
       const btn = e.target.closest('.btn-read-question');
       if (!btn) return;
       e.preventDefault();
       e.stopPropagation();
+      if (Date.now() - lastReadAt < 450) return;
+      lastReadAt = Date.now();
       let html = '';
       if (this.state.currentView === 'quiz' && this.state.quizQuestions?.length) {
         html = this.state.quizQuestions[this.state.quizIndex]?.question;
@@ -287,7 +290,9 @@ const App = {
         AudioManager.speakQuestion(html);
         AudioManager.playSfx('click');
       }
-    });
+    };
+    document.addEventListener('click', run);
+    document.addEventListener('touchend', run, { passive: false });
   },
 
   bindAuthButtons() {
@@ -1058,9 +1063,9 @@ const App = {
           ${pointsBadge}
           ${topicName ? `<span class="badge">${topicName}</span>` : ''}
         </p>
-        ${this.readQuestionBtnHtml()}
       </div>
       <div class="math-expr">${q.question}</div>
+      ${this.readQuestionBtnHtml()}
     `;
 
     document.getElementById('feedback').classList.add('hidden');
@@ -1431,9 +1436,9 @@ const App = {
     document.getElementById('quizQuestion').innerHTML = `
       <div class="question-head">
         <span class="badge">${q.topicName}</span>
-        ${this.readQuestionBtnHtml()}
       </div>
       <div class="math-expr">${q.question}</div>
+      ${this.readQuestionBtnHtml()}
     `;
 
     const optionsEl = document.getElementById('quizOptions');

@@ -645,8 +645,12 @@ const AudioManager = {
   _showCantoneseVoiceHint() {
     if (this._cantoneseHintShown) return;
     this._cantoneseHintShown = true;
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const iosTip = isIOS
+      ? 'iPad／iPhone：設定 → 輔助使用 → 語音內容 → 朗讀語音 → 揀「中文（香港）」\n\n'
+      : '';
     setTimeout(() => {
-      alert('搵唔到粵語語音。\n\n建議：\n1. 用 Microsoft Edge 瀏覽器\n2. 喺 Windows「設定 → 時間與語言 → 語音」安裝「中文（香港）」語音\n3. 重新整理頁面再試');
+      alert(`搵唔到粵語語音。\n\n${iosTip}電腦建議：\n1. 用 Microsoft Edge 瀏覽器\n2. 安裝「中文（香港）」語音\n3. 重新整理頁面再試`);
     }, 300);
   },
 
@@ -704,6 +708,7 @@ const AudioManager = {
         this._showCantoneseVoiceHint();
       }
 
+      if (speechSynthesis.paused) speechSynthesis.resume();
       speechSynthesis.speak(utter);
     };
 

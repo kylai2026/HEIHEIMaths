@@ -188,10 +188,10 @@ const P56Questions = {
         };
       },
       () => {
-        const area = MathUtils.randomInt(20, 80);
-        const h = MathUtils.randomInt(5, 15);
-        const b = area * 2 / h;
-        const chart = P34Questions._renderTriangleArea(b, h);
+        const h = MathUtils.randomChoice([4, 5, 6, 8, 10, 12, 15]);
+        const b = MathUtils.randomInt(6, 24);
+        const area = b * h / 2;
+        const chart = P34Questions._renderTriangleArea(b, h, 'cm', { hideBase: true });
         return {
           q: `<p>看圖：三角形面積是 ${area} cm²，高 ${h} cm，底是多少 cm？</p>${chart}`,
           ans: b,
@@ -516,7 +516,7 @@ const P56Questions = {
       return this.base('p5-circle',
         QuestionVisuals.withVisual(
           `一個圓的直徑是 ${d} cm，半徑是多少 cm？`,
-          QuestionVisuals.circle(r)
+          QuestionVisuals.circle(r, 'cm', { hideRadius: true, diameter: d })
         ),
         { type: 'decimal', value: r }, String(r),
         '提示：半徑 = 直徑 ÷ 2',
@@ -570,7 +570,7 @@ const P56Questions = {
           q: `一個圓的直徑是 ${d} cm，半徑是多少 cm？`,
           ans: r,
           sol: `半徑 = 直徑 ÷ 2 = ${d} ÷ 2 = ${r}`,
-          visual: () => QuestionVisuals.circle(r)
+          visual: () => QuestionVisuals.circle(r, 'cm', { hideRadius: true, diameter: d })
         };
       }
     ];
@@ -612,8 +612,7 @@ const P56Questions = {
     const price = MathUtils.roundTo(MathUtils.randomInt(25, 150) / 10, 1);
     const qty = MathUtils.randomInt(3, 12);
     const ans = MathUtils.roundTo(price * qty, 2);
-    const items = MathUtils.shuffle(['鉛筆', '橡皮', 'notebook', '尺', '原子筆']);
-    const name = items[0] === 'notebook' ? '筆記本' : items[0];
+    const name = MathUtils.randomChoice(['鉛筆', '橡皮', '筆記本', '尺', '原子筆']);
     return this.base('p5-decimal-mul',
       `每支${name} ${price} 元，買 ${qty} 支要多少元？`,
       { type: 'decimal', value: ans }, String(ans),
@@ -1159,7 +1158,7 @@ const P56Questions = {
       () => {
         const vertex = MathUtils.randomChoice([40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100]);
         const ans = (180 - vertex) / 2;
-        return { q: `等腰三角形頂角是 ${vertex}°，每個底角是多少度？`, ans, sol: `底角 = (180° - ${vertex}°) ÷ 2 = ${ans}°`, visual: () => QV.triangleAngles(ans, ans) };
+        return { q: `等腰三角形頂角是 ${vertex}°，每個底角是多少度？`, ans, sol: `底角 = (180° - ${vertex}°) ÷ 2 = ${ans}°`, visual: () => QV.triangleAngles(vertex, null, { mode: 'vertex' }) };
       }
     ];
     const t = MathUtils.randomChoice(templates)();
@@ -1181,9 +1180,10 @@ const P56Questions = {
         return { q: `汽車以每小時 ${speed} km 的速度行駛 ${time} 小時，行駛了多少 km？`, ans, sol: `距離 = 速度 × 時間 = ${speed} × ${time}` };
       },
       () => {
-        const dist = MathUtils.randomInt(60, 200);
         const time = MathUtils.randomChoice([2, 3, 4, 5]);
-        const ans = dist / time;
+        const speed = MathUtils.randomInt(20, 60);
+        const dist = speed * time;
+        const ans = speed;
         return { q: `小明行了 ${dist} km，用了 ${time} 小時，平均速度是多少 km/h？`, ans, sol: `速度 = 距離 ÷ 時間 = ${dist} ÷ ${time}` };
       },
       () => {
@@ -1227,23 +1227,23 @@ const P56Questions = {
         const a = names[0];
         const b = names[1];
         const ans = data[a] + data[b];
-        return { q: `圓形圖顯示：${names.map(n => `${n} ${data[n]} 人`).join('、')}。${a}和${b}共多少人？`, ans };
+        return { q: `看圖：圓形圖顯示各班人數。${a}和${b}共多少人？`, ans };
       },
       () => {
         const a = names[0];
         const b = names[1];
         const ans = Math.abs(data[a] - data[b]);
-        return { q: `圓形圖顯示：${names.map(n => `${n} ${data[n]} 人`).join('、')}。${a}比${b}多（或少）多少人？（填相差人數）`, ans };
+        return { q: `看圖：圓形圖顯示各班人數。${a}比${b}多（或少）多少人？（填相差人數）`, ans };
       },
       () => {
         const ans = Object.values(data).reduce((s, n) => s + n, 0);
-        return { q: `圓形圖顯示各班人數：${names.map(n => `${n} ${data[n]} 人`).join('、')}。共有多少人？`, ans };
+        return { q: '看圖：圓形圖顯示各班人數。共有多少人？', ans };
       },
       () => {
         const item = MathUtils.randomChoice(names);
         const price = MathUtils.randomChoice([10, 20, 50]);
         const ans = data[item] * price;
-        return { q: `圓形圖顯示${item}班 ${data[item]} 人，每人捐款 ${price} 元，${item}班共捐多少元？`, ans };
+        return { q: `看圖：圓形圖顯示各班人數。${item}班每人捐款 ${price} 元，${item}班共捐多少元？`, ans };
       }
     ];
     const t = MathUtils.randomChoice(types)();
