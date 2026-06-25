@@ -32,9 +32,9 @@ const ExamQuestions = {
       hard: ['runningLaps', 'compositeAreaCost', 'ropeRectArea']
     },
     'exam-perimeter': {
-      easy: ['lShapeArea'],
-      medium: ['trapezoidRectPerim', 'lShapeArea'],
-      hard: ['overlapSquarePerim', 'trapezoidRectPerim', 'lShapeArea']
+      easy: ['trapezoidRectPerim'],
+      medium: ['trapezoidRectPerim', 'overlapSquarePerim'],
+      hard: ['overlapSquarePerim', 'lShapeArea', 'trapezoidRectPerim']
     },
     'exam-data': {
       easy: ['barChart'],
@@ -418,9 +418,10 @@ const ExamQuestions = {
   decimalDistractor() {
     const chan = MathUtils.roundTo(Math.random() * 20 + 60, 1);
     const more = MathUtils.roundTo(Math.random() * 10 + 10, 1);
+    const wuGap = MathUtils.roundTo(Math.random() * 8 + 10, 1);
     const cheung = MathUtils.roundTo(chan + more, 1);
     return this.base('exam-word',
-      `陳先生的車行了 ${chan} 公里。陳先生的車比吳先生的車少行 12.9 公里。張先生的車比陳先生的車多行 ${more} 公里。張先生的車行了多少公里？<br><small>（吳先生的資料需要嗎？）</small>`,
+      `陳先生的車行了 ${chan} 公里。陳先生的車比吳先生的車少行 ${wuGap} 公里。張先生的車比陳先生的車多行 ${more} 公里。張先生的車行了多少公里？<br><small>（吳先生的資料需要嗎？）</small>`,
       { type: 'decimal', value: cheung },
       String(cheung),
       '提示：題目問張先生，只需要陳先生同張先生的關係！',
@@ -505,7 +506,7 @@ const ExamQuestions = {
     return this.base('exam-measure',
       QV.withVisual(
         `一條 ${perimeter} cm 的繩圍成一個長方形，長是闊的 ${ratio} 倍，面積是多少 cm²？`,
-        QV.rectangle(length, width)
+        QV.rectangle(length, width, 'cm', { hideLength: true, hideWidth: true })
       ),
       { type: 'decimal', value: area },
       String(area),

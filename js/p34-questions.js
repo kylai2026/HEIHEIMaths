@@ -759,8 +759,8 @@ const P34Questions = {
     const a = names[0]; const b = names[1]; const c = names[2]; const d = names[3];
     const types = [
       () => {
-        const ans = data[d] - data[c];
-        return { q: `<p>看圖：棒形圖顯示各水果銷量。${d}比${c}多賣多少個？</p>${chart}`, a: ans };
+        const ans = Math.abs(data[d] - data[c]);
+        return { q: `<p>看圖：棒形圖顯示各水果銷量。${d}和${c}相差多少個？</p>${chart}`, a: ans };
       },
       () => {
         const ans = vals.reduce((s, n) => s + n, 0);
@@ -769,8 +769,9 @@ const P34Questions = {
       () => {
         const item = MathUtils.randomChoice(names);
         const price = MathUtils.randomChoice([2, 3, 5, 8, 10]);
+        const mw = MathUtils.itemClassifier(item);
         const ans = data[item] * price;
-        return { q: `<p>看圖：棒形圖顯示各水果銷量。${item}每個 ${price} 元，${item}共賣了多少元？</p>${chart}`, a: ans };
+        return { q: `<p>看圖：棒形圖顯示各水果銷量。${item}每${mw} ${price} 元，${item}共賣了多少元？</p>${chart}`, a: ans };
       },
       () => {
         const ans = Math.max(...vals) - Math.min(...vals);
@@ -898,7 +899,7 @@ const P34Questions = {
       `${ask} 是 ${n} 的因數嗎？（是填1，否填0）`,
       { type: 'decimal', value: isFactor ? 1 : 0 },
       isFactor ? '1' : '0',
-      `提示：${n} 的因數有 ${factors.join('、')}`,
+      `提示：用試除法檢查能否整除`,
       `<h4>📖 解法</h4><p>${n} ${isFactor ? `÷ ${ask} = ${n / ask}，是` : `不能被 ${ask} 整除，不是`}因數</p>`
     );
   },

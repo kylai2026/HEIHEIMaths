@@ -38,7 +38,7 @@ const QuestionVisuals = {
     `);
   },
 
-  rectangle(length, width, unit = 'cm') {
+  rectangle(length, width, unit = 'cm', opts = {}) {
     const l = Number(length);
     const w = Number(width);
     const scale = 120 / Math.max(l, w);
@@ -46,11 +46,13 @@ const QuestionVisuals = {
     const rh = w * scale;
     const x = (230 - rw) / 2;
     const y = (130 - rh) / 2 + 8;
+    const hideLength = opts.hideLength;
+    const hideWidth = opts.hideWidth;
     return this.scene(`
       <svg class="geo-svg" viewBox="0 0 230 145" role="img" aria-label="長方形圖">
         <rect x="${x}" y="${y}" width="${rw}" height="${rh}" class="geo-rect"/>
-        <text x="${x + rw / 2}" y="${y + rh + 18}" text-anchor="middle" class="geo-label">長 ${l} ${unit}</text>
-        <text x="${x - 10}" y="${y + rh / 2}" text-anchor="end" class="geo-label">闊 ${w} ${unit}</text>
+        ${!hideLength ? `<text x="${x + rw / 2}" y="${y + rh + 18}" text-anchor="middle" class="geo-label">長 ${l} ${unit}</text>` : ''}
+        ${!hideWidth ? `<text x="${x - 10}" y="${y + rh / 2}" text-anchor="end" class="geo-label">闊 ${w} ${unit}</text>` : ''}
       </svg>
     `);
   },
@@ -274,7 +276,24 @@ const QuestionVisuals = {
     `);
   },
 
-  angleDiagram(deg, rightAngle = false) {
+  angleDiagram(deg, opts = {}) {
+    if (typeof opts === 'boolean') opts = { rightAngle: opts };
+    if (opts.mode === 'straight') {
+      return this.scene(`
+        <svg class="geo-svg" viewBox="0 0 170 130" role="img" aria-label="平角圖">
+          <line x1="20" y1="95" x2="150" y2="95" class="geo-angle-line"/>
+          <circle cx="85" cy="95" r="4" fill="#2563eb"/>
+        </svg>
+      `);
+    }
+    if (opts.mode === 'full') {
+      return this.scene(`
+        <svg class="geo-svg" viewBox="0 0 170 130" role="img" aria-label="周角圖">
+          <circle cx="85" cy="70" r="42" class="geo-circle" fill="none"/>
+          <path d="M 127 70 A 42 42 0 1 1 126 72" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow)"/>
+        </svg>
+      `);
+    }
     const d = Number(deg);
     const cx = 40;
     const cy = 110;
@@ -285,12 +304,14 @@ const QuestionVisuals = {
     const arcR = 28;
     const ax = cx + arcR * Math.cos(-rad);
     const ay = cy + arcR * Math.sin(-rad);
+    const hideLabel = opts.hideLabel;
+    const rightAngle = opts.rightAngle;
     return this.scene(`
       <svg class="geo-svg" viewBox="0 0 170 130" role="img" aria-label="角度圖">
         <line x1="${cx}" y1="${cy}" x2="${cx + len}" y2="${cy}" class="geo-angle-line"/>
         <line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" class="geo-angle-line"/>
         <path d="M ${cx + arcR} ${cy} A ${arcR} ${arcR} 0 0 0 ${ax} ${ay}" fill="none" stroke="#2563eb" stroke-width="2"/>
-        <text x="${cx + 36}" y="${cy - 10}" class="geo-label">${d}°</text>
+        ${!hideLabel ? `<text x="${cx + 36}" y="${cy - 10}" class="geo-label">${d}°</text>` : ''}
         ${rightAngle ? `<rect x="${cx}" y="${cy - 12}" width="12" height="12" class="geo-right-angle"/>` : ''}
       </svg>
     `);
@@ -378,16 +399,17 @@ const QuestionVisuals = {
     `);
   },
 
-  angleCompare(deg1, deg2, label1 = 'A', label2 = 'B') {
+  angleCompare(deg1, deg2, label1 = 'A', label2 = 'B', opts = {}) {
     const card = (deg, label) => {
-      const inner = this.angleDiagram(deg).replace(/<div class="geo-scene"[^>]*>|<\/div>\s*$/g, '');
+      const inner = this.angleDiagram(deg, { hideLabel: opts.hideLabel }).replace(/<div class="geo-scene"[^>]*>|<\/div>\s*$/g, '');
       return `<div class="geo-angle-card"><div class="geo-angle-title">角 ${label}</div>${inner}</div>`;
     };
     return this.scene(`<div class="geo-angle-compare">${card(deg1, label1)}${card(deg2, label2)}</div>`);
   },
 
-  pieChartPercent(label, pct) {
+  pieChartPercent(label, pct, opts = {}) {
     const other = 100 - pct;
-    return this.pieChart({ [label]: pct, '其他': other }, '%');
+    const data = opts.hideOther ? { [label]: pct } : { [label]: pct, '其他': other };
+    return this.pieChart(data, '%');
   }
 };

@@ -74,6 +74,7 @@ const P12Questions = {
       let s = `${c[b]}百`;
       if (rest === 0) return s;
       if (rest < 10) return s + '零' + c[rest];
+      if (rest < 20) return s + '一十' + (rest % 10 ? c[rest % 10] : '');
       return s + this._numToCn(rest);
     }
     const q = Math.floor(n / 1000);
@@ -286,11 +287,11 @@ const P12Questions = {
   countObjects() {
     const n = MathUtils.randomInt(1, 20);
     const obj = MathUtils.randomChoice(['蘋果', '星星', '圓點', '小鴨', '積木', '花朵', '糖果', '氣球']);
-    const qText = `<p>數一數，圖中有幾個${obj}？</p>${this._renderCountGrid(n, obj)}`;
+    const qText = `<p>數一數，圖中有幾${MathUtils.itemClassifier(obj)}${obj}？</p>${this._renderCountGrid(n, obj)}`;
     return this.base('p1-numbers20', qText,
       { type: 'decimal', value: n }, String(n),
       '提示：用手指逐個數',
-      `<h4>📖 解法</h4><p>共有 <strong>${n}</strong> 個</p>`);
+      `<h4>📖 解法</h4><p>共有 <strong>${n}</strong> ${MathUtils.itemClassifier(obj)}</p>`);
   },
 
   compareWithin20() {
@@ -446,11 +447,12 @@ const P12Questions = {
     const item = MathUtils.randomChoice(items);
     const names = ['小明', '小華', '小美', '小玲', '小杰'];
     const name = MathUtils.randomChoice(names);
+    const mw = MathUtils.itemClassifier(item);
     return this.base('p1-add',
-      `${name}有 ${a} 粒${item}，媽媽再給他 ${b} 粒。${name}現在共有多少粒？`,
+      `${name}有 ${a} ${mw}${item}，媽媽再給他 ${b} ${mw}。${name}現在共有多少${mw}？`,
       { type: 'decimal', value: ans }, String(ans),
       '提示：原有 + 得到 = 共有',
-      `<h4>📖 解法</h4><p>${a} + ${b} = <strong>${ans}</strong> 粒</p>`);
+      `<h4>📖 解法</h4><p>${a} + ${b} = <strong>${ans}</strong> ${mw}</p>`);
   },
 
   // ── 小一：減法 ──
@@ -482,11 +484,12 @@ const P12Questions = {
     const ans = total - used;
     const items = ['餅乾', '氣球', '圖畫', '玩具', '書本'];
     const item = MathUtils.randomChoice(items);
+    const mw = MathUtils.itemClassifier(item);
     return this.base('p1-sub',
-      `桌上有 ${total} 個${item}，拿走了 ${used} 個。還剩多少個？`,
+      `桌上有 ${total} ${mw}${item}，拿走了 ${used} ${mw}。還剩多少${mw}？`,
       { type: 'decimal', value: ans }, String(ans),
       '提示：原有 - 拿走 = 剩下',
-      `<h4>📖 解法</h4><p>${total} - ${used} = <strong>${ans}</strong> 個</p>`);
+      `<h4>📖 解法</h4><p>${total} - ${used} = <strong>${ans}</strong> ${mw}</p>`);
   },
 
   // ── 小一：100以內的數 ──
@@ -578,19 +581,21 @@ const P12Questions = {
     const next = days[(idx + 1) % 7];
     const prev = days[(idx + 6) % 7];
     const variant = MathUtils.randomChoice(['next', 'prev', 'name']);
-    if (variant === 'next' && idx < 6) {
+    if (variant === 'next') {
+      const ans = idx === 6 ? 1 : idx + 2;
       return this.base('p1-time',
         `${days[idx]}的後一天是星期幾？（填數字：星期一=1，…，星期日=7）`,
-        { type: 'decimal', value: idx + 2 }, String(idx + 2),
+        { type: 'decimal', value: ans }, String(ans),
         '提示：按順序數日子',
-        `<h4>📖 解法</h4><p>${days[idx]}之後是 <strong>${next}</strong>（${idx + 2}）</p>`);
+        `<h4>📖 解法</h4><p>${days[idx]}之後是 <strong>${next}</strong>（${ans}）</p>`);
     }
-    if (variant === 'prev' && idx > 0) {
+    if (variant === 'prev') {
+      const ans = idx === 0 ? 7 : idx;
       return this.base('p1-time',
         `${days[idx]}的前一天是星期幾？（填數字：星期一=1，…，星期日=7）`,
-        { type: 'decimal', value: idx }, String(idx),
+        { type: 'decimal', value: ans }, String(ans),
         '提示：往回數一天',
-        `<h4>📖 解法</h4><p>${days[idx]}之前是 <strong>${prev}</strong>（${idx}）</p>`);
+        `<h4>📖 解法</h4><p>${days[idx]}之前是 <strong>${prev}</strong>（${ans}）</p>`);
     }
     const dayNum = idx + 1;
     return this.base('p1-time',
@@ -621,13 +626,12 @@ const P12Questions = {
     }
     const correct = MathUtils.randomChoice(shapes);
     if (mode === 'match') {
-      const props = { '圓形': '0 條直邊', '三角形': '3 條邊', '正方形': '4 條等長的邊', '長方形': '4 條邊（對邊相等）' };
       const wrong = shapes.filter(s => s.name !== correct.name).map(s => s.name);
       const options = MathUtils.shuffle([correct.name, ...MathUtils.shuffle(wrong).slice(0, 3)]);
       return this._mcq('p1-shapes',
-        QV.withVisual(`哪個圖形有${props[correct.name]}？`, gallery),
+        QV.withVisual(`圖中有四種圖形，哪一個是${correct.name}？`, gallery),
         options, correct.name,
-        '提示：數一數邊的數目',
+        '提示：觀察邊和角的特徵',
         `<h4>📖 解法</h4><p>答案是 <strong>${correct.name}</strong></p>`);
     }
     const clue = MathUtils.randomChoice(correct.clues);
@@ -756,7 +760,7 @@ const P12Questions = {
     const len = MathUtils.randomInt(3, 20);
     const obj = MathUtils.randomChoice(['鉛筆', '書本', '梳子', '膠尺', '畫筆']);
     const visual = this._renderRulerMeasure(obj, len);
-    return this.base('p1-length',
+    return this.base('p1-money',
       `<p>看圖：用尺子量一量，${obj}長多少 cm？</p>${visual}`,
       { type: 'decimal', value: len }, String(len),
       '提示：數一數厘米格',
@@ -876,22 +880,23 @@ const P12Questions = {
     const ans = had - sold;
     const items = ['圖書', '文具', '玩具', '貼紙', '卡片'];
     const item = MathUtils.randomChoice(items);
+    const mw = MathUtils.itemClassifier(item);
     return this.base('p2-sub',
-      `書店原有 ${had} 本${item}，賣出了 ${sold} 本。還剩多少本？`,
+      `書店原有 ${had} ${mw}${item}，賣出了 ${sold} ${mw}。還剩多少${mw}？`,
       { type: 'decimal', value: ans }, String(ans),
       '提示：原有 - 賣出 = 剩下',
-      `<h4>📖 解法</h4><p>${had} - ${sold} = <strong>${ans}</strong> 本</p>`);
+      `<h4>📖 解法</h4><p>${had} - ${sold} = <strong>${ans}</strong> ${mw}</p>`);
   },
 
   // ── 小二：角 ──
   rightAngle() {
     const QV = QuestionVisuals;
     const items = [
-      { q: '直角等於多少度？', a: '90', ans: 90, visual: () => QV.angleDiagram(90, true) },
-      { q: '三角尺上的直角是幾度？', a: '90', ans: 90, visual: () => QV.angleDiagram(90, true) },
-      { q: '半個直角是多少度？', a: '45', ans: 45, visual: () => QV.angleDiagram(45) },
-      { q: '兩個直角合起來是多少度？', a: '180', ans: 180, visual: () => QV.angleDiagram(90, true) },
-      { q: '直角比 89° 大還是細？（填較大的度數）', a: '90', ans: 90, visual: () => QV.angleDiagram(90, true) },
+      { q: '直角等於多少度？', a: '90', ans: 90, visual: () => QV.angleDiagram(90, { rightAngle: true, hideLabel: true }) },
+      { q: '三角尺上的直角是幾度？', a: '90', ans: 90, visual: () => QV.angleDiagram(90, { rightAngle: true, hideLabel: true }) },
+      { q: '半個直角是多少度？', a: '45', ans: 45, visual: () => QV.angleDiagram(45, { hideLabel: true }) },
+      { q: '兩個直角合起來是多少度？', a: '180', ans: 180, visual: () => QV.angleDiagram(0, { mode: 'straight' }) },
+      { q: '直角比 89° 大還是細？（填較大的度數）', a: '90', ans: 90, visual: () => QV.angleDiagram(90, { rightAngle: true, hideLabel: true }) },
       { q: '一個正方形的每個角是什麼角？', a: '直角', ans: null, visual: () => QV.square(6) },
       { q: '長方形的四個角各是什麼角？', a: '直角', ans: null, visual: () => QV.rectangle(8, 5) },
       { q: '門框的角通常是什麼角？', a: '直角', ans: null, visual: () => QV.angleDiagram(90, true) }
@@ -945,8 +950,8 @@ const P12Questions = {
     const labels = MathUtils.shuffle(['A', 'B']);
     return this.base('p2-angles',
       QV.withVisual(
-        `角 ${labels[0]} 是 ${deg1}°，角 ${labels[1]} 是 ${deg2}°。較大的角是多少度？`,
-        QV.angleCompare(deg1, deg2, labels[0], labels[1])
+        `角 ${labels[0]} 和角 ${labels[1]}，哪一個較大？較大的角是多少度？`,
+        QV.angleCompare(deg1, deg2, labels[0], labels[1], { hideLabel: true })
       ),
       { type: 'decimal', value: bigger }, String(bigger),
       '提示：度數大代表角較大',
@@ -1024,11 +1029,12 @@ const P12Questions = {
     const ans = packs * each;
     const items = ['雞蛋', '鉛筆', '貼紙', '蘋果', '糖果'];
     const item = MathUtils.randomChoice(items);
+    const mw = MathUtils.itemClassifier(item);
     return this.base('p2-multiply',
-      `每盒有 ${each} 個${item}，買了 ${packs} 盒。共有多少個？`,
+      `每盒有 ${each} ${mw}${item}，買了 ${packs} 盒。共有多少${mw}？`,
       { type: 'decimal', value: ans }, String(ans),
       '提示：每份數量 × 份數',
-      `<h4>📖 解法</h4><p>${packs} × ${each} = <strong>${ans}</strong> 個</p>`);
+      `<h4>📖 解法</h4><p>${packs} × ${each} = <strong>${ans}</strong> ${mw}</p>`);
   },
 
   mulZeroOne() {
@@ -1079,7 +1085,7 @@ const P12Questions = {
     return this.base('p2-time',
       QuestionVisuals.withVisual('看圖：由左邊時鐘到右邊時鐘，經過了多少分鐘？', clocks),
       { type: 'decimal', value: mins }, String(mins),
-      '提示：數一數時針走了多少格',
+      '提示：數一數長針走了多少格',
       `<h4>📖 解法</h4><p>經過 <strong>${mins}</strong> 分鐘</p>`);
   },
 
@@ -1220,19 +1226,21 @@ const P12Questions = {
     const count = MathUtils.randomInt(2, 8);
     const total = count * perSymbol;
     const category = MathUtils.randomChoice(['蘋果', '橙', '圖書', '玩具', '學生']);
+    const mw = MathUtils.itemClassifier(category);
     const chart = QV.pictograph(symbol, perSymbol, count, category);
     const ask = MathUtils.randomChoice(['total', 'count']);
     if (ask === 'total') {
       return this.base('p2-divide',
-        QV.withVisual(`象形圖中，每個${symbol}代表 ${perSymbol} 個${category}。${category}一行有 ${count} 個${symbol}，共有多少個？`, chart),
+        QV.withVisual(`象形圖中，每個${symbol}代表 ${perSymbol} ${mw}${category}。${category}一行有 ${count} 個${symbol}，共有多少${mw}？`, chart),
         { type: 'decimal', value: total }, String(total),
         '提示：圖案數量 × 每個代表的值',
-        `<h4>📖 解法</h4><p>${count} × ${perSymbol} = <strong>${total}</strong> 個</p>`);
+        `<h4>📖 解法</h4><p>${count} × ${perSymbol} = <strong>${total}</strong> ${mw}</p>`);
     }
     const given = total;
     const symCount = given / perSymbol;
+    const emptyChart = QV.pictograph(symbol, perSymbol, 0, category);
     return this.base('p2-divide',
-      `象形圖中，每個${symbol}代表 ${perSymbol} 個${category}。共有 ${given} 個${category}，要畫幾個${symbol}？`,
+      QV.withVisual(`象形圖中，每個${symbol}代表 ${perSymbol} ${mw}${category}。共有 ${given} ${mw}${category}，要畫幾個${symbol}？`, emptyChart),
       { type: 'decimal', value: symCount }, String(symCount),
       '提示：總數 ÷ 每個代表的值',
       `<h4>📖 解法</h4><p>${given} ÷ ${perSymbol} = <strong>${symCount}</strong> 個</p>`);

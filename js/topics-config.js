@@ -111,6 +111,13 @@ const CURRICULUM_SECTIONS = [
     topics: ['p4-word-money', 'p4-word-logic', 'p4-word-frac']
   },
   {
+    id: 'p4-exam',
+    name: '小四 · 大考題型',
+    icon: '📋',
+    grade: 'P4',
+    topics: ['exam-calc', 'exam-frac', 'exam-word', 'exam-word-logic', 'exam-frac-word', 'exam-measure', 'exam-perimeter', 'exam-data', 'exam-space']
+  },
+  {
     id: 'p5-num',
     name: '小五 · 數與計算',
     icon: '5️⃣',
@@ -192,6 +199,17 @@ const TOPICS = [
   { id: 'p4-word-money', name: '金錢應用題', icon: '💰', desc: '4下A · 四則應用', grade: 'P4', exam: true, section: 'p4-word' },
   { id: 'p4-word-logic', name: '邏輯應用題', icon: '🧠', desc: '倍數·餘數·折扣', grade: 'P4', exam: true, section: 'p4-word' },
   { id: 'p4-word-frac', name: '分數應用題', icon: '🍎', desc: '4下B · 分數生活應用', grade: 'P4', exam: true, section: 'p4-word' },
+
+  /* ── 小四 · 大考題型 ── */
+  { id: 'exam-calc', name: '四則計算', icon: '🔢', desc: '小數混合運算', grade: 'P4', exam: true, section: 'p4-exam' },
+  { id: 'exam-frac', name: '分數計算', icon: '🍰', desc: '通分·約分·假分數', grade: 'P4', exam: true, section: 'p4-exam' },
+  { id: 'exam-word', name: '小數應用題', icon: '💧', desc: '金錢·體積·高度', grade: 'P4', exam: true, section: 'p4-exam' },
+  { id: 'exam-word-logic', name: '邏輯應用題', icon: '🧠', desc: '倍數·折扣·多餘資料', grade: 'P4', exam: true, section: 'p4-exam' },
+  { id: 'exam-frac-word', name: '分數應用題', icon: '🍎', desc: '分數生活應用', grade: 'P4', exam: true, section: 'p4-exam' },
+  { id: 'exam-measure', name: '度量應用題', icon: '📏', desc: '周界·面積·繩圍', grade: 'P4', exam: true, section: 'p4-exam' },
+  { id: 'exam-perimeter', name: '周界與面積', icon: '📐', desc: '梯形·重疊·L形', grade: 'P4', exam: true, section: 'p4-exam' },
+  { id: 'exam-data', name: '棒形圖', icon: '📊', desc: '閱讀棒形圖', grade: 'P4', exam: true, section: 'p4-exam' },
+  { id: 'exam-space', name: '地圖方向', icon: '🧭', desc: '八個方向', grade: 'P4', exam: true, section: 'p4-exam' },
 
   /* ── 小五 ── */
   { id: 'p5-multidigit', name: '多位數', icon: '🔢', desc: '5上A · 認識·近似值', grade: 'P5', exam: true, section: 'p5-num' },

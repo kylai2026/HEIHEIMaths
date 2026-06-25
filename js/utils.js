@@ -107,7 +107,32 @@ const MathUtils = {
       }
     }
 
+    if (correctAns.type === 'text') {
+      const norm = (s) => String(s || '').replace(/\s+/g, '').replace(/＞/g, '>').toLowerCase();
+      return norm(userAns) === norm(correctAns.value);
+    }
+
     return false;
+  },
+
+  /** 香港小學常用量詞 */
+  itemClassifier(item) {
+    const map = {
+      蘋果: '個', 橙: '個', 梨: '個', 香蕉: '串', 葡萄: '串', 西瓜: '個', 芒果: '個', 草莓: '粒',
+      糖果: '粒', 糖: '粒', 珠子: '粒', 彈珠: '粒', 星星: '顆', 圓點: '個',
+      貼紙: '張', 圖畫: '張', 卡片: '張', 書: '本', 書本: '本', 圖書: '本', 筆記本: '本',
+      鉛筆: '枝', 原子筆: '枝', 畫筆: '枝', 蠟筆: '枝',
+      積木: '塊', 橡皮: '塊', 餅乾: '塊', 地毯: '塊',
+      玩具: '個', 氣球: '個', 麵包: '個', 包: '個', 雞蛋: '隻', 小鴨: '隻', 熊: '隻',
+      花朵: '朵', 花: '朵', 學生: '位', 同學: '位', 人: '位',
+      尺: '把', 膠尺: '把', 梳子: '把', 繩: '條', 紅繩: '條', 藍繩: '條',
+      文具: '套', 零食: '份', 飲料: '瓶', 膠箱: '個', 短褲: '條', 長褲: '條', 衣服: '件'
+    };
+    return map[item] || '個';
+  },
+
+  countPhrase(n, item) {
+    return `${n} ${this.itemClassifier(item)}${item}`;
   },
 
   formatFractionHTML(num, den) {

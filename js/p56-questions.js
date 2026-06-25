@@ -170,7 +170,7 @@ const P56Questions = {
         const ans = area * price;
         const chart = P34Questions._renderTriangleArea(b, h, 'm');
         return {
-          q: `<p>看圖：一塊三角形地皮，底 ${b} m，高 ${h} m，每平方米 ${price} 元，這塊地值多少元？</p>${chart}`,
+          q: `<p>看圖：一塊三角形地皮，每平方米 ${price} 元，這塊地值多少元？</p>${chart}`,
           ans,
           sol: `面積 = ${b} × ${h} ÷ 2 = ${area} m²，費用 = ${area} × ${price} = ${ans} 元`
         };
@@ -379,11 +379,13 @@ const P56Questions = {
     const num = MathUtils.randomInt(1, den - 1);
     const ans = total * num / den;
     const items = MathUtils.shuffle(['蘋果', '橙', '糖', '貼紙', '彈珠']);
+    const item = items[0];
+    const mw = MathUtils.itemClassifier(item);
     return this.base('p5-frac-mul',
-      `有 ${total} 粒${items[0]}，${MathUtils.formatFractionHTML(num, den)} 是給小明的，小明得到多少粒？`,
+      `有 ${total} ${mw}${item}，${MathUtils.formatFractionHTML(num, den)} 是給小明的，小明得到多少${mw}？`,
       { type: 'decimal', value: ans }, String(ans),
       '提示：總數 × 分數',
-      `<h4>📖 解法</h4><p>${total} × ${num}/${den} = <strong>${ans}</strong> 粒</p>`
+      `<h4>📖 解法</h4><p>${total} × ${num}/${den} = <strong>${ans}</strong> ${mw}</p>`
     );
   },
 
@@ -613,8 +615,9 @@ const P56Questions = {
     const qty = MathUtils.randomInt(3, 12);
     const ans = MathUtils.roundTo(price * qty, 2);
     const name = MathUtils.randomChoice(['鉛筆', '橡皮', '筆記本', '尺', '原子筆']);
+    const mw = MathUtils.itemClassifier(name);
     return this.base('p5-decimal-mul',
-      `每支${name} ${price} 元，買 ${qty} 支要多少元？`,
+      `每${mw}${name} ${price} 元，買 ${qty} ${mw}要多少元？`,
       { type: 'decimal', value: ans }, String(ans),
       '提示：單價 × 數量',
       `<h4>📖 解法</h4><p>${price} × ${qty} = <strong>${ans}</strong> 元</p>`
@@ -930,16 +933,18 @@ const P56Questions = {
         };
       },
       () => {
-        const avg = MathUtils.randomInt(12, 20);
-        const days = 5;
-        const total = avg * days;
-        const known = Array.from({ length: days - 1 }, () => MathUtils.randomInt(8, 25));
-        const sumKnown = known.reduce((a, b) => a + b, 0);
-        const last = total - sumKnown;
+        let avg; let total; let known; let sumKnown; let last;
+        do {
+          avg = MathUtils.randomInt(12, 20);
+          total = avg * 5;
+          known = Array.from({ length: 4 }, () => MathUtils.randomInt(8, 20));
+          sumKnown = known.reduce((a, b) => a + b, 0);
+          last = total - sumKnown;
+        } while (last < 1 || last > 30);
         return {
-          q: `小明 ${days - 1} 天共讀 ${sumKnown} 頁，${days} 天平均每天讀 ${avg} 頁，第 ${days} 天讀了多少頁？`,
+          q: `小明前 4 天共讀 ${sumKnown} 頁，5 天平均每天讀 ${avg} 頁，第 5 天讀了多少頁？`,
           ans: last,
-          sol: `${days} 天共 ${total} 頁，第 ${days} 天 = ${total} - ${sumKnown} = ${last}`
+          sol: `5 天共 ${total} 頁，第 5 天 = ${total} - ${sumKnown} = ${last}`
         };
       }
     ];
@@ -1122,7 +1127,7 @@ const P56Questions = {
           { name: '周角', val: 360 }
         ];
         const t = MathUtils.randomChoice(types);
-        return { q: `一個${t.name}是多少度？`, ans: t.val, sol: `${t.name} = ${t.val}°`, visual: () => QV.angleDiagram(Math.min(t.val, 150), t.val === 90) };
+        return { q: `一個${t.name}是多少度？`, ans: t.val, sol: `${t.name} = ${t.val}°`, visual: () => t.val === 90 ? QV.angleDiagram(90, { rightAngle: true, hideLabel: true }) : t.val === 180 ? QV.angleDiagram(0, { mode: 'straight' }) : QV.angleDiagram(0, { mode: 'full' }) };
       }
     ];
     const t = MathUtils.randomChoice(templates)();
@@ -1233,7 +1238,7 @@ const P56Questions = {
         const a = names[0];
         const b = names[1];
         const ans = Math.abs(data[a] - data[b]);
-        return { q: `看圖：圓形圖顯示各班人數。${a}比${b}多（或少）多少人？（填相差人數）`, ans };
+        return { q: `看圖：圓形圖顯示各班人數。${a}和${b}相差多少人？`, ans };
       },
       () => {
         const ans = Object.values(data).reduce((s, n) => s + n, 0);
@@ -1280,7 +1285,7 @@ const P56Questions = {
           q: `圓形圖顯示${items[2]}佔 ${pct}%，其餘運動佔百分之幾？（只填數字）`,
           ans: other,
           sol: `100% - ${pct}% = ${other}%`,
-          visual: () => QV.pieChartPercent(items[2], pct)
+          visual: () => QV.pieChartPercent(items[2], pct, { hideOther: true })
         };
       }
     ];
