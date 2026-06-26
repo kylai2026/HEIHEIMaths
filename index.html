@@ -10,14 +10,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=60">
+  <link rel="stylesheet" href="css/style.css?v=62">
 </head>
 <body>
   <header class="header">
     <div class="header-bg"></div>
     <div class="header-inner">
       <div class="logo">
-        <img src="assets/img/logo-uncle.png" alt="舅父與晞晞、雋雋" class="logo-img">
+        <img src="assets/img/art/logo-ai.png" alt="舅父與晞晞、雋雋" class="logo-img">
         <div>
           <h1>舅父與晞晞、雋雋補習網</h1>
         </div>
@@ -28,7 +28,7 @@
         <div class="hud-item user-hud hidden" id="currentUser" title="而家登入嘅帳號"></div>
         <button type="button" class="btn-logout hidden" id="logoutBtn" title="登出帳號">登出</button>
         <div class="hud-item level-hud" title="等級">
-          <img src="assets/img/tier-medium.png" alt="" class="hud-img" id="hudLevelImg">
+          <img src="assets/img/art/tier-medium-ai.png" alt="" class="hud-img" id="hudLevelImg">
           <span class="hud-val">Lv.<strong id="hudLevel">1</strong></span>
         </div>
         <div class="hud-item" title="經驗值">
@@ -36,7 +36,7 @@
           <span class="hud-val"><strong id="hudXp">0</strong> / 100 XP</span>
         </div>
         <div class="hud-item points" title="可兌換禮物積分">
-          <img src="assets/img/gift-small.png" alt="" class="hud-img small">
+          <img src="assets/img/art/gift-small-ai.png" alt="" class="hud-img small">
           <span class="hud-val"><strong id="hudPoints">0</strong> 分</span>
           <span class="test-points-badge hidden" id="testPointsBadge" title="測試帳號無限積分">∞ 測試</span>
         </div>
@@ -67,12 +67,12 @@
   </div>
 
   <nav class="nav-tabs" id="navTabs">
-    <button class="nav-tab active" data-view="home"><img src="assets/img/tier-easy.png" alt="" class="nav-icon">主頁</button>
-    <button class="nav-tab" data-view="practice"><img src="assets/img/tier-medium.png" alt="" class="nav-icon">分題練習</button>
-    <button class="nav-tab" data-view="quiz"><img src="assets/img/bg-pattern.png" alt="" class="nav-icon">模擬小測</button>
-    <button class="nav-tab" data-view="rewards"><img src="assets/img/gift-big.png" alt="" class="nav-icon">抽卡</button>
-    <button class="nav-tab" data-view="tips"><img src="assets/img/logo-uncle.png" alt="" class="nav-icon">溫習秘笈</button>
-    <button class="nav-tab" data-view="progress"><img src="assets/img/tier-hard.png" alt="" class="nav-icon">學習記錄</button>
+    <button class="nav-tab active" data-view="home"><img src="assets/img/art/tier-easy-ai.png" alt="" class="nav-icon">主頁</button>
+    <button class="nav-tab" data-view="practice"><img src="assets/img/art/topic-chart-ai.png" alt="" class="nav-icon">分題練習</button>
+    <button class="nav-tab" data-view="quiz"><img src="assets/img/quiz-hero-ai.png" alt="" class="nav-icon">模擬小測</button>
+    <button class="nav-tab" data-view="rewards"><img src="assets/img/art/gift-big-ai.png" alt="" class="nav-icon">抽卡</button>
+    <button class="nav-tab" data-view="tips"><img src="assets/img/art/logo-ai.png" alt="" class="nav-icon">溫習秘笈</button>
+    <button class="nav-tab" data-view="progress"><img src="assets/img/art/tier-hard-ai.png" alt="" class="nav-icon">學習記錄</button>
   </nav>
 
   <div class="grade-top-bar" id="gradeTopBar">
@@ -175,13 +175,13 @@
           </div>
           <div class="tier-selector" id="tierSelector">
             <button class="tier-btn tier-easy" data-tier="easy">
-              <img src="assets/img/tier-easy.png" alt=""> 初級 +2分
+              <img src="assets/img/art/tier-easy-ai.png" alt=""> 初級 +2分
             </button>
             <button class="tier-btn tier-medium active" data-tier="medium">
-              <img src="assets/img/tier-medium.png" alt=""> 中級 +4分
+              <img src="assets/img/art/tier-medium-ai.png" alt=""> 中級 +4分
             </button>
             <button class="tier-btn tier-hard" data-tier="hard">
-              <img src="assets/img/tier-hard.png" alt=""> 高級 +6分
+              <img src="assets/img/art/tier-hard-ai.png" alt=""> 高級 +6分
             </button>
           </div>
           <p class="tier-progress-hint" id="tierProgressHint"></p>
@@ -246,7 +246,7 @@
       <div class="rewards-hero">
         <div class="level-card" id="levelCard"></div>
         <div class="coins-card points-card">
-          <img src="assets/img/gift-medium.png" alt="" class="points-hero-img">
+          <img src="assets/img/art/gift-medium-ai.png" alt="" class="points-hero-img">
           <span class="big-coins"><strong id="rewardPoints">0</strong> 分</span>
           <p>答題賺積分，抽卡收集！</p>
         </div>
@@ -361,7 +361,7 @@
   </div>
 
   <footer class="footer">
-    <img src="assets/img/logo-uncle.png" alt="" class="footer-logo">
+    <img src="assets/img/art/logo-ai.png" alt="" class="footer-logo">
     <p>舅父與晞晞、雋雋補習網 · 加油！🌟</p>
   </footer>
 
@@ -371,11 +371,12 @@
   <script src="js/audio.js?v=28"></script>
   <script src="js/utils.js?v=26"></script>
   <script src="js/cloud-sync.js?v=31"></script>
-  <script src="js/scoring.js?v=24"></script>
-  <script src="js/topics-config.js?v=26"></script>
-  <script src="js/question-visuals.js?v=5"></script>
+  <script src="js/scoring.js?v=25"></script>
+  <script src="js/topics-config.js?v=27"></script>
+  <script src="js/topic-art.js?v=1"></script>
+  <script src="js/question-visuals.js?v=6"></script>
   <script src="js/p34-questions.js?v=29"></script>
-  <script src="js/p12-questions.js?v=32"></script>
+  <script src="js/p12-questions.js?v=33"></script>
   <script src="js/p56-questions.js?v=26"></script>
   <script src="js/exam-questions.js?v=5"></script>
   <script src="js/question-engine.js?v=21"></script>
@@ -386,8 +387,8 @@
   <script src="js/disney-deck.js?v=4"></script>
   <script src="js/marvel-deck.js?v=4"></script>
   <script src="js/gacha-animation.js?v=32"></script>
-  <script src="js/gacha-pools.js?v=26"></script>
-  <script src="js/boss-battle.js?v=2"></script>
-  <script src="js/app.js?v=50"></script>
+  <script src="js/gacha-pools.js?v=27"></script>
+  <script src="js/boss-battle.js?v=3"></script>
+  <script src="js/app.js?v=51"></script>
 </body>
 </html>

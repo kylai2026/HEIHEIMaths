@@ -953,20 +953,21 @@ const P12Questions = {
 
   compareAngles() {
     const QV = QuestionVisuals;
-    const pool = [15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85];
-    const deg1 = MathUtils.randomChoice(pool);
-    let deg2 = MathUtils.randomChoice(pool);
-    while (deg2 === deg1) deg2 = MathUtils.randomChoice(pool);
-    const bigger = Math.max(deg1, deg2);
-    const labels = MathUtils.shuffle(['A', 'B']);
+    const smaller = MathUtils.randomChoice([25, 30, 35, 40, 45]);
+    const larger = MathUtils.randomChoice([60, 65, 70, 75, 80]);
+    const items = MathUtils.shuffle([
+      { label: 'A', deg: smaller },
+      { label: 'B', deg: larger }
+    ]);
+    const bigger = larger;
     return this.base('p2-angles',
       QV.withVisual(
-        `角 ${labels[0]} 和角 ${labels[1]}，哪一個較大？較大的角是多少度？`,
-        QV.angleCompare(deg1, deg2, labels[0], labels[1], { hideLabel: true })
+        `角 ${items[0].label} 和角 ${items[1].label}，哪一個較大？較大的角是多少度？`,
+        QV.angleCompare(items[0].deg, items[1].deg, items[0].label, items[1].label, { hideLabel: true })
       ),
       { type: 'decimal', value: bigger }, String(bigger),
-      '提示：度數大代表角較大',
-      `<h4>📖 解法</h4><p>較大的角是 <strong>${bigger}</strong>°</p>`);
+      '提示：開合愈闊的角愈大；兩角相差至少 15°',
+      `<h4>📖 解法</h4><p>角 ${items.find(i => i.deg === bigger).label} 較大，是 <strong>${bigger}</strong>°</p>`);
   },
 
   // ── 小二：方向 ──

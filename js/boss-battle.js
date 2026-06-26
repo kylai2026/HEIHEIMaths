@@ -38,8 +38,6 @@ const BossBattle = {
     }
   ],
 
-  BOSS_ENEMY_DEX: Array.from({ length: 100 }, (_, i) => i + 1).filter(d => d !== 25),
-
   DEFAULT_TAUNTS: ['出招吧！', '接招！', '不會放過你！', '全力一擊！'],
 
   TAUNTS_BY_TYPE: {
@@ -82,38 +80,86 @@ const BossBattle = {
     return this.getStageConfig().streakForUlt;
   },
 
+  playerCard() {
+    return typeof GachaSystem !== 'undefined' && GachaSystem.getPokemonByDex
+      ? GachaSystem.getPokemonByDex(this.PLAYER_DEX)
+      : null;
+  },
+
   playerSpriteUrl() {
+    const card = this.playerCard();
+    if (card) return card.imageUrl;
     return typeof pokemonSpriteUrl === 'function'
       ? pokemonSpriteUrl(this.PLAYER_DEX)
       : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.PLAYER_DEX}.png`;
   },
 
   playerFallbackUrl() {
+    const card = this.playerCard();
+    if (card) return card.fallbackUrl;
     return typeof pokemonFallbackUrl === 'function'
       ? pokemonFallbackUrl(this.PLAYER_DEX)
       : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${this.PLAYER_DEX}.png`;
   },
 
   genRandomEnemy() {
-    const dex = MathUtils.randomChoice(this.BOSS_ENEMY_DEX);
-    const type = (typeof POKEMON_TYPES !== 'undefined' && POKEMON_TYPES[dex])
+    const card = typeof GachaSystem !== 'undefined' && GachaSystem.pickBossEnemyCard
+      ? GachaSystem.pickBossEnemyCard(this.PLAYER_DEX)
+      : null;
+    const fallbackDex = MathUtils.randomChoice(
+      Array.from({ length: 100 }, (_, i) => i + 1).filter(d => d !== this.PLAYER_DEX)
+    );
+    const dex = card?.dexId || fallbackDex;
+    const type = card?.type
+      || (typeof POKEMON_TYPES !== 'undefined' && POKEMON_TYPES[dex])
       || MathUtils.randomChoice(['一般', '草', '火', '水', '電', '毒', '飛行', '地面']);
-    const name = (typeof POKEMON_NAMES !== 'undefined' && POKEMON_NAMES[dex]) || `寶可夢 #${dex}`;
+    const name = card?.name
+      || (typeof POKEMON_NAMES !== 'undefined' && POKEMON_NAMES[dex])
+      || `寶可夢 #${dex}`;
     const taunts = this.TAUNTS_BY_TYPE[type] || this.DEFAULT_TAUNTS;
-    const appearance = {
-      scale: MathUtils.roundTo(0.88 + Math.random() * 0.28, 2),
-      hue: MathUtils.randomInt(-28, 28),
-      brightness: MathUtils.roundTo(0.9 + Math.random() * 0.18, 2),
-      aura: MathUtils.randomChoice(['#ef4444', '#3b82f6', '#a855f7', '#22c55e', '#f59e0b', '#ec4899', '#06b6d4'])
-    };
-    return {
+    const bossCard = card || {
+      id: `poke-${String(dex).padStart(3, '0')}`,
+      poolId: 'pokemon',
       dexId: dex,
       name,
       type,
-      taunt: MathUtils.randomChoice(taunts),
+      rarity: 'common',
+      emoji: '🎴',
       imageUrl: typeof pokemonSpriteUrl === 'function' ? pokemonSpriteUrl(dex) : '',
-      fallbackUrl: typeof pokemonFallbackUrl === 'function' ? pokemonFallbackUrl(dex) : '',
-      appearance
+      fallbackUrl: typeof pokemonFallbackUrl === 'function' ? pokemonFallbackUrl(dex) : ''
+    };
+    return {
+      cardId: bossCard.id,
+      dexId: dex,
+      card: bossCard,
+      name,
+      type,
+      rarity: bossCard.rarity,
+      taunt: MathUtils.randomChoice(taunts),
+      imageUrl: bossCard.imageUrl,
+      fallbackUrl: bossCard.fallbackUrl
+    };
+  },
+
+  fighterCardHtml(card, side) {
+    if (!card) return '';
+    const id = side === 'player' ? 'bossPikachu' : 'bossEnemy';
+    const animClass = side === 'player' ? 'boss-pikachu-card' : 'boss-enemy-card';
+    const rarityClass = card.rarity ? `boss-card-rarity-${card.rarity}` : '';
+    const art = typeof GachaSystem !== 'undefined'
+      ? GachaSystem.cardArtHtml(card, true, 'boss')
+      : `<div class="card-art card-art-boss card-art-pokemon"><img src="${card.imageUrl}" alt="${card.name}" class="card-img" onerror="this.onerror=null;this.src='${card.fallbackUrl || card.imageUrl}'"></div>`;
+    return `<div class="boss-fighter-card-wrap ${animClass} ${rarityClass}" id="${id}">${art}</div>`;
+  },
+
+  initEntryArt() {
+    const card = this.playerCard();
+    const img = document.querySelector('.boss-entry-pika');
+    if (!card || !img) return;
+    img.src = card.imageUrl;
+    img.onerror = () => {
+      img.onerror = null;
+      img.src = card.fallbackUrl;
     };
   },
 
@@ -231,16 +277,6 @@ const BossBattle = {
     return Math.max(0, Math.min(100, Math.round((current / max) * 100)));
   },
 
-  enemySpriteStyle(boss) {
-    const a = boss.appearance || {};
-    return [
-      `--boss-scale:${a.scale || 1}`,
-      `--boss-hue:${a.hue || 0}deg`,
-      `--boss-bright:${a.brightness || 1}`,
-      `--boss-aura:${a.aura || '#f59e0b'}`
-    ].join(';');
-  },
-
   showPanel(show) {
     document.getElementById('bossBattlePanel')?.classList.toggle('hidden', !show);
     document.querySelector('.practice-layout')?.classList.toggle('boss-mode', show);
@@ -261,9 +297,8 @@ const BossBattle = {
     const streakDots = Array.from({ length: streakForUlt }, (_, i) =>
       `<span class="boss-streak-dot ${i < this.streak ? 'on' : ''}"></span>`
     ).join('');
-    const playerImg = this.playerSpriteUrl();
-    const playerFb = this.playerFallbackUrl();
-    const enemyStyle = this.enemySpriteStyle(this.boss);
+    const playerArt = this.fighterCardHtml(this.playerCard(), 'player');
+    const enemyArt = this.fighterCardHtml(this.boss.card, 'enemy');
 
     panel.innerHTML = `
       <div class="boss-arena" id="bossArena">
@@ -275,8 +310,7 @@ const BossBattle = {
         <div class="boss-fighters">
           <div class="boss-fighter boss-fighter--player">
             <div class="boss-fighter-sprite-wrap">
-              <img src="${playerImg}" alt="比卡超" class="boss-sprite-img boss-pikachu-img" id="bossPikachu"
-                onerror="this.onerror=null;this.src='${playerFb}'">
+              ${playerArt}
             </div>
             <div class="boss-fighter-name">比卡超</div>
             <div class="boss-hpbar">
@@ -286,10 +320,8 @@ const BossBattle = {
           </div>
           <div class="boss-vs">VS</div>
           <div class="boss-fighter boss-fighter--enemy">
-            <div class="boss-fighter-sprite-wrap boss-enemy-aura" style="${enemyStyle}">
-              <img src="${this.boss.imageUrl}" alt="${this.boss.name}" class="boss-sprite-img boss-enemy-img" id="bossEnemy"
-                style="${enemyStyle}"
-                onerror="this.onerror=null;this.src='${this.boss.fallbackUrl}'">
+            <div class="boss-fighter-sprite-wrap">
+              ${enemyArt}
             </div>
             <div class="boss-fighter-name">${this.boss.name}</div>
             <div class="boss-hpbar">

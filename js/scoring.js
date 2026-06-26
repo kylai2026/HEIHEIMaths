@@ -3,7 +3,7 @@ const DIFFICULTY_TIERS = {
     id: 'easy',
     name: '初級',
     icon: '🌱',
-    image: 'assets/img/tier-easy.png',
+    image: 'assets/img/art/tier-easy-ai.png',
     points: 2,
     cssClass: 'tier-easy'
   },
@@ -11,7 +11,7 @@ const DIFFICULTY_TIERS = {
     id: 'medium',
     name: '中級',
     icon: '⭐',
-    image: 'assets/img/tier-medium.png',
+    image: 'assets/img/art/tier-medium-ai.png',
     points: 4,
     cssClass: 'tier-medium'
   },
@@ -19,16 +19,16 @@ const DIFFICULTY_TIERS = {
     id: 'hard',
     name: '高級',
     icon: '🔥',
-    image: 'assets/img/tier-hard.png',
+    image: 'assets/img/art/tier-hard-ai.png',
     points: 6,
     cssClass: 'tier-hard'
   }
 };
 
 const GIFT_SHOP = [
-  { id: 'gift-small', name: '小禮物', image: 'assets/img/gift-small.png', desc: '舅父與晞晞、雋雋準備的小驚喜', cost: 30, tier: 'small' },
-  { id: 'gift-medium', name: '中級禮物', image: 'assets/img/gift-medium.png', desc: '做得好好嘅獎勵', cost: 60, tier: 'medium' },
-  { id: 'gift-big', name: '大獎', image: 'assets/img/gift-big.png', desc: '超勁嘅終極獎品', cost: 100, tier: 'big' }
+  { id: 'gift-small', name: '小禮物', image: 'assets/img/art/gift-small-ai.png', desc: '舅父與晞晞、雋雋準備的小驚喜', cost: 30, tier: 'small' },
+  { id: 'gift-medium', name: '中級禮物', image: 'assets/img/art/gift-medium-ai.png', desc: '做得好好嘅獎勵', cost: 60, tier: 'medium' },
+  { id: 'gift-big', name: '大獎', image: 'assets/img/art/gift-big-ai.png', desc: '超勁嘅終極獎品', cost: 100, tier: 'big' }
 ];
 
 const XP_PER_LEVEL = 100;

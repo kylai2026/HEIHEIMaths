@@ -312,11 +312,12 @@ const QuestionVisuals = {
     const ay = cy + arcR * Math.sin(-rad);
     const hideLabel = opts.hideLabel;
     const rightAngle = opts.rightAngle;
+    const stroke = opts.color || '#2563eb';
     return this.scene(`
       <svg class="geo-svg" viewBox="0 0 170 130" role="img" aria-label="角度圖">
         <line x1="${cx}" y1="${cy}" x2="${cx + len}" y2="${cy}" class="geo-angle-line"/>
-        <line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" class="geo-angle-line"/>
-        <path d="M ${cx + arcR} ${cy} A ${arcR} ${arcR} 0 0 0 ${ax} ${ay}" fill="none" stroke="#2563eb" stroke-width="2"/>
+        <line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" class="geo-angle-line" style="stroke:${stroke}"/>
+        <path d="M ${cx + arcR} ${cy} A ${arcR} ${arcR} 0 0 0 ${ax} ${ay}" fill="none" stroke="${stroke}" stroke-width="3"/>
         ${!hideLabel ? `<text x="${cx + 36}" y="${cy - 10}" class="geo-label">${d}°</text>` : ''}
         ${rightAngle ? `<rect x="${cx}" y="${cy - 12}" width="12" height="12" class="geo-right-angle"/>` : ''}
       </svg>
@@ -417,11 +418,12 @@ const QuestionVisuals = {
   },
 
   angleCompare(deg1, deg2, label1 = 'A', label2 = 'B', opts = {}) {
-    const card = (deg, label) => {
-      const inner = this.angleDiagram(deg, { hideLabel: opts.hideLabel }).replace(/<div class="geo-scene"[^>]*>|<\/div>\s*$/g, '');
+    const colors = ['#2563eb', '#ea580c'];
+    const card = (deg, label, color) => {
+      const inner = this.angleDiagram(deg, { hideLabel: opts.hideLabel, color }).replace(/<div class="geo-scene"[^>]*>|<\/div>\s*$/g, '');
       return `<div class="geo-angle-card"><div class="geo-angle-title">角 ${label}</div>${inner}</div>`;
     };
-    return this.scene(`<div class="geo-angle-compare">${card(deg1, label1)}${card(deg2, label2)}</div>`);
+    return this.scene(`<div class="geo-angle-compare">${card(deg1, label1, colors[0])}${card(deg2, label2, colors[1])}</div>`);
   },
 
   pieChartPercent(label, pct, opts = {}) {

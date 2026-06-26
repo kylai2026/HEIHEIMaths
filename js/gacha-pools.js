@@ -270,6 +270,16 @@ const GachaSystem = {
     return ALL_GACHA_CARDS.filter(c => c.poolId === poolId);
   },
 
+  getPokemonByDex(dexId) {
+    return this.getCardsByPool('pokemon').find(c => c.dexId === dexId) || null;
+  },
+
+  pickBossEnemyCard(excludeDex = 25) {
+    const pool = this.getCardsByPool('pokemon').filter(c => c.dexId !== excludeDex);
+    if (!pool.length) return null;
+    return pool[Math.floor(Math.random() * pool.length)];
+  },
+
   getCard(cardId) {
     return ALL_GACHA_CARDS.find(c => c.id === cardId);
   },

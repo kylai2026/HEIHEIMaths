@@ -648,6 +648,7 @@ const App = {
   },
 
   bindBossBattle() {
+    BossBattle.initEntryArt();
     document.getElementById('startBossBattle')?.addEventListener('click', () => {
       AudioManager.playSfx('click');
       this.startBossBattle();
@@ -924,13 +925,13 @@ const App = {
           <div class="section-random-row">
             ${['easy', 'medium', 'hard'].map(tierKey => {
               const t = DIFFICULTY_TIERS[tierKey];
-              return `<button class="btn btn-sm section-random-btn ${t.cssClass}" data-tier="${tierKey}" data-section="${sec.id}"> ${t.name}隨機</button>`;
+              return `<button class="btn btn-sm section-random-btn ${t.cssClass}" data-tier="${tierKey}" data-section="${sec.id}"><img src="${TopicArt.tier(tierKey)}" alt="" class="section-tier-img"> ${t.name}隨機</button>`;
             }).join('')}
           </div>
           <div class="topic-grid compact">
             ${topics.map(topic => `
               <div class="topic-card exam-card" data-topic="${topic.id}">
-                <span class="icon">${topic.icon}</span>
+                <img src="${TopicArt.topic(topic)}" alt="" class="topic-art-img">
                 <h4>${topic.name}</h4>
                 <p>${topic.desc}</p>
               </div>
@@ -1206,7 +1207,7 @@ const App = {
       AudioManager.playSfx('levelUp');
       this.showModal('🎊', `升級了！Lv.${scoreResult.newLevel.level}`,
         `儲滿 100 XP 升一級！你而家係 Lv.${scoreResult.newLevel.level}`,
-        'assets/img/tier-medium.png');
+        TopicArt.tier('medium'));
     }
 
     if (scoreResult.newBadges.length > 0) {
@@ -1603,7 +1604,7 @@ const App = {
 
     document.getElementById('rewardPoints').textContent = Storage.getPoints(data);
     document.getElementById('levelCard').innerHTML = `
-      <img src="assets/img/tier-medium.png" alt="" class="level-hero-img">
+      <img src="${TopicArt.tier('medium')}" alt="" class="level-hero-img">
       <div class="level-big">Lv.${lvl.level}</div>
       <div class="level-title">每 100 XP 升 1 級</div>
       <div class="level-xp-bar"><div class="level-xp-fill" style="width:${lvl.progress}%"></div></div>
@@ -1825,7 +1826,7 @@ const App = {
   renderTips() {
     document.getElementById('tipsGrid').innerHTML = TIPS.map(tip => `
       <div class="tip-card">
-        <div class="tip-icon">${tip.icon}</div>
+        <div class="tip-icon"><img src="${TopicArt.icon(tip.icon)}" alt=""></div>
         <h3>${tip.title}</h3>
         <div class="formula">${tip.formula}</div>
         <ul>${tip.points.map(p => `<li>${p}</li>`).join('')}</ul>

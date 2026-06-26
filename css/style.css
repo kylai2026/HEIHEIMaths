@@ -410,10 +410,16 @@ body {
 }
 
 .tier-rule-img {
-  width: 48px;
-  height: 48px;
+  width: 72px;
+  height: 72px;
   object-fit: contain;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.65rem;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.15));
+  transition: transform 0.2s ease;
+}
+
+.tier-rule-card:hover .tier-rule-img {
+  transform: scale(1.06) translateY(-2px);
 }
 
 .tier-btn img {
@@ -484,7 +490,22 @@ body {
   margin-bottom: 1rem;
 }
 
+.section-random-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.section-tier-img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
 .section-random-btn.tier-easy { background: #dcfce7; color: #16a34a; border: none; }
+.section-random-btn.tier-medium { background: #dbeafe; color: #2563eb; border: none; }
+.section-random-btn.tier-hard { background: #fee2e2; color: #dc2626; border: none; }
 .section-random-btn.tier-medium { background: #dbeafe; color: #2563eb; border: none; }
 .section-random-btn.tier-hard { background: #fee2e2; color: #dc2626; border: none; }
 
@@ -2186,8 +2207,9 @@ html[data-theme="dark"] .btn-read-question:hover {
   flex-wrap: wrap;
   width: 100%;
 }
-.geo-angle-card { text-align: center; }
-.geo-angle-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.25rem; }
+.geo-angle-card { text-align: center; min-width: 150px; }
+.geo-angle-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--text); }
+.geo-angle-card .geo-svg { width: 100%; max-width: 180px; height: auto; }
 .geo-angle-card .geo-scene { margin: 0; padding: 0.35rem; border: none; background: transparent; }
 
 .geo-cuboid-front { fill: #bfdbfe; stroke: #2563eb; stroke-width: 2; }
@@ -4010,6 +4032,20 @@ html[data-theme="dark"] .parent-correct-ans {
   border-radius: 10px;
   border: 2px solid rgba(255,255,255,0.6);
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.card-art-boss {
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+  margin-bottom: 0;
+  border-radius: 14px;
+  border: 3px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.4);
+}
+
+.card-art-boss .card-img {
+  object-fit: contain;
 }
 
 .card-art-lg {
@@ -6572,12 +6608,38 @@ html[data-theme="dark"] .card-art-cinna .card-img {
 
 .boss-fighter-sprite-wrap {
   position: relative;
-  width: 96px;
-  height: 96px;
+  width: 104px;
+  height: 104px;
   margin: 0 auto 0.35rem;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.boss-fighter-card-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.boss-pikachu-card {
+  animation: boss-pika-idle 1s ease-in-out infinite alternate;
+}
+
+.boss-enemy-card {
+  transform: scaleX(-1);
+  animation: boss-enemy-card-idle 1.2s ease-in-out infinite alternate;
+}
+
+.boss-card-rarity-ssr .card-art-boss,
+.boss-card-rarity-ur .card-art-boss {
+  border-color: #fbbf24;
+  box-shadow: 0 0 18px rgba(251, 191, 36, 0.55), 0 6px 22px rgba(0, 0, 0, 0.4);
+}
+
+.boss-card-rarity-sr .card-art-boss {
+  border-color: #c084fc;
+  box-shadow: 0 0 14px rgba(192, 132, 252, 0.45), 0 6px 22px rgba(0, 0, 0, 0.4);
 }
 
 .boss-sprite-img {
@@ -6590,6 +6652,11 @@ html[data-theme="dark"] .card-art-cinna .card-img {
 
 .boss-pikachu-img {
   animation: boss-pika-idle 1s ease-in-out infinite alternate;
+}
+
+@keyframes boss-enemy-card-idle {
+  from { transform: scaleX(-1) translateY(0); }
+  to { transform: scaleX(-1) translateY(-3px); }
 }
 
 .boss-enemy-aura::before {
@@ -6736,16 +6803,21 @@ html[data-theme="dark"] .card-art-cinna .card-img {
   80% { transform: translateX(6px); }
 }
 
+.boss-pikachu-card.boss-shake {
+  animation: boss-shake 0.45s ease;
+}
+
+.boss-enemy-card.boss-shake,
 .boss-enemy-img.boss-shake {
   animation: boss-shake-enemy-img 0.45s ease;
 }
 
 @keyframes boss-shake-enemy-img {
-  0%, 100% { transform: scaleX(-1) scale(var(--boss-scale, 1)) translateX(0); }
-  20% { transform: scaleX(-1) scale(var(--boss-scale, 1)) translateX(8px); }
-  40% { transform: scaleX(-1) scale(var(--boss-scale, 1)) translateX(-8px); }
-  60% { transform: scaleX(-1) scale(var(--boss-scale, 1)) translateX(6px); }
-  80% { transform: scaleX(-1) scale(var(--boss-scale, 1)) translateX(-6px); }
+  0%, 100% { transform: scaleX(-1) translateX(0); }
+  20% { transform: scaleX(-1) translateX(8px); }
+  40% { transform: scaleX(-1) translateX(-8px); }
+  60% { transform: scaleX(-1) translateX(6px); }
+  80% { transform: scaleX(-1) translateX(-6px); }
 }
 
 .boss-stage-next-hint {
@@ -7158,4 +7230,89 @@ html[data-theme="dark"] .profile-modal {
   .view-hero-strip { min-height: 90px; }
   .view-hero-strip-text { padding: 1rem; }
   .view-hero-strip h2 { font-size: 1.2rem; }
+}
+
+/* ── AI 課題／積分圖示 ── */
+.topic-art-img {
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 0.65rem;
+  filter: drop-shadow(0 8px 16px rgba(99, 102, 241, 0.2));
+  transition: transform 0.22s ease, filter 0.22s ease;
+}
+
+.topic-card:hover .topic-art-img {
+  transform: scale(1.08) translateY(-4px);
+  filter: drop-shadow(0 12px 22px rgba(99, 102, 241, 0.32));
+}
+
+.topic-card.exam-card {
+  background: linear-gradient(160deg, var(--card) 0%, rgba(219, 234, 254, 0.35) 100%);
+  padding-top: 1rem;
+}
+
+.tip-icon img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.12));
+}
+
+.tip-card {
+  background: linear-gradient(160deg, var(--card), rgba(254, 243, 199, 0.25));
+  border: 1px solid var(--glass-border);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tip-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.tier-rule-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tier-rule-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.nav-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12));
+}
+
+.tier-btn img {
+  width: 36px;
+  height: 36px;
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.12));
+}
+
+.gift-img,
+.points-hero-img,
+.level-hero-img,
+.weekly-tier-img {
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.14));
+}
+
+.weekly-tier-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.hud-img {
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.2));
+}
+
+.logo-img,
+.footer-logo {
+  object-fit: cover;
 }
