@@ -855,11 +855,12 @@ const P34Questions = {
         return { q: `計算：${a} + ${b} × ${c} = ?`, ans, sol: `${b} × ${c} = ${b * c}，${a} + ${b * c} = ${ans}` };
       },
       () => {
-        const a = MathUtils.randomInt(20, 60);
         const b = MathUtils.randomInt(2, 9);
         const c = MathUtils.randomInt(2, 9);
-        const ans = a - b * c;
-        return { q: `計算：${a} - ${b} × ${c} = ?`, ans, sol: `${b} × ${c} = ${b * c}，${a} - ${b * c} = ${ans}` };
+        const product = b * c;
+        const a = MathUtils.randomInt(product, product + 40);
+        const ans = a - product;
+        return { q: `計算：${a} - ${b} × ${c} = ?`, ans, sol: `${b} × ${c} = ${product}，${a} - ${product} = ${ans}` };
       }
     ];
     const t = MathUtils.randomChoice(templates)();
@@ -871,11 +872,14 @@ const P34Questions = {
   },
 
   mixedBracket() {
-    const a = MathUtils.randomInt(2, 8);
-    const b = MathUtils.randomInt(3, 10);
-    const c = MathUtils.randomInt(2, 6);
-    const d = MathUtils.randomInt(5, 20);
-    const ans = a * (b + c) - d;
+    let a; let b; let c; let d; let ans;
+    do {
+      a = MathUtils.randomInt(2, 8);
+      b = MathUtils.randomInt(3, 10);
+      c = MathUtils.randomInt(2, 6);
+      d = MathUtils.randomInt(5, 20);
+      ans = a * (b + c) - d;
+    } while (ans < 0);
     return this.base('p4-mixed-ops',
       `計算：${a} × (${b} + ${c}) - ${d} = ?`,
       { type: 'decimal', value: ans }, String(ans),

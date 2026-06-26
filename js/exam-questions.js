@@ -118,7 +118,7 @@ const ExamQuestions = {
       d = MathUtils.randomChoice([2, 4, 7, 14]);
       if (c % d !== 0) continue;
       result = a * b - c / d;
-    } while (!Number.isInteger(result));
+    } while (!Number.isInteger(result) || result < 0);
     return this.base('exam-calc',
       `計算：${a} × ${b} - ${c} ÷ ${d} = ?`,
       { type: 'decimal', value: result },
@@ -132,10 +132,13 @@ const ExamQuestions = {
   },
 
   decimalOps() {
-    const a = MathUtils.roundTo(Math.random() * 30 + 10, 1);
-    const b = MathUtils.roundTo(Math.random() * 10 + 1, 2);
-    const c = MathUtils.roundTo(Math.random() * 15 + 5, 2);
-    const result = MathUtils.roundTo(a + b - c, 2);
+    let a; let b; let c; let result;
+    do {
+      a = MathUtils.roundTo(Math.random() * 30 + 10, 1);
+      b = MathUtils.roundTo(Math.random() * 10 + 1, 2);
+      c = MathUtils.roundTo(Math.random() * 15 + 5, 2);
+      result = MathUtils.roundTo(a + b - c, 2);
+    } while (result < 0);
     return this.base('exam-calc',
       `計算：${a} + ${b} - ${c} = ?`,
       { type: 'decimal', value: result },
@@ -166,10 +169,13 @@ const ExamQuestions = {
   },
 
   findA() {
-    const a = MathUtils.roundTo(Math.random() * 30 + 50, 2);
-    const b = MathUtils.roundTo(Math.random() * 20 + 10, 2);
-    const c = MathUtils.roundTo(Math.random() * 20 + 10, 2);
-    const result = MathUtils.roundTo(a - b - c, 2);
+    let a; let b; let c; let result;
+    do {
+      a = MathUtils.roundTo(Math.random() * 30 + 50, 2);
+      b = MathUtils.roundTo(Math.random() * 20 + 10, 2);
+      c = MathUtils.roundTo(Math.random() * 20 + 10, 2);
+      result = MathUtils.roundTo(a - b - c, 2);
+    } while (result < 0);
     return this.base('exam-calc',
       `若 A - ${b} - ${c} = ${result}，求 A 的值。`,
       { type: 'decimal', value: a },

@@ -795,7 +795,7 @@ const App = {
 
     if (!items.length) {
       panel.classList.add('empty');
-      list.innerHTML = '<p class="correct-bank-empty">答對題目會儲存喺呢度，可以揀選重做（重做唔計分）。</p>';
+      list.innerHTML = '<p class="correct-bank-empty">答對題目會儲存喺呢度，可以揀選重做。</p>';
       btn?.classList.add('hidden');
       return;
     }
@@ -842,16 +842,16 @@ const App = {
     AudioManager.playSfx('click');
     this.state.dailyMode = false;
     this.state.randomMode = false;
-    this.state.noPointsMode = true;
+    this.state.noPointsMode = false;
     this.state.sessionCorrect = [];
     this.state.practiceTopic = 'redo';
-    this.state.practiceQuestions = questions.map(q => ({ ...q, isRedo: true }));
+    this.state.practiceQuestions = questions.map(q => ({ ...q }));
     this.state.practiceIndex = 0;
     this.state.practiceAnswered = false;
 
     document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
     document.getElementById('practiceTitle').textContent = '重做練習';
-    document.getElementById('practiceTopicBadge').textContent = `${questions.length} 題 · 唔計分`;
+    document.getElementById('practiceTopicBadge').textContent = `${questions.length} 題 · 答對計分`;
     document.getElementById('tierSelector').classList.add('hidden');
     this.updateTierProgressHint();
     this.switchView('practice');
@@ -973,11 +973,6 @@ const App = {
   updateTierProgressHint() {
     const hint = document.getElementById('tierProgressHint');
     if (!hint) return;
-    if (this.state.noPointsMode) {
-      hint.innerHTML = '🔄 <strong>重做模式</strong>：做題唔會獲取積分';
-      hint.className = 'tier-progress-hint redo-mode';
-      return;
-    }
     const data = Storage.load();
     const tier = DIFFICULTY_TIERS[this.state.practiceTier];
     const progress = Scoring.getTierProgress(data).find(t => t.id === this.state.practiceTier);
@@ -1051,9 +1046,7 @@ const App = {
     const bossDmg = this.state.bossMode ? BossBattle.getDamage(q.tier || 'medium') : 0;
     const pointsBadge = this.state.bossMode
       ? `<span class="badge ${tierInfo.cssClass}">${tierInfo.icon} ${tierInfo.name} -${bossDmg} BOSS HP</span>`
-      : this.state.noPointsMode
-        ? '<span class="badge badge-redo">重做 · 唔計分</span>'
-        : `<span class="badge ${tierInfo.cssClass}">${tierInfo.icon} ${tierInfo.name} +${tierInfo.points}分</span>`;
+      : `<span class="badge ${tierInfo.cssClass}">${tierInfo.icon} ${tierInfo.name} +${tierInfo.points}分</span>`;
 
     document.getElementById('practiceCount').textContent = `${current} / ${total}`;
     const topicName = q.topicId ? (TOPICS.find(t => t.id === q.topicId)?.name || '') : '';
@@ -1130,16 +1123,14 @@ const App = {
 
     const data = Storage.load();
     const q = this.state.currentQuestion;
-    const alreadyMastered = !!(q?.poolKey && data.correctBank?.[q.poolKey]);
-    const noPoints = this.state.noPointsMode || q?.isRedo || (correct && alreadyMastered);
-    const scoreResult = Scoring.awardAnswer(data, correct, tier, { noPoints });
+    const scoreResult = Scoring.awardAnswer(data, correct, tier);
 
     if (!correct && q) {
       Storage.recordWrongAnswer(data, q, userAnswer, this.getPracticeMode());
     }
 
     if (q?.poolKey) Scoring.markQuestionCompleted(data, tier, q.poolKey);
-    if (correct && !noPoints && q) {
+    if (correct && q) {
       Storage.saveCorrectQuestion(data, q);
       Storage.recordCorrectLog(data, q, this.getPracticeMode());
     }
@@ -1158,9 +1149,7 @@ const App = {
 
     let rewardMsg = '';
     if (correct) {
-      if (noPoints) {
-        rewardMsg = '重做 · 唔計分';
-      } else if (scoreResult.pointsEarned > 0) {
+      if (scoreResult.pointsEarned > 0) {
         rewardMsg = `+${scoreResult.pointsEarned} 積分 🎁`;
       }
       if (scoreResult.xp > 0) {
@@ -1225,8 +1214,6 @@ const App = {
       if (this.state.bossMode && br) {
         feedback.classList.add('boss-hit');
         feedback.innerHTML = `🎉 答對了！<br><strong>${br.message}</strong>${rewardMsg ? '<br><small>' + rewardMsg + '</small>' : ''}`;
-      } else if (this.state.noPointsMode) {
-        feedback.innerHTML = '🎉 答對了！<br><small>重做 · 唔計分</small>';
       } else {
         feedback.innerHTML = `🎉 答對了！${rewardMsg ? '<br><small>' + rewardMsg + '</small>' : ''}`;
       }
@@ -1311,7 +1298,6 @@ const App = {
       redoHtml = `
         <div class="redo-picker">
           <h4>📋 今次答對嘅題目 · 揀選重做</h4>
-          <p class="redo-picker-note">重做唔會獲取積分</p>
           <div class="redo-list session-redo-list">
             ${unique.map((q, i) => `
               <label class="redo-item">
