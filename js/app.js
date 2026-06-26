@@ -630,7 +630,8 @@ const App = {
   switchView(view) {
     if (typeof AudioManager !== 'undefined') AudioManager.stopSpeaking();
     if (this.state.bossMode && view !== 'practice') {
-      this.endBossBattle(false);
+      if (!confirm('確定退出 BOSS 關卡？而家嘅進度唔會儲存。')) return;
+      this.cleanupBossBattle();
     }
     this.state.currentView = view;
     document.querySelectorAll('.nav-tab').forEach(t => {
@@ -652,6 +653,12 @@ const App = {
     document.getElementById('startBossBattle')?.addEventListener('click', () => {
       AudioManager.playSfx('click');
       this.startBossBattle();
+    });
+    document.getElementById('bossBattlePanel')?.addEventListener('click', (e) => {
+      if (e.target.closest('#bossQuitBtn')) {
+        e.preventDefault();
+        this.quitBossBattle();
+      }
     });
   },
 
@@ -698,6 +705,7 @@ const App = {
     if (!this.state.bossMode) return;
     this.state.bossMode = false;
     this.state.bossPendingResult = null;
+    clearTimeout(BossBattle._ultimateTimer);
     AudioManager.stopBossMusic();
     if (restoreLayout) {
       BossBattle.showPanel(false);
@@ -705,6 +713,32 @@ const App = {
       document.querySelector('.topic-sidebar')?.classList.remove('hidden');
       document.querySelector('.practice-layout')?.classList.remove('boss-mode');
     }
+  },
+
+  cleanupBossBattle() {
+    this.endBossBattle(true);
+    this.state.bossQuestionQueue = [];
+    this.state.practiceTopic = null;
+    this.state.practiceQuestions = [];
+    this.state.practiceIndex = 0;
+    this.state.practiceAnswered = false;
+    document.getElementById('practiceTitle').textContent = '選擇課題開始練習';
+    document.getElementById('practiceTopicBadge').textContent = '';
+    document.getElementById('practiceCount').textContent = '0 / 10';
+    document.getElementById('questionCard').innerHTML = '<p class="placeholder-text">👈 請喺左邊揀一個課題</p>';
+    document.getElementById('answerArea').classList.add('hidden');
+    document.getElementById('practiceMcqArea')?.classList.add('hidden');
+    document.getElementById('actionRow').classList.add('hidden');
+    document.getElementById('feedback').classList.add('hidden');
+    document.getElementById('solutionBox')?.classList.add('hidden');
+  },
+
+  quitBossBattle() {
+    if (!this.state.bossMode) return;
+    if (!confirm('確定退出 BOSS 關卡？而家嘅進度唔會儲存。')) return;
+    AudioManager.playSfx('click');
+    this.cleanupBossBattle();
+    this.switchView('home');
   },
 
   showBossEndScreen(won) {
@@ -754,6 +788,7 @@ const App = {
       <p>比卡超打敗了 <strong>${boss.name}</strong>（${boss.type}系）！</p>
       <p class="boss-stage-next-hint">下一關 <strong>${nextCfg.label}</strong>：BOSS HP ${nextCfg.bossMaxHp}、反擊 -${nextCfg.counter} HP、題目更難！</p>
       <button type="button" class="btn btn-boss" id="bossNextStageBtn">挑戰第 ${nextStage} 關</button>
+      <button type="button" class="btn btn-secondary" id="bossQuitStageBtn">退出 BOSS</button>
     `;
     document.getElementById('answerArea').classList.add('hidden');
     document.getElementById('practiceMcqArea')?.classList.add('hidden');
@@ -772,6 +807,7 @@ const App = {
       document.getElementById('solutionBox')?.classList.remove('hidden');
       this.showPracticeQuestion();
     });
+    document.getElementById('bossQuitStageBtn')?.addEventListener('click', () => this.quitBossBattle());
   },
 
   finishBossAnswerFlow(correct, q, rewardMsg) {

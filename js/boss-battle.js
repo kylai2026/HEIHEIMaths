@@ -306,6 +306,7 @@ const BossBattle = {
         <div class="boss-arena-flash" id="bossArenaFlash"></div>
         <div class="boss-lightning-layer" id="bossLightningLayer"></div>
         <div class="boss-stage-badge">第 ${this.currentStage} / ${this.STAGES.length} 關 · ${cfg.label}</div>
+        <button type="button" class="boss-quit-btn" id="bossQuitBtn" title="退出 BOSS 關卡">退出</button>
         <p class="boss-taunt">${this.boss.type}系 · ${this.boss.taunt}</p>
         <div class="boss-fighters">
           <div class="boss-fighter boss-fighter--player">
