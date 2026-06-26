@@ -461,8 +461,12 @@ const P34Questions = {
     let n2 = MathUtils.randomInt(1, den - 1);
     while (n1 === n2) n2 = MathUtils.randomInt(1, den - 1);
     const bigger = n1 > n2 ? n1 : n2;
+    const QV = QuestionVisuals;
     return this.base('p3-frac-basic',
-      `比較 ${MathUtils.formatFractionHTML(n1, den)} 和 ${MathUtils.formatFractionHTML(n2, den)}，較大的是？（填較大分數，如 3/5）`,
+      QV.withVisual(
+        `比較 ${MathUtils.formatFractionHTML(n1, den)} 和 ${MathUtils.formatFractionHTML(n2, den)}，較大的是？（填較大分數，如 3/5）`,
+        QV.fractionComparePair(n1, den, n2, den)
+      ),
       { type: 'fraction', num: bigger, den },
       `${bigger}/${den}`,
       '提示：同分母時，分子大=分數大',
@@ -484,8 +488,12 @@ const P34Questions = {
     const total = MathUtils.randomChoice([8, 10, 12, 15, 20]);
     const den = MathUtils.randomChoice([2, 3, 4, 5]);
     const num = total / den;
+    const QV = QuestionVisuals;
     return this.base('p3-frac-basic',
-      `有 ${total} 個蘋果，平均分成 ${den} 份，每份有幾個？`,
+      QV.withVisual(
+        `有 ${total} 個蘋果，平均分成 ${den} 份，每份有幾個？`,
+        QV.objectGrid(total, '🍎', 5)
+      ),
       { type: 'decimal', value: num }, String(num),
       '提示：用除法計算',
       `<h4>📖 解法</h4><p>${total} ÷ ${den} = <strong>${num}</strong> 個</p>`
@@ -580,8 +588,12 @@ const P34Questions = {
     const total = MathUtils.randomInt(3, 8);
     const each = MathUtils.randomInt(250, 500);
     const ans = total * each;
+    const QV = QuestionVisuals;
     return this.base('p3-capacity',
-      `每瓶果汁 ${each} 毫升，買了 ${total} 瓶，共有多少毫升？`,
+      QV.withVisual(
+        `每瓶果汁 ${each} 毫升，買了 ${total} 瓶，共有多少毫升？`,
+        QV.capacityBottles(total, each)
+      ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：用乘法',
       `<h4>📖 解法</h4><p>${total} × ${each} = <strong>${ans}</strong> 毫升</p>`

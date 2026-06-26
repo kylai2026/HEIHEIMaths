@@ -678,13 +678,19 @@ const App = {
     this.state.practiceIndex = 0;
     this.state.practiceAnswered = false;
 
-    document.getElementById('practiceTitle').textContent = `⚡ BOSS 關卡 · 打倒 ${BossBattle.boss.name}！`;
-    document.getElementById('practiceTopicBadge').textContent = '答題攻擊 · 連續 3 題十萬伏特';
-    document.getElementById('tierSelector').classList.add('hidden');
+    this.updateBossPracticeTitle();
     document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
 
     this.switchView('practice');
     this.showPracticeQuestion();
+  },
+
+  updateBossPracticeTitle() {
+    const cfg = BossBattle.getStageConfig();
+    document.getElementById('practiceTitle').textContent =
+      `⚡ BOSS ${cfg.label} · 打倒 ${BossBattle.boss.name}！`;
+    document.getElementById('practiceTopicBadge').textContent =
+      `第 ${BossBattle.currentStage}/${BossBattle.STAGES.length} 關 · 連續 ${cfg.streakForUlt} 題十萬伏特`;
   },
 
   endBossBattle(restoreLayout = true) {
@@ -703,18 +709,21 @@ const App = {
   showBossEndScreen(won) {
     AudioManager.playSfx(won ? 'bossWin' : 'bossLose');
     const data = Storage.load();
-    const bonus = won ? 15 : 0;
+    const bonus = won ? 40 : 0;
     if (bonus) {
       data.points = (data.points || 0) + bonus;
       Storage.save(data);
       this.renderHUD();
     }
 
+    const boss = BossBattle.boss;
+
     document.getElementById('questionCard').innerHTML = `
-      <h3>${won ? '🏆 打敗 BOSS！' : '😵 皮卡丘倒下了…'}</h3>
+      <h3>${won ? '🏆 三關全破！' : '😵 比卡超倒下了…'}</h3>
+      ${won ? `<div class="boss-end-hero"><img src="${BossBattle.playerSpriteUrl()}" alt="比卡超" class="boss-end-sprite boss-end-sprite--player" onerror="this.onerror=null;this.src='${BossBattle.playerFallbackUrl()}'"></div>` : ''}
       <p>${won
-        ? `你擊敗了 ${BossBattle.boss.emoji} ${BossBattle.boss.name}！獎勵 +${bonus} 積分`
-        : '再練習多啲，下次一定可以！'}</p>
+        ? `比卡超連續擊敗 3 關 BOSS，最後打敗 ${boss.name}！獎勵 +${bonus} 積分`
+        : `第 ${BossBattle.currentStage} 關失手了，再練習多啲一定可以！`}</p>
       <button type="button" class="btn btn-boss" id="bossRetryBtn">再戰 BOSS</button>
       <button type="button" class="btn btn-secondary" id="bossHomeBtn">返回首頁</button>
     `;
@@ -732,10 +741,46 @@ const App = {
     });
   },
 
+  showBossStageClear() {
+    const clearedStage = BossBattle.currentStage;
+    const clearedCfg = BossBattle.getStageConfig(clearedStage);
+    const nextStage = clearedStage + 1;
+    const nextCfg = BossBattle.getStageConfig(nextStage);
+    const boss = BossBattle.boss;
+
+    document.getElementById('questionCard').innerHTML = `
+      <h3>✨ ${clearedCfg.label} 通過！</h3>
+      <p>比卡超打敗了 <strong>${boss.name}</strong>（${boss.type}系）！</p>
+      <p class="boss-stage-next-hint">下一關 <strong>${nextCfg.label}</strong>：BOSS HP ${nextCfg.bossMaxHp}、反擊 -${nextCfg.counter} HP、題目更難！</p>
+      <button type="button" class="btn btn-boss" id="bossNextStageBtn">挑戰第 ${nextStage} 關</button>
+    `;
+    document.getElementById('answerArea').classList.add('hidden');
+    document.getElementById('practiceMcqArea')?.classList.add('hidden');
+    document.getElementById('actionRow').classList.add('hidden');
+    document.getElementById('feedback').classList.add('hidden');
+    document.getElementById('solutionBox')?.classList.add('hidden');
+
+    document.getElementById('bossNextStageBtn')?.addEventListener('click', () => {
+      const grade = this.getSelectedGrade();
+      BossBattle.advanceToNextStage();
+      BossBattle.renderArena();
+      this.updateBossPracticeTitle();
+      this.state.practiceAnswered = false;
+      this.state.bossPendingResult = null;
+      this.state.practiceQuestions.push(...BossBattle.pullQuestions(12, grade));
+      document.getElementById('solutionBox')?.classList.remove('hidden');
+      this.showPracticeQuestion();
+    });
+  },
+
   finishBossAnswerFlow(correct, q, rewardMsg) {
     const br = this.state.bossPendingResult;
     const afterEffects = () => {
       BossBattle.renderArena();
+      if (br?.stageCleared) {
+        setTimeout(() => this.showBossStageClear(), 600);
+        return;
+      }
       if (br?.bossDefeated) {
         setTimeout(() => this.showBossEndScreen(true), 600);
         return;
@@ -1341,7 +1386,7 @@ const App = {
   nextPracticeQuestion() {
     if (this.state.bossMode) {
       const br = BossBattle.lastResult;
-      if (br?.bossDefeated || br?.playerDefeated) return;
+      if (br?.bossDefeated || br?.playerDefeated || br?.stageCleared) return;
     }
 
     this.state.practiceIndex++;

@@ -331,7 +331,9 @@ const P12Questions = {
       () => `10 可以分成 ${a} 和 □，□ 是多少？`
     ];
     const qText = MathUtils.randomChoice(templates)();
-    return this.base('p1-decompose', qText,
+    const QV = QuestionVisuals;
+    return this.base('p1-decompose',
+      QV.withVisual(qText, QV.tenBond(a)),
       { type: 'decimal', value: b }, String(b),
       '提示：想想 10 可以分成兩部分',
       `<h4>📖 解法</h4><p>${a} + ${b} = 10，所以 □ = <strong>${b}</strong></p>`);
@@ -344,7 +346,7 @@ const P12Questions = {
     const options = MathUtils.shuffle([String(b), ...MathUtils.shuffle(wrongs).slice(0, 3).map(String)]);
     const correct = String(b);
     return this._mcq('p1-decompose',
-      `哪個數和 ${a} 合起來是 10？`,
+      QuestionVisuals.withVisual(`哪個數和 ${a} 合起來是 10？`, QuestionVisuals.tenBond(a)),
       options, correct,
       '提示：兩個數加起來要等於 10',
       `<h4>📖 解法</h4><p>${a} + ${b} = 10，答案是 <strong>${b}</strong></p>`);
@@ -356,14 +358,20 @@ const P12Questions = {
     const variant = MathUtils.randomChoice(['ones', 'teen', 'split', 'add']);
     if (variant === 'ones') {
       return this.base('p1-decompose',
-        `10 + □ = ${teen}，□ 是多少？`,
+        QuestionVisuals.withVisual(
+          `10 + □ = ${teen}，□ 是多少？`,
+          QuestionVisuals.teenBond(teen)
+        ),
         { type: 'decimal', value: ones }, String(ones),
         '提示：十幾的數 = 10 + 個位',
         `<h4>📖 解法</h4><p>10 + ${ones} = ${teen}，□ = <strong>${ones}</strong></p>`);
     }
     if (variant === 'split') {
       return this.base('p1-decompose',
-        `把 ${teen} 分成 10 和 □，□ 是多少？`,
+        QuestionVisuals.withVisual(
+          `把 ${teen} 分成 10 和 □，□ 是多少？`,
+          QuestionVisuals.teenBond(teen)
+        ),
         { type: 'decimal', value: ones }, String(ones),
         '提示：十幾的數可以拆成 10 和個位',
         `<h4>📖 解法</h4><p>${teen} = 10 + <strong>${ones}</strong></p>`);
@@ -378,7 +386,10 @@ const P12Questions = {
         `<h4>📖 解法</h4><p>${base} 之後是 <strong>${ans}</strong></p>`);
     }
     return this.base('p1-decompose',
-      `${teen} = 10 + □，□ 是多少？`,
+      QuestionVisuals.withVisual(
+        `${teen} = 10 + □，□ 是多少？`,
+        QuestionVisuals.teenBond(teen)
+      ),
       { type: 'decimal', value: ones }, String(ones),
       '提示：把個位數填進去',
       `<h4>📖 解法</h4><p>${teen} = 10 + <strong>${ones}</strong></p>`);

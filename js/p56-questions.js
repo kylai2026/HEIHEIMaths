@@ -215,7 +215,7 @@ const P56Questions = {
     return this.base('p5-quad-area',
       QuestionVisuals.withVisual(
         `一個平行四邊形，底 ${base} cm，高 ${height} cm，面積是多少 cm²？`,
-        QuestionVisuals.parallelogram(base, height)
+        QuestionVisuals.parallelogram(base, height, 'cm', { hideLabels: true })
       ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：平行四邊形面積 = 底 × 高',
@@ -232,7 +232,7 @@ const P56Questions = {
     return this.base('p5-quad-area',
       QuestionVisuals.withVisual(
         `一個梯形，上底 ${top} cm，下底 ${bottom} cm，高 ${height} cm，面積是多少 cm²？`,
-        QuestionVisuals.trapezoid(top, bottom, height)
+        QuestionVisuals.trapezoid(top, bottom, height, 'cm', { hideLabels: true })
       ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：梯形面積 = (上底 + 下底) × 高 ÷ 2',
@@ -249,7 +249,7 @@ const P56Questions = {
       return this.base('p5-quad-area',
         QuestionVisuals.withVisual(
           `一塊平行四邊形花圃，底 ${l} m，高 ${w} m，面積是多少 m²？`,
-          QuestionVisuals.parallelogram(l, w, 'm')
+          QuestionVisuals.parallelogram(l, w, 'm', { hideLabels: true })
         ),
         { type: 'decimal', value: ans }, String(ans),
         '提示：面積 = 底 × 高',
@@ -264,7 +264,7 @@ const P56Questions = {
     return this.base('p5-quad-area',
       QuestionVisuals.withVisual(
         `一個梯形水池，上底 ${top} m，下底 ${bottom} m，深 ${height} m（當高），面積是多少 m²？`,
-        QuestionVisuals.trapezoid(top, bottom, height, 'm')
+        QuestionVisuals.trapezoid(top, bottom, height, 'm', { hideLabels: true })
       ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：梯形面積 = (上底 + 下底) × 高 ÷ 2',
@@ -284,7 +284,10 @@ const P56Questions = {
     const target = askBigger ? bigger : smaller;
     const label = askBigger ? '較大' : '較小';
     return this.base('p5-frac-cmp',
-      `比較 ${MathUtils.formatFractionHTML(n1, d1)} 和 ${MathUtils.formatFractionHTML(n2, d2)}，${label}的是？（填分數，如 3/5）`,
+      QuestionVisuals.withVisual(
+        `比較 ${MathUtils.formatFractionHTML(n1, d1)} 和 ${MathUtils.formatFractionHTML(n2, d2)}，${label}的是？（填分數，如 3/5）`,
+        QuestionVisuals.fractionComparePair(n1, d1, n2, d2)
+      ),
       { type: 'fraction', num: target.num, den: target.den },
       MathUtils.fractionToString(target.num, target.den),
       '提示：先通分，再比較分子',
@@ -710,7 +713,7 @@ const P56Questions = {
     return this.base('p5-volume',
       QuestionVisuals.withVisual(
         `一個長方體，長 ${l} cm，闊 ${w} cm，高 ${h} cm，體積是多少 cm³？`,
-        QuestionVisuals.cuboid(l, w, h)
+        QuestionVisuals.cuboid(l, w, h, 'cm', { hideLabels: true })
       ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：體積 = 長 × 闊 × 高',
@@ -729,7 +732,7 @@ const P56Questions = {
           q: `一個紙箱長 ${l} cm、闊 ${w} cm、高 ${h} cm，體積是多少 cm³？`,
           ans,
           sol: `${l} × ${w} × ${h} = ${ans}`,
-          visual: () => QuestionVisuals.cuboid(l, w, h)
+          visual: () => QuestionVisuals.cuboid(l, w, h, 'cm', { hideLabels: true })
         };
       },
       () => {
@@ -739,7 +742,7 @@ const P56Questions = {
           q: `一個正方體邊長 ${edge} cm，體積是多少 cm³？`,
           ans,
           sol: `${edge} × ${edge} × ${edge} = ${ans}`,
-          visual: () => QuestionVisuals.cuboid(edge, edge, edge)
+          visual: () => QuestionVisuals.cuboid(edge, edge, edge, 'cm', { hideLabels: true })
         };
       },
       () => {
@@ -751,7 +754,7 @@ const P56Questions = {
           q: `一個長方體體積是 ${vol} cm³，長 ${l} cm，闊 ${w} cm，高是多少 cm？`,
           ans: h,
           sol: `高 = ${vol} ÷ ${l} ÷ ${w} = ${h}`,
-          visual: () => QuestionVisuals.cuboid(l, w, h)
+          visual: () => QuestionVisuals.cuboid(l, w, h, 'cm', { hideLabels: true })
         };
       }
     ];

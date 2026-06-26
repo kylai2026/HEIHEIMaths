@@ -6,7 +6,10 @@ const QuestionVisuals = {
 
   withVisual(text, visual) {
     if (!visual) return text;
-    if (text.includes('geo-scene') || text.includes('triangle-scene') || text.includes('bar-chart-scene')) return text;
+    const hasVisual = ['geo-scene', 'triangle-scene', 'bar-chart-scene', 'clock-scene',
+      'count-object-grid', 'pie-chart', 'capacity-compare', 'ten-bond-frame', 'pos-lr-scene', 'pos-ud-scene']
+      .some(cls => text.includes(cls));
+    if (hasVisual) return text;
     const body = text.startsWith('<p>') ? text : `<p>看圖：${text}</p>`;
     return `${body}${visual}`;
   },
@@ -344,7 +347,7 @@ const QuestionVisuals = {
     `);
   },
 
-  cuboid(length, width, height, unit = 'cm') {
+  cuboid(length, width, height, unit = 'cm', opts = {}) {
     const l = Number(length);
     const w = Number(width);
     const h = Number(height);
@@ -354,6 +357,7 @@ const QuestionVisuals = {
     const y = 95;
     const fw = 90;
     const fh = 45;
+    const hideLabels = opts.hideLabels;
     const front = `${x},${y} ${x + fw},${y} ${x + fw},${y - fh} ${x},${y - fh}`;
     const top = `${x},${y - fh} ${x + dx},${y - fh + dy} ${x + fw + dx},${y - fh + dy} ${x + fw},${y - fh}`;
     const side = `${x + fw},${y} ${x + fw + dx},${y + dy} ${x + fw + dx},${y - fh + dy} ${x + fw},${y - fh}`;
@@ -362,9 +366,9 @@ const QuestionVisuals = {
         <polygon points="${side}" class="geo-cuboid-side"/>
         <polygon points="${top}" class="geo-cuboid-top"/>
         <polygon points="${front}" class="geo-cuboid-front"/>
-        <text x="${x + fw / 2}" y="${y + 16}" text-anchor="middle" class="geo-label">長 ${l} ${unit}</text>
+        ${!hideLabels ? `<text x="${x + fw / 2}" y="${y + 16}" text-anchor="middle" class="geo-label">長 ${l} ${unit}</text>
         <text x="${x + fw + dx + 8}" y="${y - fh / 2}" class="geo-label">闊 ${w}</text>
-        <text x="${x - 8}" y="${y - fh / 2}" text-anchor="end" class="geo-label">高 ${h}</text>
+        <text x="${x - 8}" y="${y - fh / 2}" text-anchor="end" class="geo-label">高 ${h}</text>` : ''}
       </svg>
     `);
   },
@@ -391,6 +395,16 @@ const QuestionVisuals = {
     `);
   },
 
+  capacityBottles(count, mlEach) {
+    const show = Math.min(count, 6);
+    const pct = Math.min(92, mlEach / 6 + 18);
+    const bottles = Array.from({ length: show }, () =>
+      `<div class="capacity-jug capacity-jug--small"><div class="capacity-fill" style="height:${pct}%"></div><span>${mlEach} mL</span></div>`
+    ).join('');
+    const more = count > show ? `<div class="capacity-more">共 ${count} 瓶</div>` : '';
+    return this.scene(`<div class="capacity-bottles">${bottles}${more}</div>`);
+  },
+
   facingPerson(direction) {
     const arrows = { '北方': '↑', '北': '↑', '東方': '→', '東': '→', '南方': '↓', '南': '↓', '西方': '←', '西': '←' };
     return this.scene(`
@@ -414,5 +428,95 @@ const QuestionVisuals = {
     const other = 100 - pct;
     const data = opts.hideOther ? { [label]: pct } : { [label]: pct, '其他': other };
     return this.pieChart(data, '%');
+  },
+
+  fractionComparePair(n1, d1, n2, d2) {
+    const cell = (n, d, label) => {
+      const inner = this.fractionCircle(n, d).replace(/<div class="geo-scene"[^>]*>|<\/div>\s*$/g, '');
+      return `<div class="frac-compare-item"><div class="frac-compare-label">${label}</div>${inner}</div>`;
+    };
+    return this.scene(`<div class="frac-compare-row">${cell(n1, d1, '甲')}${cell(n2, d2, '乙')}</div>`);
+  },
+
+  objectGrid(n, emoji, cols = 5) {
+    const cells = Array.from({ length: n }, () => `<span class="count-object-item">${emoji}</span>`).join('');
+    return this.scene(`<div class="count-object-grid" style="--cols:${cols}">${cells}</div>`);
+  },
+
+  tenBond(filled, total = 10) {
+    const dots = Array.from({ length: total }, (_, i) =>
+      `<span class="ten-bond-dot${i < filled ? ' ten-bond-dot--on' : ''}"></span>`
+    ).join('');
+    return this.scene(`<div class="ten-bond-frame" aria-hidden="true">${dots}</div>`);
+  },
+
+  teenBond(teen) {
+    const ones = teen % 10;
+    const tensDots = Array.from({ length: 10 }, () =>
+      `<span class="ten-bond-dot ten-bond-dot--on"></span>`
+    ).join('');
+    const onesDots = Array.from({ length: 10 }, (_, i) =>
+      `<span class="ten-bond-dot${i < ones ? ' ten-bond-dot--on' : ''}"></span>`
+    ).join('');
+    return this.scene(`
+      <div class="teen-bond-row">
+        <div class="teen-bond-block"><span class="teen-bond-title">10</span><div class="ten-bond-frame">${tensDots}</div></div>
+        <span class="teen-bond-plus">+</span>
+        <div class="teen-bond-block"><span class="teen-bond-title">個位</span><div class="ten-bond-frame">${onesDots}</div></div>
+      </div>`);
+  },
+
+  lShape(totalW, totalH, thick, unit = 'cm') {
+    const w = Number(totalW);
+    const h = Number(totalH);
+    const t = Number(thick);
+    const scale = 130 / Math.max(w, h);
+    const rw = w * scale;
+    const rh = h * scale;
+    const rt = t * scale;
+    const x = (200 - rw) / 2;
+    const y = (120 - rh) / 2 + 10;
+    const pts = `${x},${y + rh} ${x + rw},${y + rh} ${x + rw},${y + rt} ${x + rt},${y + rt} ${x + rt},${y} ${x},${y}`;
+    return this.scene(`
+      <svg class="geo-svg" viewBox="0 0 200 135" role="img" aria-label="L形圖">
+        <polygon points="${pts}" class="geo-poly"/>
+      </svg>
+    `);
+  },
+
+  overlapSquares(side, overlap, unit = 'cm') {
+    const s = Number(side);
+    const o = Number(overlap);
+    const scale = 100 / s;
+    const sz = s * scale;
+    const off = (s - o) * scale;
+    const x1 = 30;
+    const y = 25;
+    const x2 = x1 + off;
+    return this.scene(`
+      <svg class="geo-svg" viewBox="0 0 200 135" role="img" aria-label="重疊正方形圖">
+        <rect x="${x1}" y="${y}" width="${sz}" height="${sz}" class="geo-rect" fill="none"/>
+        <rect x="${x2}" y="${y}" width="${sz}" height="${sz}" class="geo-rect" fill="rgba(59,130,246,0.15)"/>
+        <rect x="${x2}" y="${y}" width="${o * scale}" height="${o * scale}" class="geo-rect" fill="rgba(59,130,246,0.35)" stroke="#2563eb" stroke-dasharray="4 2"/>
+      </svg>
+    `);
+  },
+
+  squareCutout(totalSide, cutW, cutH, unit = 'm') {
+    const s = Number(totalSide);
+    const cw = Number(cutW);
+    const ch = Number(cutH);
+    const scale = 90 / s;
+    const sz = s * scale;
+    const cx = (200 - sz) / 2;
+    const cy = (120 - sz) / 2 + 8;
+    const hx = cx + (sz - cw * scale) / 2;
+    const hy = cy + (sz - ch * scale) / 2;
+    return this.scene(`
+      <svg class="geo-svg" viewBox="0 0 200 135" role="img" aria-label="挖去長方形後的正方形圖">
+        <rect x="${cx}" y="${cy}" width="${sz}" height="${sz}" class="geo-rect"/>
+        <rect x="${hx}" y="${hy}" width="${cw * scale}" height="${ch * scale}" fill="#fff" stroke="#ef4444" stroke-dasharray="5 3"/>
+      </svg>
+    `);
   }
 };

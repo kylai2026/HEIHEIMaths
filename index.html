@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=57">
+  <link rel="stylesheet" href="css/style.css?v=60">
 </head>
 <body>
   <header class="header">
@@ -88,7 +88,8 @@
   <main class="main">
     <section class="view active" id="view-home">
       <div class="hero-banner">
-        <img src="assets/img/hero-banner.png" alt="數學學習" class="hero-img">
+        <img src="assets/img/hero-banner-ai.png" alt="數學學習" class="hero-img">
+        <div class="hero-shine"></div>
         <div class="hero-text">
           <h2>加油！舅父與晞晞、雋雋信你可以做到 💪</h2>
           <p>每日練習 <strong>20 分鐘</strong>，做題賺積分，抽卡收集！</p>
@@ -117,10 +118,12 @@
       <div class="boss-entry-card" id="bossEntryCard">
         <div class="boss-entry-glow"></div>
         <div class="boss-entry-inner">
-          <div class="boss-entry-icon">⚡</div>
+          <div class="boss-entry-icon">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" alt="比卡超" class="boss-entry-pika">
+          </div>
           <div class="boss-entry-text">
             <h3>BOSS 關卡</h3>
-            <p>操控皮卡丘答題攻擊 BOSS！初級 -10、中級 -18、高級 -28 HP；連續答對 3 題放出<strong>十萬伏特</strong>！</p>
+            <p>操控<strong>比卡超</strong>連戰 <strong>3 關</strong>！每關 BOSS 隨機生成、愈打愈難；答題攻擊，連續答對放出<strong>十萬伏特</strong>！</p>
           </div>
           <button type="button" class="btn btn-boss" id="startBossBattle">挑戰 BOSS</button>
         </div>
@@ -145,7 +148,7 @@
       <div id="tierSections"></div>
 
       <div class="daily-challenge">
-        <img src="assets/img/hero-banner.png" alt="" class="daily-bg">
+        <img src="assets/img/daily-challenge-ai.png" alt="" class="daily-bg">
         <div class="daily-content">
           <h3>🎯 今日挑戰</h3>
           <p id="dailyChallengeDesc">請先揀年級，就會出對應年級嘅 10 條隨機題目。</p>
@@ -205,7 +208,9 @@
 
     <section class="view" id="view-quiz">
       <div class="quiz-intro" id="quizIntro">
-        <img src="assets/img/bg-pattern.png" alt="" class="quiz-hero-img">
+        <div class="quiz-hero-wrap">
+          <img src="assets/img/quiz-hero-ai.png" alt="" class="quiz-hero-img">
+        </div>
         <h2>📝 模擬小測</h2>
         <p id="quizIntroDesc"><strong>20 條選擇題</strong>。請先揀年級，就只會出該年級嘅題目。</p>
         <div class="activity-grade-picker" id="quizGradePicker"></div>
@@ -231,7 +236,13 @@
     </section>
 
     <section class="view" id="view-rewards">
-      <h2>🎴 抽卡</h2>
+      <div class="view-hero-strip view-hero-strip--rewards">
+        <img src="assets/img/rewards-hero-ai.png" alt="" class="view-hero-strip-img">
+        <div class="view-hero-strip-text">
+          <h2>🎴 抽卡</h2>
+          <p>答題賺積分，收集百款卡片！</p>
+        </div>
+      </div>
       <div class="rewards-hero">
         <div class="level-card" id="levelCard"></div>
         <div class="coins-card points-card">
@@ -256,13 +267,22 @@
     </section>
 
     <section class="view" id="view-tips">
-      <h2>💡 溫習秘笈</h2>
-      <p class="tips-intro">舅父與晞晞、雋雋話你知：記住呢啲技巧就可以搶分！</p>
+      <div class="view-hero-strip view-hero-strip--tips">
+        <div class="view-hero-strip-text">
+          <h2>💡 溫習秘笈</h2>
+          <p>舅父與晞晞、雋雋話你知：記住呢啲技巧就可以搶分！</p>
+        </div>
+      </div>
       <div class="tips-grid" id="tipsGrid"></div>
     </section>
 
     <section class="view" id="view-progress">
-      <h2>📊 學習記錄</h2>
+      <div class="view-hero-strip view-hero-strip--progress">
+        <div class="view-hero-strip-text">
+          <h2>📊 學習記錄</h2>
+          <p>追蹤進度，睇清楚邊啲課題要加強</p>
+        </div>
+      </div>
       <div class="parent-wrong-panel hidden" id="parentWrongPanel"></div>
       <div class="progress-summary" id="progressSummary"></div>
       <h3>📅 每日學習記錄</h3>
@@ -353,11 +373,11 @@
   <script src="js/cloud-sync.js?v=31"></script>
   <script src="js/scoring.js?v=24"></script>
   <script src="js/topics-config.js?v=26"></script>
-  <script src="js/question-visuals.js?v=4"></script>
-  <script src="js/p34-questions.js?v=28"></script>
-  <script src="js/p12-questions.js?v=31"></script>
-  <script src="js/p56-questions.js?v=25"></script>
-  <script src="js/exam-questions.js?v=4"></script>
+  <script src="js/question-visuals.js?v=5"></script>
+  <script src="js/p34-questions.js?v=29"></script>
+  <script src="js/p12-questions.js?v=32"></script>
+  <script src="js/p56-questions.js?v=26"></script>
+  <script src="js/exam-questions.js?v=5"></script>
   <script src="js/question-engine.js?v=21"></script>
   <script src="js/question-pool.js?v=22"></script>
   <script src="js/questions.js?v=22"></script>
@@ -367,7 +387,7 @@
   <script src="js/marvel-deck.js?v=4"></script>
   <script src="js/gacha-animation.js?v=32"></script>
   <script src="js/gacha-pools.js?v=26"></script>
-  <script src="js/boss-battle.js?v=1"></script>
-  <script src="js/app.js?v=49"></script>
+  <script src="js/boss-battle.js?v=2"></script>
+  <script src="js/app.js?v=50"></script>
 </body>
 </html>

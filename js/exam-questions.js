@@ -536,7 +536,7 @@ const ExamQuestions = {
     return this.base('exam-perimeter',
       QV.withVisual(
         `兩個相同的梯形（上底 ${top} cm、下底 ${bottom} cm、高 ${height} cm）拼成一個長方形，長方形周界是多少 cm？`,
-        QV.trapezoid(top, bottom, height)
+        QV.trapezoid(top, bottom, height, 'cm', { hideLabels: true })
       ),
       { type: 'decimal', value: perimeter },
       String(perimeter),
@@ -552,8 +552,12 @@ const ExamQuestions = {
     const h = 28;
     const thick = 15;
     const area = w * thick + (h - thick) * thick;
+    const QV = QuestionVisuals;
     return this.base('exam-perimeter',
-      `一個 L 形圖形，總闊 ${w} cm、總高 ${h} cm，厚度 ${thick} cm，面積是多少 cm²？`,
+      QV.withVisual(
+        `一個 L 形圖形，總闊 ${w} cm、總高 ${h} cm，厚度 ${thick} cm，面積是多少 cm²？`,
+        QV.lShape(w, h, thick)
+      ),
       { type: 'decimal', value: area },
       String(area),
       '提示：分割成兩個長方形',
@@ -567,8 +571,12 @@ const ExamQuestions = {
     const side = 16;
     const overlapSide = 8;
     const perim = 2 * (side + side + (side - overlapSide) + (side - overlapSide));
+    const QV = QuestionVisuals;
     return this.base('exam-perimeter',
-      `兩個相同的正方形（邊長 ${side} cm）重疊，重疊部分面積 64 cm²。整個圖形周界是多少 cm？`,
+      QV.withVisual(
+        `兩個相同的正方形（邊長 ${side} cm）重疊，重疊部分面積 64 cm²。整個圖形周界是多少 cm？`,
+        QV.overlapSquares(side, overlapSide)
+      ),
       { type: 'decimal', value: perim },
       String(perim),
       '提示：重疊部分係正方形，邊長 = √64 = 8 cm',
@@ -584,8 +592,12 @@ const ExamQuestions = {
     const old = l * w;
     const newA = (l - 1) * (w - 1);
     const decrease = old - newA;
+    const QV = QuestionVisuals;
     return this.base('exam-measure',
-      `一個長 ${l} m、闊 ${w} m 的長方形，每邊減少 1 m，面積減少多少 m²？`,
+      QV.withVisual(
+        `一個長 ${l} m、闊 ${w} m 的長方形，每邊減少 1 m，面積減少多少 m²？`,
+        QV.rectangle(l, w, 'm', { hideLength: true, hideWidth: true })
+      ),
       { type: 'decimal', value: decrease },
       String(decrease),
       '提示：分別計算新舊面積再相減',
@@ -601,8 +613,12 @@ const ExamQuestions = {
     const laps = MathUtils.randomChoice([5, 8]);
     const meters = 2 * (l + w) * laps;
     const km = MathUtils.roundTo(meters / 1000, 2);
+    const QV = QuestionVisuals;
     return this.base('exam-measure',
-      `長 ${l} m、闊 ${w} m 的長方形花園，跑了 ${laps} 圈，共跑了多少公里？`,
+      QV.withVisual(
+        `長 ${l} m、闊 ${w} m 的長方形花園，跑了 ${laps} 圈，共跑了多少公里？`,
+        QV.rectangle(l, w, 'm', { hideLength: true, hideWidth: true })
+      ),
       { type: 'decimal', value: km },
       String(km),
       '提示：先計周界，再乘圈數，最後除以 1000',
@@ -637,8 +653,12 @@ const ExamQuestions = {
     const cutH = 4;
     const area = total - cutW * cutH;
     const cost = area * 75;
+    const QV = QuestionVisuals;
     return this.base('exam-measure',
-      `一個 10 m × 10 m 的正方形，中間挖去 8 m × 4 m 的長方形。鋪假草每平方米 75 元，共需多少元？`,
+      QV.withVisual(
+        `一個 10 m × 10 m 的正方形，中間挖去 8 m × 4 m 的長方形。鋪假草每平方米 75 元，共需多少元？`,
+        QV.squareCutout(10, cutW, cutH, 'm')
+      ),
       { type: 'decimal', value: cost },
       String(cost),
       '提示：用大正方形面積減去挖去的部分',
