@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=63">
+  <link rel="stylesheet" href="css/style.css?v=64">
 </head>
 <body>
   <header class="header">
@@ -360,6 +360,18 @@
     </div>
   </div>
 
+  <div class="modal hidden" id="bossExitModal" role="dialog" aria-modal="true" aria-labelledby="bossExitTitle">
+    <div class="modal-content boss-exit-modal">
+      <div class="modal-icon">⚡</div>
+      <h3 id="bossExitTitle">退出 BOSS 關卡？</h3>
+      <p>你而家喺 BOSS 戰鬥中，離開後進度<strong>唔會儲存</strong>。確定要退出嗎？</p>
+      <div class="boss-exit-actions">
+        <button type="button" class="btn btn-secondary" id="bossExitCancel">繼續戰鬥</button>
+        <button type="button" class="btn btn-boss" id="bossExitConfirm">確定退出</button>
+      </div>
+    </div>
+  </div>
+
   <footer class="footer">
     <img src="assets/img/art/logo-ai.png" alt="" class="footer-logo">
     <p>舅父與晞晞、雋雋補習網 · 加油！🌟</p>
@@ -389,6 +401,6 @@
   <script src="js/gacha-animation.js?v=32"></script>
   <script src="js/gacha-pools.js?v=27"></script>
   <script src="js/boss-battle.js?v=4"></script>
-  <script src="js/app.js?v=52"></script>
+  <script src="js/app.js?v=53"></script>
 </body>
 </html>

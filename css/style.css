@@ -2695,9 +2695,24 @@ html[data-theme="dark"] .teach-hint {
 }
 
 .modal-content p {
-  color: var(--text-muted);
-  margin-bottom: 1.25rem;
-  line-height: 1.7;
+  margin: 0.5rem 0 1.25rem;
+  line-height: 1.55;
+}
+
+.boss-exit-modal p {
+  color: var(--text-muted, #64748b);
+  font-size: 0.95rem;
+}
+
+.boss-exit-actions {
+  display: flex;
+  gap: 0.65rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.boss-exit-actions .btn {
+  min-width: 7.5rem;
 }
 
 #cardViewerModal {

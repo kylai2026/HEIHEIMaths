@@ -51,8 +51,9 @@ const App = {
     if (typeof AudioManager !== 'undefined') AudioManager.playSfx('click');
   },
 
-  setSelectedGrade(grade) {
+  async setSelectedGrade(grade) {
     if (!GRADE_ORDER.includes(grade)) return;
+    if (!(await this.leaveBossIfNeeded())) return;
     UserSettings.save({ grade });
     this.state.selectedGrade = grade;
     document.getElementById('gradeModal')?.classList.add('hidden');
@@ -230,6 +231,7 @@ const App = {
     this.bindAuthButtons();
     this.bindGradeDelegation();
     this.bindModal();
+    this.bindBossExitModal();
     this.bindCardZoomDelegation();
 
     const syncResult = await CloudSync.init();
@@ -622,16 +624,53 @@ const App = {
     document.querySelectorAll('.nav-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         AudioManager.playSfx('click');
-        this.switchView(tab.dataset.view);
+        void this.switchView(tab.dataset.view);
       });
     });
   },
 
-  switchView(view) {
+  bindBossExitModal() {
+    if (this._bossExitModalBound) return;
+    this._bossExitModalBound = true;
+    const modal = document.getElementById('bossExitModal');
+    const cancel = () => {
+      modal?.classList.add('hidden');
+      const resolve = this._confirmBossExitResolve;
+      this._confirmBossExitResolve = null;
+      resolve?.(false);
+    };
+    const confirm = () => {
+      modal?.classList.add('hidden');
+      const resolve = this._confirmBossExitResolve;
+      this._confirmBossExitResolve = null;
+      resolve?.(true);
+    };
+    document.getElementById('bossExitCancel')?.addEventListener('click', cancel);
+    document.getElementById('bossExitConfirm')?.addEventListener('click', confirm);
+    modal?.addEventListener('click', (e) => {
+      if (e.target === modal) cancel();
+    });
+  },
+
+  confirmBossExit() {
+    if (!this.state.bossMode) return Promise.resolve(true);
+    return new Promise(resolve => {
+      this._confirmBossExitResolve = resolve;
+      document.getElementById('bossExitModal')?.classList.remove('hidden');
+    });
+  },
+
+  async leaveBossIfNeeded() {
+    if (!this.state.bossMode) return true;
+    if (!(await this.confirmBossExit())) return false;
+    this.cleanupBossBattle();
+    return true;
+  },
+
+  async switchView(view) {
     if (typeof AudioManager !== 'undefined') AudioManager.stopSpeaking();
     if (this.state.bossMode && view !== 'practice') {
-      if (!confirm('確定退出 BOSS 關卡？而家嘅進度唔會儲存。')) return;
-      this.cleanupBossBattle();
+      if (!(await this.leaveBossIfNeeded())) return;
     }
     this.state.currentView = view;
     document.querySelectorAll('.nav-tab').forEach(t => {
@@ -652,22 +691,23 @@ const App = {
     BossBattle.initEntryArt();
     document.getElementById('startBossBattle')?.addEventListener('click', () => {
       AudioManager.playSfx('click');
-      this.startBossBattle();
+      void this.startBossBattle();
     });
     document.getElementById('bossBattlePanel')?.addEventListener('click', (e) => {
       if (e.target.closest('#bossQuitBtn')) {
         e.preventDefault();
-        this.quitBossBattle();
+        void this.quitBossBattle();
       }
     });
   },
 
-  startBossBattle() {
+  async startBossBattle() {
     const grade = this.getSelectedGrade();
     if (!grade) {
       this.showGradeModalIfNeeded();
       return;
     }
+    if (!(await this.leaveBossIfNeeded())) return;
 
     BossBattle.reset();
     BossBattle.showPanel(true);
@@ -733,12 +773,12 @@ const App = {
     document.getElementById('solutionBox')?.classList.add('hidden');
   },
 
-  quitBossBattle() {
+  async quitBossBattle() {
     if (!this.state.bossMode) return;
-    if (!confirm('確定退出 BOSS 關卡？而家嘅進度唔會儲存。')) return;
+    if (!(await this.confirmBossExit())) return;
     AudioManager.playSfx('click');
     this.cleanupBossBattle();
-    this.switchView('home');
+    await this.switchView('home');
   },
 
   showBossEndScreen(won) {
@@ -807,7 +847,9 @@ const App = {
       document.getElementById('solutionBox')?.classList.remove('hidden');
       this.showPracticeQuestion();
     });
-    document.getElementById('bossQuitStageBtn')?.addEventListener('click', () => this.quitBossBattle());
+    document.getElementById('bossQuitStageBtn')?.addEventListener('click', () => {
+      void this.quitBossBattle();
+    });
   },
 
   finishBossAnswerFlow(correct, q, rewardMsg) {
@@ -856,7 +898,9 @@ const App = {
     `).join('');
 
     document.querySelectorAll('.random-tier-btn').forEach(btn => {
-      btn.addEventListener('click', () => this.startRandomPractice(btn.dataset.tier));
+      btn.addEventListener('click', () => {
+        void this.startRandomPractice(btn.dataset.tier);
+      });
     });
     this.renderCorrectBank();
   },
@@ -916,11 +960,12 @@ const App = {
     const bank = data.correctBank || {};
     const questions = [...checks].map(c => bank[c.dataset.key]).filter(Boolean);
     if (!questions.length) return;
-    this.startRedoPractice(questions);
+    void this.startRedoPractice(questions);
   },
 
-  startRedoPractice(questions) {
+  async startRedoPractice(questions) {
     if (!questions.length) return;
+    if (!(await this.leaveBossIfNeeded())) return;
     AudioManager.playSfx('click');
     this.state.dailyMode = false;
     this.state.randomMode = false;
@@ -980,13 +1025,13 @@ const App = {
     container.querySelectorAll('.section-random-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const sec = CURRICULUM_SECTIONS.find(s => s.id === btn.dataset.section);
-        this.startRandomPractice(btn.dataset.tier, sec.topics);
+        void this.startRandomPractice(btn.dataset.tier, sec.topics);
       });
     });
 
     container.querySelectorAll('.topic-card').forEach(card => {
       card.addEventListener('click', () => {
-        this.startPractice(card.dataset.topic, this.state.practiceTier || 'medium');
+        void this.startPractice(card.dataset.topic, this.state.practiceTier || 'medium');
       });
     });
   },
@@ -1026,14 +1071,18 @@ const App = {
     });
     sidebar.innerHTML = html;
     sidebar.querySelectorAll('.sidebar-item').forEach(btn => {
-      btn.addEventListener('click', () => this.startPractice(btn.dataset.topic, this.state.practiceTier));
+      btn.addEventListener('click', () => {
+        void this.startPractice(btn.dataset.topic, this.state.practiceTier);
+      });
     });
   },
 
   bindTierSelector() {
     document.getElementById('tierSelector').querySelectorAll('.tier-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        const tier = btn.dataset.tier;
+        void (async () => {
+          if (!(await this.leaveBossIfNeeded())) return;
+          const tier = btn.dataset.tier;
         this.state.practiceTier = tier;
         document.querySelectorAll('.tier-btn').forEach(b => b.classList.toggle('active', b.dataset.tier === tier));
         this.updateTierProgressHint();
@@ -1048,6 +1097,7 @@ const App = {
           this.state.practiceAnswered = false;
           this.showPracticeQuestion();
         }
+        })();
       });
     });
   },
@@ -1062,7 +1112,8 @@ const App = {
     hint.className = 'tier-progress-hint';
   },
 
-  startRandomPractice(tier, topicIds = null) {
+  async startRandomPractice(tier, topicIds = null) {
+    if (!(await this.leaveBossIfNeeded())) return;
     this.state.dailyMode = false;
     this.state.randomMode = true;
     this.state.noPointsMode = false;
@@ -1088,7 +1139,8 @@ const App = {
     this.showPracticeQuestion();
   },
 
-  startPractice(topicId, tier = 'medium') {
+  async startPractice(topicId, tier = 'medium') {
+    if (!(await this.leaveBossIfNeeded())) return;
     this.state.dailyMode = false;
     this.state.randomMode = false;
     this.state.noPointsMode = false;
@@ -1413,7 +1465,7 @@ const App = {
         alert('請至少揀一題重做');
         return;
       }
-      this.startRedoPractice(selected);
+      void this.startRedoPractice(selected);
     });
 
     this.renderHUD();
@@ -1452,9 +1504,11 @@ const App = {
 
   bindDaily() {
     document.getElementById('startDaily').addEventListener('click', () => {
-      const grade = this.getDailyGrade();
-      if (!grade) return;
-      AudioManager.playSfx('click');
+      void (async () => {
+        const grade = this.getDailyGrade();
+        if (!grade) return;
+        if (!(await this.leaveBossIfNeeded())) return;
+        AudioManager.playSfx('click');
       this.state.dailyMode = true;
       this.state.randomMode = true;
       this.state.noPointsMode = false;
@@ -1471,11 +1525,17 @@ const App = {
 
       this.switchView('practice');
       this.showPracticeQuestion();
+      })();
     });
   },
 
   bindQuiz() {
-    document.getElementById('startQuiz').addEventListener('click', () => this.startQuiz());
+    document.getElementById('startQuiz').addEventListener('click', () => {
+      void (async () => {
+        if (!(await this.leaveBossIfNeeded())) return;
+        this.startQuiz();
+      })();
+    });
   },
 
   startQuiz() {
@@ -1626,9 +1686,9 @@ const App = {
       const weakest = Object.entries(this.state.quizWeak).sort((a, b) => b[1] - a[1])[0];
       if (weakest) {
         const topic = TOPICS.find(t => t.name === weakest[0]);
-        if (topic) this.startPractice(topic.id, 'medium');
+        if (topic) void this.startPractice(topic.id, 'medium');
       } else {
-        this.switchView('practice');
+        void this.switchView('practice');
       }
     });
   },
