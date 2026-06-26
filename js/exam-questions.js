@@ -373,10 +373,12 @@ const ExamQuestions = {
 
   moneyUnit() {
     const boxes = 4;
-    const cost = MathUtils.randomChoice([280, 316, 400]);
     const buy = 6;
+    const pay = 500;
+    const validCosts = [160, 200, 240, 280, 316].filter(c => pay >= (c / boxes) * buy);
+    const cost = MathUtils.randomChoice(validCosts);
     const unit = cost / boxes;
-    const change = 500 - unit * buy;
+    const change = pay - unit * buy;
     return this.base('exam-word',
       `${boxes} 個膠箱售 ${cost} 元，婆婆用 500 元買 ${buy} 個，應找回多少元？`,
       { type: 'decimal', value: change },

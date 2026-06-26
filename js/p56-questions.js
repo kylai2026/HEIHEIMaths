@@ -400,7 +400,7 @@ const P56Questions = {
       },
       () => {
         const a = MathUtils.randomInt(3, 9);
-        const b = MathUtils.randomInt(1, 8);
+        const b = MathUtils.randomInt(1, Math.min(8, 3 * a - 1));
         const ans = 3 * a - b;
         return { q: `若 a = ${a}，求 3a - ${b} 的值。`, ans, sol: `3 × ${a} - ${b} = ${3 * a} - ${b} = ${ans}` };
       },
@@ -813,11 +813,12 @@ const P56Questions = {
         return { q: `計算：${a} + ${b} × ${c} = ?`, ans, sol: `${b} × ${c} = ${MathUtils.roundTo(b * c, 2)}，${a} + ${MathUtils.roundTo(b * c, 2)} = ${ans}` };
       },
       () => {
-        const a = MathUtils.roundTo(MathUtils.randomInt(30, 80) / 10, 1);
         const b = MathUtils.randomInt(2, 6);
         const c = MathUtils.roundTo(MathUtils.randomInt(5, 25) / 10, 1);
-        const ans = MathUtils.roundTo(a - b * c, 2);
-        return { q: `計算：${a} - ${b} × ${c} = ?`, ans, sol: `先乘後減` };
+        const product = MathUtils.roundTo(b * c, 2);
+        const a = MathUtils.roundTo(MathUtils.randomInt(Math.max(Math.ceil(product * 10), 30), 80) / 10, 1);
+        const ans = MathUtils.roundTo(a - product, 2);
+        return { q: `計算：${a} - ${b} × ${c} = ?`, ans, sol: `先乘後減：${b} × ${c} = ${product}，${a} - ${product} = ${ans}` };
       },
       () => {
         const a = MathUtils.roundTo(MathUtils.randomInt(20, 50) / 10, 1);

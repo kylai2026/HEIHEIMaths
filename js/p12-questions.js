@@ -897,9 +897,9 @@ const P12Questions = {
       { q: '半個直角是多少度？', a: '45', ans: 45, visual: () => QV.angleDiagram(45, { hideLabel: true }) },
       { q: '兩個直角合起來是多少度？', a: '180', ans: 180, visual: () => QV.angleDiagram(0, { mode: 'straight' }) },
       { q: '直角比 89° 大還是細？（填較大的度數）', a: '90', ans: 90, visual: () => QV.angleDiagram(90, { rightAngle: true, hideLabel: true }) },
-      { q: '一個正方形的每個角是什麼角？', a: '直角', ans: null, visual: () => QV.square(6) },
-      { q: '長方形的四個角各是什麼角？', a: '直角', ans: null, visual: () => QV.rectangle(8, 5) },
-      { q: '門框的角通常是什麼角？', a: '直角', ans: null, visual: () => QV.angleDiagram(90, true) }
+      { q: '一個正方形的每個角是什麼角？', a: '直角', ans: null, visual: () => QV.square(6, 'cm', { hideSide: true }) },
+      { q: '長方形的四個角各是什麼角？', a: '直角', ans: null, visual: () => QV.rectangle(8, 5, 'cm', { hideLength: true, hideWidth: true }) },
+      { q: '門框的角通常是什麼角？', a: '直角', ans: null, visual: () => QV.angleDiagram(90, { rightAngle: true, hideLabel: true }) }
     ];
     const v = MathUtils.randomChoice(items);
     const qText = QV.withVisual(v.q, v.visual());
@@ -934,7 +934,7 @@ const P12Questions = {
     const v = MathUtils.randomChoice(items);
     const options = MathUtils.shuffle(['銳角', '直角', '鈍角', '平角']);
     return this._mcq('p2-angles',
-      QV.withVisual(v.q, QV.angleDiagram(v.deg)),
+      QV.withVisual(v.q, QV.angleDiagram(v.deg, { hideLabel: true })),
       options, v.a,
       '提示：直角是 90°，細過 90° 係銳角，大過 90° 係鈍角',
       `<h4>📖 解法</h4><p>答案是 <strong>${v.a}</strong></p>`);

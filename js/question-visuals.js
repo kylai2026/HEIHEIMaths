@@ -96,7 +96,7 @@ const QuestionVisuals = {
     `);
   },
 
-  parallelogram(base, height, unit = 'cm') {
+  parallelogram(base, height, unit = 'cm', opts = {}) {
     const b = Number(base);
     const h = Number(height);
     const scale = 110 / Math.max(b, h);
@@ -106,17 +106,18 @@ const QuestionVisuals = {
     const x0 = 40;
     const y0 = 120;
     const pts = `${x0 + skew},${y0 - hh} ${x0 + bw + skew},${y0 - hh} ${x0 + bw},${y0} ${x0},${y0}`;
+    const hideLabels = opts.hideLabels;
     return this.scene(`
       <svg class="geo-svg" viewBox="0 0 240 145" role="img" aria-label="平行四邊形圖">
         <polygon points="${pts}" class="geo-poly"/>
         <line x1="${x0 + bw + skew}" y1="${y0 - hh}" x2="${x0 + bw + skew}" y2="${y0}" class="geo-height-line"/>
-        <text x="${x0 + bw / 2}" y="${y0 + 16}" text-anchor="middle" class="geo-label">底 ${b} ${unit}</text>
-        <text x="${x0 + bw + skew + 12}" y="${y0 - hh / 2}" class="geo-label">高 ${h} ${unit}</text>
+        ${!hideLabels ? `<text x="${x0 + bw / 2}" y="${y0 + 16}" text-anchor="middle" class="geo-label">底 ${b} ${unit}</text>
+        <text x="${x0 + bw + skew + 12}" y="${y0 - hh / 2}" class="geo-label">高 ${h} ${unit}</text>` : ''}
       </svg>
     `);
   },
 
-  trapezoid(top, bottom, height, unit = 'cm') {
+  trapezoid(top, bottom, height, unit = 'cm', opts = {}) {
     const t = Number(top);
     const b = Number(bottom);
     const h = Number(height);
@@ -127,23 +128,25 @@ const QuestionVisuals = {
     const x0 = (220 - bw) / 2;
     const y0 = 120;
     const pts = `${x0 + (bw - tw) / 2},${y0 - hh} ${x0 + (bw + tw) / 2},${y0 - hh} ${x0 + bw},${y0} ${x0},${y0}`;
+    const hideLabels = opts.hideLabels;
     return this.scene(`
       <svg class="geo-svg" viewBox="0 0 240 145" role="img" aria-label="梯形圖">
         <polygon points="${pts}" class="geo-poly"/>
         <line x1="${x0 + bw / 2}" y1="${y0 - hh}" x2="${x0 + bw / 2}" y2="${y0}" class="geo-height-line"/>
-        <text x="${x0 + bw / 2}" y="${y0 - hh - 6}" text-anchor="middle" class="geo-label">上底 ${t} ${unit}</text>
+        ${!hideLabels ? `<text x="${x0 + bw / 2}" y="${y0 - hh - 6}" text-anchor="middle" class="geo-label">上底 ${t} ${unit}</text>
         <text x="${x0 + bw / 2}" y="${y0 + 16}" text-anchor="middle" class="geo-label">下底 ${b} ${unit}</text>
-        <text x="${x0 + bw + 14}" y="${y0 - hh / 2}" class="geo-label">高 ${h} ${unit}</text>
+        <text x="${x0 + bw + 14}" y="${y0 - hh / 2}" class="geo-label">高 ${h} ${unit}</text>` : ''}
       </svg>
     `);
   },
 
-  quadShape(name) {
+  quadShape(name, opts = {}) {
+    const hide = { hideLabels: true, hideLength: true, hideWidth: true, hideSide: true, ...opts };
     const map = {
-      '梯形': () => this.trapezoid(6, 10, 5),
-      '平行四邊形': () => this.parallelogram(10, 6),
-      '長方形': () => this.rectangle(10, 6),
-      '正方形': () => this.square(8),
+      '梯形': () => this.trapezoid(6, 10, 5, 'cm', hide),
+      '平行四邊形': () => this.parallelogram(10, 6, 'cm', hide),
+      '長方形': () => this.rectangle(10, 6, 'cm', hide),
+      '正方形': () => this.square(8, 'cm', hide),
       '菱形': () => this.scene(`
         <svg class="geo-svg" viewBox="0 0 200 150" role="img" aria-label="菱形圖">
           <polygon points="100,20 170,75 100,130 30,75" class="geo-poly"/>

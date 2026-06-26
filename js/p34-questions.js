@@ -361,8 +361,9 @@ const P34Questions = {
   addSubChain() {
     const a = MathUtils.randomInt(20, 80);
     const b = MathUtils.randomInt(10, 40);
-    const c = MathUtils.randomInt(5, 30);
-    const ans = a + b - c;
+    const sum = a + b;
+    const c = MathUtils.randomInt(1, Math.min(30, sum - 1));
+    const ans = sum - c;
     return this.base('p3-mixed-addsub',
       `計算：${a} + ${b} - ${c} = ?`,
       { type: 'decimal', value: ans }, String(ans),
@@ -374,8 +375,9 @@ const P34Questions = {
   addSubBracket() {
     const a = MathUtils.randomInt(10, 50);
     const b = MathUtils.randomInt(10, 50);
-    const c = MathUtils.randomInt(5, 40);
-    const ans = (a + b) - c;
+    const sum = a + b;
+    const c = MathUtils.randomInt(1, Math.min(40, sum - 1));
+    const ans = sum - c;
     return this.base('p3-mixed-addsub',
       `計算：(${a} + ${b}) - ${c} = ?`,
       { type: 'decimal', value: ans }, String(ans),
@@ -732,8 +734,8 @@ const P34Questions = {
     const shapes = ['長方形', '平行四邊形'];
     const shape = MathUtils.randomChoice(shapes);
     const visual = shape === '長方形'
-      ? QuestionVisuals.rectangle(l, w)
-      : QuestionVisuals.parallelogram(l, w);
+      ? QuestionVisuals.rectangle(l, w, 'cm', { hideLength: true, hideWidth: true })
+      : QuestionVisuals.parallelogram(l, w, 'cm', { hideLabels: true });
     return this.base('p3-quad',
       QuestionVisuals.withVisual(`一個${shape}，長 ${l} cm，闊 ${w} cm，周界是多少 cm？`, visual),
       { type: 'decimal', value: ans }, String(ans),
@@ -1111,7 +1113,7 @@ const P34Questions = {
     return this.base('p4-area',
       QuestionVisuals.withVisual(
         `一個長方形，長 ${l} cm，闊 ${w} cm，面積是多少 cm²？`,
-        QuestionVisuals.rectangle(l, w)
+        QuestionVisuals.rectangle(l, w, 'cm', { hideLength: true, hideWidth: true })
       ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：面積 = 長 × 闊',
@@ -1125,7 +1127,7 @@ const P34Questions = {
     return this.base('p4-area',
       QuestionVisuals.withVisual(
         `一個正方形邊長 ${side} cm，面積是多少 cm²？`,
-        QuestionVisuals.square(side)
+        QuestionVisuals.square(side, 'cm', { hideSide: true })
       ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：正方形面積 = 邊長 × 邊長',
@@ -1141,7 +1143,7 @@ const P34Questions = {
     return this.base('p4-area',
       QuestionVisuals.withVisual(
         `一塊長 ${l} m、闊 ${w} m 的地毯，每平方米 ${price} 元，鋪滿要多少元？`,
-        QuestionVisuals.rectangle(l, w, 'm')
+        QuestionVisuals.rectangle(l, w, 'm', { hideLength: true, hideWidth: true })
       ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：先算面積，再乘單價',
@@ -1325,7 +1327,7 @@ const P34Questions = {
     return this.base('p4-word-logic',
       QuestionVisuals.withVisual(
         `一條繩子圍成一個長 ${l} cm、闊 ${w} cm 的長方形，繩子長多少 cm？`,
-        QuestionVisuals.rectangle(l, w)
+        QuestionVisuals.rectangle(l, w, 'cm', { hideLength: true, hideWidth: true })
       ),
       { type: 'decimal', value: perim }, String(perim),
       '提示：繩子長 = 周界',
