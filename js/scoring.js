@@ -180,6 +180,29 @@ const Scoring = {
     return { bonusXp, pointsEarned, passed: percentage >= PASS_THRESHOLD, newBadges };
   },
 
+  awardTermExam(data, percentage) {
+    const PASS_THRESHOLD = 60;
+    let bonusXp = 0;
+    let pointsEarned = 0;
+
+    if (percentage >= PASS_THRESHOLD) bonusXp += 40;
+    if (percentage >= 80) bonusXp += 60;
+    if (percentage >= 100) {
+      pointsEarned = 50;
+    } else if (percentage >= 80) {
+      pointsEarned = 35;
+    } else if (percentage >= PASS_THRESHOLD) {
+      pointsEarned = 20;
+    }
+
+    if (pointsEarned > 0) {
+      data.points = (data.points || 0) + pointsEarned;
+    }
+    data.xp = (data.xp || 0) + bonusXp;
+    const newBadges = RewardSystem.checkBadges(data);
+    return { bonusXp, pointsEarned, passed: percentage >= PASS_THRESHOLD, newBadges };
+  },
+
   awardDaily(data) {
     if (data.lastDailyDate === new Date().toDateString()) return null;
     data.lastDailyDate = new Date().toDateString();

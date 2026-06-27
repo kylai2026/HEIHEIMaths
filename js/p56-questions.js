@@ -215,7 +215,7 @@ const P56Questions = {
     return this.base('p5-quad-area',
       QuestionVisuals.withVisual(
         `一個平行四邊形，底 ${base} cm，高 ${height} cm，面積是多少 cm²？`,
-        QuestionVisuals.parallelogram(base, height, 'cm', { hideLabels: true })
+        QuestionVisuals.parallelogram(base, height, 'cm')
       ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：平行四邊形面積 = 底 × 高',
@@ -232,7 +232,7 @@ const P56Questions = {
     return this.base('p5-quad-area',
       QuestionVisuals.withVisual(
         `一個梯形，上底 ${top} cm，下底 ${bottom} cm，高 ${height} cm，面積是多少 cm²？`,
-        QuestionVisuals.trapezoid(top, bottom, height, 'cm', { hideLabels: true })
+        QuestionVisuals.trapezoid(top, bottom, height, 'cm')
       ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：梯形面積 = (上底 + 下底) × 高 ÷ 2',
@@ -249,7 +249,7 @@ const P56Questions = {
       return this.base('p5-quad-area',
         QuestionVisuals.withVisual(
           `一塊平行四邊形花圃，底 ${l} m，高 ${w} m，面積是多少 m²？`,
-          QuestionVisuals.parallelogram(l, w, 'm', { hideLabels: true })
+          QuestionVisuals.parallelogram(l, w, 'm')
         ),
         { type: 'decimal', value: ans }, String(ans),
         '提示：面積 = 底 × 高',
@@ -264,7 +264,7 @@ const P56Questions = {
     return this.base('p5-quad-area',
       QuestionVisuals.withVisual(
         `一個梯形水池，上底 ${top} m，下底 ${bottom} m，深 ${height} m（當高），面積是多少 m²？`,
-        QuestionVisuals.trapezoid(top, bottom, height, 'm', { hideLabels: true })
+        QuestionVisuals.trapezoid(top, bottom, height, 'm')
       ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：梯形面積 = (上底 + 下底) × 高 ÷ 2',
@@ -713,7 +713,7 @@ const P56Questions = {
     return this.base('p5-volume',
       QuestionVisuals.withVisual(
         `一個長方體，長 ${l} cm，闊 ${w} cm，高 ${h} cm，體積是多少 cm³？`,
-        QuestionVisuals.cuboid(l, w, h, 'cm', { hideLabels: true })
+        QuestionVisuals.cuboid(l, w, h, 'cm')
       ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：體積 = 長 × 闊 × 高',
@@ -732,7 +732,7 @@ const P56Questions = {
           q: `一個紙箱長 ${l} cm、闊 ${w} cm、高 ${h} cm，體積是多少 cm³？`,
           ans,
           sol: `${l} × ${w} × ${h} = ${ans}`,
-          visual: () => QuestionVisuals.cuboid(l, w, h, 'cm', { hideLabels: true })
+          visual: () => QuestionVisuals.cuboid(l, w, h, 'cm')
         };
       },
       () => {
@@ -742,19 +742,31 @@ const P56Questions = {
           q: `一個正方體邊長 ${edge} cm，體積是多少 cm³？`,
           ans,
           sol: `${edge} × ${edge} × ${edge} = ${ans}`,
-          visual: () => QuestionVisuals.cuboid(edge, edge, edge, 'cm', { hideLabels: true })
+          visual: () => QuestionVisuals.cuboid(edge, edge, edge, 'cm')
         };
       },
       () => {
-        const vol = MathUtils.randomInt(60, 240);
-        const l = MathUtils.randomChoice([5, 6, 8, 10, 12].filter(x => vol % x === 0));
-        const w = MathUtils.randomChoice([3, 4, 5, 6].filter(x => (vol / l) % x === 0));
-        const h = vol / l / w;
+        let vol = 120;
+        let l = 10;
+        let w = 4;
+        let h = 3;
+        for (let attempt = 0; attempt < 40; attempt++) {
+          vol = MathUtils.randomInt(60, 240);
+          const lenOpts = [5, 6, 8, 10, 12].filter(x => vol % x === 0);
+          l = MathUtils.randomChoice(lenOpts);
+          if (!l) continue;
+          const rem = vol / l;
+          const widOpts = [3, 4, 5, 6].filter(x => rem % x === 0);
+          w = MathUtils.randomChoice(widOpts);
+          if (!w) continue;
+          h = rem / w;
+          if (h > 0 && Number.isInteger(h)) break;
+        }
         return {
           q: `一個長方體體積是 ${vol} cm³，長 ${l} cm，闊 ${w} cm，高是多少 cm？`,
           ans: h,
           sol: `高 = ${vol} ÷ ${l} ÷ ${w} = ${h}`,
-          visual: () => QuestionVisuals.cuboid(l, w, h, 'cm', { hideLabels: true })
+          visual: () => QuestionVisuals.cuboid(l, w, h, 'cm', { hideLabels: false, hideHeight: true })
         };
       }
     ];
@@ -1181,25 +1193,38 @@ const P56Questions = {
 
   // ── 小六：速率 ──
   speedCalc() {
+    const QV = QuestionVisuals;
     const templates = [
       () => {
         const speed = MathUtils.randomInt(40, 80);
         const time = MathUtils.randomInt(2, 5);
         const ans = speed * time;
-        return { q: `汽車以每小時 ${speed} km 的速度行駛 ${time} 小時，行駛了多少 km？`, ans, sol: `距離 = 速度 × 時間 = ${speed} × ${time}` };
+        return {
+          q: QV.withVisual(`汽車以每小時 ${speed} km 的速度行駛 ${time} 小時，行駛了多少 km？`, QV.speedDiagram({ speed, time, distance: ans, ask: 'distance' })),
+          ans,
+          sol: `距離 = 速度 × 時間 = ${speed} × ${time}`
+        };
       },
       () => {
         const time = MathUtils.randomChoice([2, 3, 4, 5]);
         const speed = MathUtils.randomInt(20, 60);
         const dist = speed * time;
-        const ans = speed;
-        return { q: `小明行了 ${dist} km，用了 ${time} 小時，平均速度是多少 km/h？`, ans, sol: `速度 = 距離 ÷ 時間 = ${dist} ÷ ${time}` };
+        return {
+          q: QV.withVisual(`小明行了 ${dist} km，用了 ${time} 小時，平均速度是多少 km/h？`, QV.speedDiagram({ speed, time, distance: dist, ask: 'speed' })),
+          ans: speed,
+          sol: `速度 = 距離 ÷ 時間 = ${dist} ÷ ${time}`
+        };
       },
       () => {
         const speed = MathUtils.randomInt(5, 12);
-        const dist = speed * MathUtils.randomInt(2, 6);
-        const ans = dist / speed;
-        return { q: `步行速度是每小時 ${speed} km，要走 ${dist} km 需多少小時？`, ans, sol: `時間 = 距離 ÷ 速度 = ${dist} ÷ ${speed}` };
+        const time = MathUtils.randomInt(2, 6);
+        const dist = speed * time;
+        const ans = time;
+        return {
+          q: QV.withVisual(`步行速度是每小時 ${speed} km，要走 ${dist} km 需多少小時？`, QV.speedDiagram({ speed, time: ans, distance: dist, ask: 'time' })),
+          ans,
+          sol: `時間 = 距離 ÷ 速度 = ${dist} ÷ ${speed}`
+        };
       }
     ];
     const t = MathUtils.randomChoice(templates)();
@@ -1216,7 +1241,10 @@ const P56Questions = {
     const t2 = MathUtils.randomInt(1, 3);
     const ans = speed * (t1 + t2);
     return this.base('p6-speed',
-      `火車以每小時 ${speed} km 行駛，先開 ${t1} 小時，再開 ${t2} 小時，共行駛多少 km？`,
+      QuestionVisuals.withVisual(
+        `火車以每小時 ${speed} km 行駛，先開 ${t1} 小時，再開 ${t2} 小時，共行駛多少 km？`,
+        QuestionVisuals.speedDiagram({ speed, time: t1 + t2, distance: ans, ask: 'distance' })
+      ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：總距離 = 速度 × 總時間',
       `<h4>📖 解法</h4><p>總時間 = ${t1 + t2} 小時，${speed} × ${t1 + t2} = <strong>${ans}</strong> km</p>`

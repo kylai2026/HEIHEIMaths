@@ -219,8 +219,12 @@ const P34Questions = {
     const B = { x: pad + b * scale, y: vh - pad };
     const C = { x: pad + (b * scale) / 2, y: vh - pad - h * scale };
     const foot = { x: C.x, y: A.y };
-    const baseLabel = opts.hideBase ? '' : this._triangleEdgeLabel(A, B, `底 ${b} ${unit}`, -16);
-    const heightLabel = opts.hideHeight ? '' : `<text x="${C.x + 12}" y="${(C.y + foot.y) / 2}" class="triangle-edge-label" dominant-baseline="middle">高 ${h} ${unit}</text>`;
+    const baseLabel = opts.hideBase
+      ? `<text x="${(A.x + B.x) / 2}" y="${A.y + 16}" class="triangle-edge-label triangle-edge-label--calc" text-anchor="middle">底 ?</text>`
+      : this._triangleEdgeLabel(A, B, `底 ${b} ${unit}`, -16);
+    const heightLabel = opts.hideHeight
+      ? `<text x="${C.x + 14}" y="${(C.y + foot.y) / 2}" class="triangle-edge-label triangle-edge-label--calc" dominant-baseline="middle">高 ?</text>`
+      : `<text x="${C.x + 14}" y="${(C.y + foot.y) / 2}" class="triangle-edge-label" dominant-baseline="middle">高 ${h} ${unit}</text>`;
     return `
       <div class="triangle-scene" aria-hidden="true">
         <svg class="triangle-svg" viewBox="0 0 ${vw} ${vh}" role="img" aria-label="三角形面積圖">
@@ -746,8 +750,8 @@ const P34Questions = {
     const shapes = ['長方形', '平行四邊形'];
     const shape = MathUtils.randomChoice(shapes);
     const visual = shape === '長方形'
-      ? QuestionVisuals.rectangle(l, w, 'cm', { hideLength: true, hideWidth: true })
-      : QuestionVisuals.parallelogram(l, w, 'cm', { hideLabels: true });
+      ? QuestionVisuals.rectangle(l, w, 'cm')
+      : QuestionVisuals.parallelogram(l, w, 'cm');
     return this.base('p3-quad',
       QuestionVisuals.withVisual(`一個${shape}，長 ${l} cm，闊 ${w} cm，周界是多少 cm？`, visual),
       { type: 'decimal', value: ans }, String(ans),
@@ -1125,7 +1129,7 @@ const P34Questions = {
     return this.base('p4-area',
       QuestionVisuals.withVisual(
         `一個長方形，長 ${l} cm，闊 ${w} cm，面積是多少 cm²？`,
-        QuestionVisuals.rectangle(l, w, 'cm', { hideLength: true, hideWidth: true })
+        QuestionVisuals.rectangle(l, w, 'cm')
       ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：面積 = 長 × 闊',
@@ -1139,7 +1143,7 @@ const P34Questions = {
     return this.base('p4-area',
       QuestionVisuals.withVisual(
         `一個正方形邊長 ${side} cm，面積是多少 cm²？`,
-        QuestionVisuals.square(side, 'cm', { hideSide: true })
+        QuestionVisuals.square(side, 'cm')
       ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：正方形面積 = 邊長 × 邊長',
@@ -1155,7 +1159,7 @@ const P34Questions = {
     return this.base('p4-area',
       QuestionVisuals.withVisual(
         `一塊長 ${l} m、闊 ${w} m 的地毯，每平方米 ${price} 元，鋪滿要多少元？`,
-        QuestionVisuals.rectangle(l, w, 'm', { hideLength: true, hideWidth: true })
+        QuestionVisuals.rectangle(l, w, 'm')
       ),
       { type: 'decimal', value: ans }, String(ans),
       '提示：先算面積，再乘單價',
@@ -1182,9 +1186,10 @@ const P34Questions = {
     const bank = this.getDirectionBank();
     const q = MathUtils.randomChoice(bank);
     const QV = QuestionVisuals;
-    let visual = QV.compassRose();
-    if (q.map) visual += QV.directionMap(q.map.center, q.map.places);
-    else if (q.facing) visual += QV.facingPerson(q.facing);
+    let visual = '';
+    if (q.map) visual = QV.directionMap(q.map.center, q.map.places);
+    else if (q.facing) visual = QV.facingPerson(q.facing);
+    else visual = QV.compassRose();
     return {
       topicId: 'p4-direction',
       question: QV.withVisual(q.q, visual),
@@ -1339,7 +1344,7 @@ const P34Questions = {
     return this.base('p4-word-logic',
       QuestionVisuals.withVisual(
         `一條繩子圍成一個長 ${l} cm、闊 ${w} cm 的長方形，繩子長多少 cm？`,
-        QuestionVisuals.rectangle(l, w, 'cm', { hideLength: true, hideWidth: true })
+        QuestionVisuals.rectangle(l, w, 'cm')
       ),
       { type: 'decimal', value: perim }, String(perim),
       '提示：繩子長 = 周界',
@@ -1430,8 +1435,12 @@ const P34Questions = {
   },
 
   toMCQ(q, topicId) {
-    if (q.type === 'mcq') {
-      return { ...q, topicName: getTopicName(topicId || q.topicId), correctIndex: q.correctIndex };
+    const tid = topicId || q.topicId;
+    if (q.type === 'mcq' && q.options) {
+      return { ...q, topicName: getTopicName(tid), correctIndex: q.correctIndex, type: 'mcq' };
+    }
+    if (!q.answer || q.answer.type === 'text') {
+      return { ...q, type: q.type || 'input' };
     }
     const correct = q.answerDisplay;
     const wrongAnswers = new Set();
@@ -1443,7 +1452,7 @@ const P34Questions = {
       if (q.answer.type === 'fraction') {
         const newNum = q.answer.num + offset;
         if (newNum > 0) wrong = MathUtils.fractionToString(newNum, q.answer.den);
-      } else {
+      } else if (q.answer.type === 'decimal' && typeof q.answer.value === 'number') {
         wrong = String(MathUtils.roundTo(q.answer.value + offset, 2));
       }
       if (wrong && wrong !== correct) wrongAnswers.add(wrong);
@@ -1452,8 +1461,7 @@ const P34Questions = {
       wrongAnswers.add(String(MathUtils.randomInt(1, 50)));
     }
     const options = MathUtils.shuffle([correct, ...wrongAnswers]);
-    const tid = topicId || q.topicId;
-    return { ...q, topicName: getTopicName(tid), options, correctIndex: options.indexOf(correct) };
+    return { ...q, topicName: getTopicName(tid), options, correctIndex: options.indexOf(correct), type: 'mcq' };
   }
 };
 

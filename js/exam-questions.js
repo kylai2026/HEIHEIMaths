@@ -514,7 +514,7 @@ const ExamQuestions = {
     return this.base('exam-measure',
       QV.withVisual(
         `一條 ${perimeter} cm 的繩圍成一個長方形，長是闊的 ${ratio} 倍，面積是多少 cm²？`,
-        QV.rectangle(length, width, 'cm', { hideLength: true, hideWidth: true })
+        QV.rectangle(length, width, 'cm', { hideLength: true, hideWidth: true, note: `繩長 ${perimeter} cm · 長是闊的 ${ratio} 倍` })
       ),
       { type: 'decimal', value: area },
       String(area),
@@ -536,7 +536,7 @@ const ExamQuestions = {
     return this.base('exam-perimeter',
       QV.withVisual(
         `兩個相同的梯形（上底 ${top} cm、下底 ${bottom} cm、高 ${height} cm）拼成一個長方形，長方形周界是多少 cm？`,
-        QV.trapezoid(top, bottom, height, 'cm', { hideLabels: true })
+        QV.trapezoid(top, bottom, height, 'cm')
       ),
       { type: 'decimal', value: perimeter },
       String(perimeter),
@@ -575,7 +575,7 @@ const ExamQuestions = {
     return this.base('exam-perimeter',
       QV.withVisual(
         `兩個相同的正方形（邊長 ${side} cm）重疊，重疊部分面積 64 cm²。整個圖形周界是多少 cm？`,
-        QV.overlapSquares(side, overlapSide)
+        QV.overlapSquares(side, overlapSide, 'cm', { overlapArea: 64 })
       ),
       { type: 'decimal', value: perim },
       String(perim),
@@ -596,7 +596,7 @@ const ExamQuestions = {
     return this.base('exam-measure',
       QV.withVisual(
         `一個長 ${l} m、闊 ${w} m 的長方形，每邊減少 1 m，面積減少多少 m²？`,
-        QV.rectangle(l, w, 'm', { hideLength: true, hideWidth: true })
+        QV.rectangle(l, w, 'm')
       ),
       { type: 'decimal', value: decrease },
       String(decrease),
@@ -617,7 +617,7 @@ const ExamQuestions = {
     return this.base('exam-measure',
       QV.withVisual(
         `長 ${l} m、闊 ${w} m 的長方形花園，跑了 ${laps} 圈，共跑了多少公里？`,
-        QV.rectangle(l, w, 'm', { hideLength: true, hideWidth: true })
+        QV.rectangle(l, w, 'm')
       ),
       { type: 'decimal', value: km },
       String(km),
@@ -674,7 +674,7 @@ const ExamQuestions = {
       '四年級': 90, '五年級': 80, '六年級': 110
     };
     const chart = typeof P34Questions !== 'undefined'
-      ? P34Questions._renderBarChart(data, '人', { cellUnit: 10 })
+      ? P34Questions._renderBarChart(data, '人', { cellUnit: 10, showValues: true })
       : '';
     const types = [
       () => {
@@ -712,9 +712,10 @@ const ExamQuestions = {
       const bank = P34Questions.getDirectionBank();
       const q = MathUtils.randomChoice(bank);
       const QV = QuestionVisuals;
-      let visual = QV.compassRose();
-      if (q.map) visual += QV.directionMap(q.map.center, q.map.places);
-      else if (q.facing) visual += QV.facingPerson(q.facing);
+      let visual = '';
+      if (q.map) visual = QV.directionMap(q.map.center, q.map.places);
+      else if (q.facing) visual = QV.facingPerson(q.facing);
+      else visual = QV.compassRose();
       return {
         topicId: 'exam-space',
         question: QV.withVisual(q.q, visual),

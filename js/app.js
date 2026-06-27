@@ -20,6 +20,12 @@ const App = {
     selectedGrade: null,
     dailyGrade: null,
     quizGrade: null,
+    examGrade: null,
+    examMode: false,
+    examPaper: null,
+    examAnswers: {},
+    examEndsAt: null,
+    examTimerId: null,
     bossMode: false,
     bossQuestionQueue: [],
     bossPendingResult: null
@@ -37,6 +43,10 @@ const App = {
     return this.state.quizGrade || this.getSelectedGrade() || null;
   },
 
+  getExamGrade() {
+    return this.state.examGrade || this.getSelectedGrade() || null;
+  },
+
   setDailyGrade(grade) {
     if (!GRADE_ORDER.includes(grade)) return;
     this.state.dailyGrade = grade;
@@ -51,9 +61,18 @@ const App = {
     if (typeof AudioManager !== 'undefined') AudioManager.playSfx('click');
   },
 
+  setExamGrade(grade) {
+    if (!GRADE_ORDER.includes(grade)) return;
+    this.state.examGrade = grade;
+    this.renderActivityGradePickers();
+    this.renderExamScopePreview();
+    if (typeof AudioManager !== 'undefined') AudioManager.playSfx('click');
+  },
+
   async setSelectedGrade(grade) {
     if (!GRADE_ORDER.includes(grade)) return;
     if (!(await this.leaveBossIfNeeded())) return;
+    if (!(await this.leaveExamIfNeeded())) return;
     UserSettings.save({ grade });
     this.state.selectedGrade = grade;
     document.getElementById('gradeModal')?.classList.add('hidden');
@@ -91,6 +110,10 @@ const App = {
       }
       if (context === 'quiz') {
         this.setQuizGrade(btn.dataset.grade);
+        return;
+      }
+      if (context === 'exam') {
+        this.setExamGrade(btn.dataset.grade);
         return;
       }
       this.setSelectedGrade(btn.dataset.grade);
@@ -156,6 +179,46 @@ const App = {
 
     const startQuiz = document.getElementById('startQuiz');
     if (startQuiz) startQuiz.disabled = !quizGrade;
+
+    const examGrade = this.getExamGrade();
+    const examEl = document.getElementById('examGradePicker');
+    if (examEl) {
+      examEl.innerHTML = `
+        <p class="activity-grade-label">選擇年級</p>
+        <div class="activity-grade-grid">
+          ${GRADE_ORDER.map(g => this.activityGradeButtonHtml(g, examGrade, 'exam')).join('')}
+        </div>
+      `;
+    }
+
+    const examDesc = document.getElementById('examIntroDesc');
+    if (examDesc) {
+      const cfg = examGrade && typeof TermExam !== 'undefined' ? TermExam.getConfig(examGrade) : null;
+      examDesc.innerHTML = cfg
+        ? `<strong>${cfg.title}</strong> · 全卷約 ${cfg.sections.reduce((n, s) => n + s.parts.reduce((a, p) => a + p.count, 0), 0)} 題 · <strong>限時 1 小時</strong>`
+        : '仿照學校大考卷格式，<strong>限時 1 小時</strong>。請先揀年級。';
+    }
+
+    const startExam = document.getElementById('startExam');
+    if (startExam) startExam.disabled = !examGrade;
+
+    this.renderExamScopePreview();
+  },
+
+  renderExamScopePreview() {
+    const el = document.getElementById('examScopePreview');
+    if (!el) return;
+    const grade = this.getExamGrade();
+    const cfg = grade && typeof TermExam !== 'undefined' ? TermExam.getConfig(grade) : null;
+    if (!cfg) {
+      el.innerHTML = '';
+      return;
+    }
+    el.innerHTML = `
+      <div class="exam-scope-preview">
+        <h4>考試範圍</h4>
+        ${TermExam.scopeTableHtml(cfg.sections)}
+      </div>`;
   },
 
   gradeButtonHtml(grade, large = false) {
@@ -260,14 +323,18 @@ const App = {
     this.renderProgress();
     this.bindPractice();
     this.bindQuiz();
+    this.bindTermExam();
+    this.bindExamHomeEntry();
     this.bindDaily();
     this.bindBossBattle();
     this.bindReadQuestion();
+    this.bindExamExitModal();
     this.bindSessionTracking();
   },
 
-  readQuestionBtnHtml() {
-    return '<div class="question-read-row"><button type="button" class="btn-read-question" title="朗讀題目" aria-label="朗讀題目"><span class="btn-read-icon" aria-hidden="true">🔊</span><span class="btn-read-label">朗讀題目</span></button></div>';
+  readQuestionBtnHtml(examNum) {
+    const numAttr = examNum ? ` data-exam-num="${examNum}"` : '';
+    return `<div class="question-read-row"><button type="button" class="btn-read-question" title="朗讀題目" aria-label="朗讀題目"${numAttr}><span class="btn-read-icon" aria-hidden="true">🔊</span><span class="btn-read-label">朗讀題目</span></button></div>`;
   },
 
   mcqOptionRowHtml(opt, index, optionClass = 'option-btn') {
@@ -293,7 +360,12 @@ const App = {
         const i = parseInt(mcqBtn.dataset.optionIndex, 10);
         if (Number.isNaN(i)) return;
         let opt = '';
-        if (this.state.currentView === 'quiz' && this.state.quizQuestions?.length) {
+        if (this.state.examMode && this.state.examPaper) {
+          const row = mcqBtn.closest('[data-exam-num]');
+          const examNum = row ? parseInt(row.dataset.examNum, 10) : NaN;
+          const q = this.state.examPaper.questions.find(x => x.examNum === examNum);
+          opt = q?.options?.[i];
+        } else if (this.state.currentView === 'quiz' && this.state.quizQuestions?.length) {
           opt = this.state.quizQuestions[this.state.quizIndex]?.options?.[i];
         } else {
           opt = this.state.currentQuestion?.options?.[i];
@@ -314,7 +386,10 @@ const App = {
       if (Date.now() - lastReadAt < 450) return;
       lastReadAt = Date.now();
       let html = '';
-      if (this.state.currentView === 'quiz' && this.state.quizQuestions?.length) {
+      const examNum = btn.dataset.examNum ? parseInt(btn.dataset.examNum, 10) : NaN;
+      if (this.state.examMode && this.state.examPaper && !Number.isNaN(examNum)) {
+        html = this.state.examPaper.questions.find(q => q.examNum === examNum)?.question;
+      } else if (this.state.currentView === 'quiz' && this.state.quizQuestions?.length) {
         html = this.state.quizQuestions[this.state.quizIndex]?.question;
       } else if (this.state.currentQuestion?.question) {
         html = this.state.currentQuestion.question;
@@ -704,6 +779,9 @@ const App = {
     if (this.state.bossMode && view !== 'practice') {
       if (!(await this.leaveBossIfNeeded())) return;
     }
+    if (this.state.examMode && view !== 'exam') {
+      if (!(await this.leaveExamIfNeeded())) return;
+    }
     this.state.currentView = view;
     document.querySelectorAll('.nav-tab').forEach(t => {
       t.classList.toggle('active', t.dataset.view === view);
@@ -715,6 +793,7 @@ const App = {
     if (view === 'rewards') this.renderRewards();
     if (view === 'home') this.renderDailyProgress();
     if (view === 'quiz') this.renderActivityGradePickers();
+    if (view === 'exam') this.renderActivityGradePickers();
     if (view === 'practice' && !this.getSelectedGrade()) this.showGradeModalIfNeeded();
     this.renderHUD();
   },
@@ -740,6 +819,7 @@ const App = {
       return;
     }
     if (!(await this.leaveBossIfNeeded())) return;
+    if (!(await this.leaveExamIfNeeded())) return;
 
     BossBattle.reset();
     BossBattle.showPanel(true);
@@ -998,6 +1078,7 @@ const App = {
   async startRedoPractice(questions) {
     if (!questions.length) return;
     if (!(await this.leaveBossIfNeeded())) return;
+    if (!(await this.leaveExamIfNeeded())) return;
     AudioManager.playSfx('click');
     this.state.dailyMode = false;
     this.state.randomMode = false;
@@ -1114,6 +1195,7 @@ const App = {
       btn.addEventListener('click', () => {
         void (async () => {
           if (!(await this.leaveBossIfNeeded())) return;
+          if (!(await this.leaveExamIfNeeded())) return;
           const tier = btn.dataset.tier;
         this.state.practiceTier = tier;
         document.querySelectorAll('.tier-btn').forEach(b => b.classList.toggle('active', b.dataset.tier === tier));
@@ -1146,6 +1228,7 @@ const App = {
 
   async startRandomPractice(tier, topicIds = null) {
     if (!(await this.leaveBossIfNeeded())) return;
+    if (!(await this.leaveExamIfNeeded())) return;
     this.state.dailyMode = false;
     this.state.randomMode = true;
     this.state.noPointsMode = false;
@@ -1173,6 +1256,7 @@ const App = {
 
   async startPractice(topicId, tier = 'medium') {
     if (!(await this.leaveBossIfNeeded())) return;
+    if (!(await this.leaveExamIfNeeded())) return;
     this.state.dailyMode = false;
     this.state.randomMode = false;
     this.state.noPointsMode = false;
@@ -1540,6 +1624,7 @@ const App = {
         const grade = this.getDailyGrade();
         if (!grade) return;
         if (!(await this.leaveBossIfNeeded())) return;
+        if (!(await this.leaveExamIfNeeded())) return;
         AudioManager.playSfx('click');
       this.state.dailyMode = true;
       this.state.randomMode = true;
@@ -1565,9 +1650,286 @@ const App = {
     document.getElementById('startQuiz').addEventListener('click', () => {
       void (async () => {
         if (!(await this.leaveBossIfNeeded())) return;
+        if (!(await this.leaveExamIfNeeded())) return;
         this.startQuiz();
       })();
     });
+  },
+
+  bindExamExitModal() {
+    if (this._examExitModalBound) return;
+    this._examExitModalBound = true;
+    const modal = document.getElementById('examExitModal');
+    const cancel = () => {
+      modal?.classList.add('hidden');
+      const resolve = this._confirmExamExitResolve;
+      this._confirmExamExitResolve = null;
+      resolve?.(false);
+    };
+    const confirm = () => {
+      modal?.classList.add('hidden');
+      const resolve = this._confirmExamExitResolve;
+      this._confirmExamExitResolve = null;
+      resolve?.(true);
+    };
+    document.getElementById('examExitCancel')?.addEventListener('click', cancel);
+    document.getElementById('examExitConfirm')?.addEventListener('click', confirm);
+    modal?.addEventListener('click', (e) => {
+      if (e.target === modal) cancel();
+    });
+  },
+
+  confirmExamExit() {
+    if (!this.state.examMode) return Promise.resolve(true);
+    return new Promise(resolve => {
+      this._confirmExamExitResolve = resolve;
+      document.getElementById('examExitModal')?.classList.remove('hidden');
+    });
+  },
+
+  async leaveExamIfNeeded() {
+    if (!this.state.examMode) return true;
+    if (!(await this.confirmExamExit())) return false;
+    this.cleanupExam();
+    return true;
+  },
+
+  cleanupExam() {
+    this.stopExamTimer();
+    this.state.examMode = false;
+    this.state.examPaper = null;
+    this.state.examAnswers = {};
+    this.state.examEndsAt = null;
+    document.getElementById('examActive')?.classList.add('hidden');
+    document.getElementById('examIntro')?.classList.remove('hidden');
+    document.getElementById('examResult')?.classList.add('hidden');
+  },
+
+  bindExamHomeEntry() {
+    document.getElementById('goToExam')?.addEventListener('click', () => {
+      void (async () => {
+        if (!(await this.leaveBossIfNeeded())) return;
+        AudioManager.playSfx('click');
+        void this.switchView('exam');
+      })();
+    });
+  },
+
+  bindTermExam() {
+    document.getElementById('startExam')?.addEventListener('click', () => {
+      void (async () => {
+        if (!(await this.leaveBossIfNeeded())) return;
+        this.startTermExam();
+      })();
+    });
+    document.getElementById('submitExamBtn')?.addEventListener('click', () => {
+      void this.submitTermExam(false);
+    });
+  },
+
+  startTermExam() {
+    const grade = this.getExamGrade();
+    if (!grade || typeof TermExam === 'undefined') return;
+    const paper = QuestionBank.generateTermExam(grade);
+    if (!paper?.questions?.length) {
+      alert('暫時未能生成試卷，請稍後再試。');
+      return;
+    }
+
+    AudioManager.playSfx('click');
+    this.state.examMode = true;
+    this.state.examPaper = paper;
+    this.state.examAnswers = {};
+    this.state.examEndsAt = Date.now() + paper.durationSec * 1000;
+
+    document.getElementById('examIntro').classList.add('hidden');
+    document.getElementById('examResult').classList.add('hidden');
+    document.getElementById('examActive').classList.remove('hidden');
+    this.renderExamPaper();
+    this.startExamTimer();
+    void this.switchView('exam');
+  },
+
+  startExamTimer() {
+    this.stopExamTimer();
+    const tick = () => {
+      const left = Math.max(0, Math.ceil((this.state.examEndsAt - Date.now()) / 1000));
+      const el = document.getElementById('examTimerValue');
+      if (el) {
+        el.textContent = TermExam.formatTime(left);
+        el.classList.toggle('exam-timer-value--warn', left <= 300);
+        el.classList.toggle('exam-timer-value--urgent', left <= 60);
+      }
+      if (left <= 0) {
+        this.stopExamTimer();
+        void this.submitTermExam(true);
+      }
+    };
+    tick();
+    this.state.examTimerId = setInterval(tick, 1000);
+  },
+
+  stopExamTimer() {
+    if (this.state.examTimerId) {
+      clearInterval(this.state.examTimerId);
+      this.state.examTimerId = null;
+    }
+  },
+
+  examQuestionRowHtml(q, answers) {
+    if (q.type === 'mcq' && q.options) {
+      return `
+        <tr class="exam-q-row exam-q-row--mcq" data-exam-num="${q.examNum}">
+          <td class="exam-q-num">${q.examNum}</td>
+          <td class="exam-q-text" colspan="2">
+            <div class="math-expr">${q.question}</div>
+            ${this.readQuestionBtnHtml(q.examNum)}
+            <p class="exam-mcq-hint">請選擇答案（可撳 🔊 朗讀選項）</p>
+            <div class="exam-mcq-group options-grid">
+              ${q.options.map((opt, i) => this.mcqOptionRowHtml(opt, i, `option-btn exam-mcq-option ${answers[q.examNum] === String.fromCharCode(65 + i) ? 'selected' : ''}`)).join('')}
+            </div>
+          </td>
+        </tr>`;
+    }
+    return `
+      <tr class="exam-q-row" data-exam-num="${q.examNum}">
+        <td class="exam-q-num">${q.examNum}</td>
+        <td class="exam-q-text">
+          <div class="math-expr">${q.question}</div>
+          ${this.readQuestionBtnHtml(q.examNum)}
+        </td>
+        <td class="exam-q-answer">
+          <input type="text" class="exam-answer-input" data-exam-num="${q.examNum}" value="${answers[q.examNum] || ''}" placeholder="答案" autocomplete="off">
+        </td>
+      </tr>`;
+  },
+
+  examLongQuestionHtml(q, answers) {
+    return `
+      <div class="exam-q-long" data-exam-num="${q.examNum}">
+        <div class="exam-q-long-head">
+          <span class="exam-q-num">${q.examNum}</span>
+          <div class="exam-q-long-body">
+            <div class="math-expr">${q.question}</div>
+            ${this.readQuestionBtnHtml(q.examNum)}
+          </div>
+        </div>
+        <p class="exam-q-long-hint">須列橫式、計算步驟及答句（∴）</p>
+        <textarea class="exam-working-input" rows="3" placeholder="橫式與步驟（方便溫習，唔影響自動評分）"></textarea>
+        <div class="exam-q-answer-row">
+          <label>答案：</label>
+          <input type="text" class="exam-answer-input exam-answer-input--long" data-exam-num="${q.examNum}" value="${answers[q.examNum] || ''}" placeholder="最終答案" autocomplete="off">
+        </div>
+      </div>`;
+  },
+
+  renderExamPaper() {
+    const paper = this.state.examPaper;
+    const answers = this.state.examAnswers;
+    if (!paper) return;
+
+    let html = `
+      <article class="exam-paper">
+        <header class="exam-paper-header">
+          <h2>${paper.title}</h2>
+          <p class="exam-paper-meta">姓名：＿＿＿＿＿＿　　班別：＿＿＿　　編號：＿＿＿</p>
+          ${TermExam.scopeTableHtml(paper.sections)}
+        </header>`;
+
+    paper.sections.forEach(sec => {
+      const tableQs = sec.questions.filter(q => q.style !== 'long');
+      const longQs = sec.questions.filter(q => q.style === 'long');
+      html += `
+        <section class="exam-paper-section">
+          <h3 class="exam-section-title">${sec.title}：${sec.percent}%</h3>
+          ${sec.note ? `<p class="exam-section-note">${sec.note}</p>` : ''}`;
+      if (tableQs.length) {
+        html += `<table class="exam-q-table"><tbody>`;
+        tableQs.forEach(q => { html += this.examQuestionRowHtml(q, answers); });
+        html += `</tbody></table>`;
+      }
+      longQs.forEach(q => { html += this.examLongQuestionHtml(q, answers); });
+      html += `<p class="exam-section-score">本節 ${sec.questions.length} 題</p></section>`;
+    });
+
+    html += `<p class="exam-paper-end">— 全卷完 —</p></article>`;
+    document.getElementById('examPaperWrap').innerHTML = html;
+
+    document.querySelectorAll('.exam-answer-input').forEach(input => {
+      input.addEventListener('input', (e) => {
+        const num = parseInt(e.target.dataset.examNum, 10);
+        this.state.examAnswers[num] = e.target.value;
+      });
+    });
+    document.querySelectorAll('.exam-mcq-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const row = btn.closest('[data-exam-num]');
+        const num = parseInt(row.dataset.examNum, 10);
+        const letter = String.fromCharCode(65 + parseInt(btn.dataset.index, 10));
+        this.state.examAnswers[num] = letter;
+        row.querySelectorAll('.exam-mcq-option').forEach(b => {
+          b.classList.toggle('selected', b === btn);
+        });
+      });
+    });
+  },
+
+  async submitTermExam(timedOut = false) {
+    if (!this.state.examMode || !this.state.examPaper) return;
+    if (!timedOut && !confirm('確定交卷？交卷後會顯示成績。')) return;
+
+    this.stopExamTimer();
+    const paper = this.state.examPaper;
+    const scored = TermExam.scorePaper(paper, this.state.examAnswers);
+    const data = Storage.load();
+    Storage.recordTermExam(paper.grade, scored.correct, scored.total, scored.sectionScores, timedOut, data);
+    const reward = Scoring.awardTermExam(data, scored.percentage);
+    Storage.save(data);
+    this.renderHUD();
+    this.renderDailyProgress();
+    this.renderProgress();
+
+    this.state.examMode = false;
+    document.getElementById('examActive').classList.add('hidden');
+    const resultEl = document.getElementById('examResult');
+    resultEl.classList.remove('hidden');
+
+    const sectionRows = Object.values(scored.sectionScores).map(s => `
+      <tr><td>${s.title}</td><td>${s.correct} / ${s.total}</td></tr>
+    `).join('');
+
+    let gradeLabel = '繼續加油 💪';
+    if (scored.percentage >= 100) gradeLabel = '滿分 🏆';
+    else if (scored.percentage >= 80) gradeLabel = '優秀 ⭐';
+    else if (scored.percentage >= 60) gradeLabel = '合格 ✅';
+
+    resultEl.innerHTML = `
+      <h3>${timedOut ? '⏰ 時間到！' : '📋 交卷完成'}</h3>
+      <p class="exam-result-grade">${gradeLabel}</p>
+      <p class="exam-result-score">得分：<strong>${scored.correct}</strong> / ${scored.total}（${scored.percentage}%）</p>
+      <table class="exam-result-table">
+        <thead><tr><th>範疇</th><th>得分</th></tr></thead>
+        <tbody>${sectionRows}</tbody>
+      </table>
+      ${reward.pointsEarned > 0 || reward.bonusXp > 0 ? `<p class="reward-line">🎁 獎勵：${[
+        reward.pointsEarned > 0 ? `+${reward.pointsEarned} 積分` : '',
+        reward.bonusXp > 0 ? `+${reward.bonusXp} XP` : ''
+      ].filter(Boolean).join(' · ')}</p>` : ''}
+      <button type="button" class="btn btn-primary" id="examRetryBtn">再考一次</button>
+      <button type="button" class="btn btn-secondary" id="examHomeBtn">返回大考首頁</button>
+    `;
+
+    document.getElementById('examRetryBtn')?.addEventListener('click', () => {
+      resultEl.classList.add('hidden');
+      this.startTermExam();
+    });
+    document.getElementById('examHomeBtn')?.addEventListener('click', () => {
+      this.cleanupExam();
+    });
+
+    AudioManager.playSfx(scored.percentage >= 60 ? 'bossWin' : 'bossLose');
+    this.state.examPaper = null;
+    this.state.examAnswers = {};
   },
 
   startQuiz() {
@@ -2023,6 +2385,21 @@ const App = {
           <span><strong>${h.score}/${h.total}</strong>（${h.percentage}%）</span>
         </div>
       `).join('');
+    }
+
+    const examHistoryEl = document.getElementById('examHistory');
+    if (examHistoryEl) {
+      const history = data.examHistory || [];
+      if (!history.length) {
+        examHistoryEl.innerHTML = '<p style="color:var(--text-muted)">尚未進行學期大考</p>';
+      } else {
+        examHistoryEl.innerHTML = history.map(h => `
+          <div class="exam-history-item">
+            <span>${new Date(h.date).toLocaleDateString('zh-HK')} · ${GRADE_LABELS[h.grade] || h.grade || ''}${h.timedOut ? ' · ⏰' : ''}</span>
+            <span><strong>${h.score}/${h.total}</strong>（${h.percentage}%）</span>
+          </div>
+        `).join('');
+      }
     }
   },
 

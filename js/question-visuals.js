@@ -14,6 +14,34 @@ const QuestionVisuals = {
     return `${body}${visual}`;
   },
 
+  _dimLine(x1, y1, x2, y2, label, opts = {}) {
+    const vertical = opts.vertical || Math.abs(x2 - x1) < Math.abs(y2 - y1);
+    const mx = (x1 + x2) / 2;
+    const my = (y1 + y2) / 2;
+    const cls = opts.known === false ? 'geo-dim-label geo-dim-label--calc' : 'geo-dim-label';
+    if (vertical) {
+      const lx = x1 + (opts.offset ?? -16);
+      const ly = my + 4;
+      return `
+        <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="geo-dim-line"/>
+        <text x="${lx}" y="${ly}" text-anchor="middle" transform="rotate(-90, ${lx}, ${ly})" class="${cls}">${label}</text>`;
+    }
+    const ly = y1 + (opts.offset ?? 14);
+    return `
+      <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="geo-dim-line"/>
+      <text x="${mx}" y="${ly}" text-anchor="middle" class="${cls}">${label}</text>`;
+  },
+
+  _mapCompass(x, y, size = 22) {
+    const r = size / 2;
+    return `
+      <g class="geo-map-compass" transform="translate(${x},${y})">
+        <circle cx="0" cy="0" r="${r}" class="geo-map-compass-ring"/>
+        <polygon points="0,${-r + 2} 3,2 0,0 -3,2" fill="#ef4444"/>
+        <text x="0" y="${-r - 3}" text-anchor="middle" class="geo-map-compass-n">北</text>
+      </g>`;
+  },
+
   _colors: ['#3b82f6', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899', '#64748b'],
 
   fractionCircle(num, den) {
@@ -51,11 +79,15 @@ const QuestionVisuals = {
     const y = (130 - rh) / 2 + 8;
     const hideLength = opts.hideLength;
     const hideWidth = opts.hideWidth;
+    const note = opts.note || '';
+    const lengthLabel = hideLength ? '長 ?' : `長 ${l} ${unit}`;
+    const widthLabel = hideWidth ? '闊 ?' : `闊 ${w} ${unit}`;
     return this.scene(`
       <svg class="geo-svg" viewBox="0 0 230 145" role="img" aria-label="長方形圖">
         <rect x="${x}" y="${y}" width="${rw}" height="${rh}" class="geo-rect"/>
-        ${!hideLength ? `<text x="${x + rw / 2}" y="${y + rh + 18}" text-anchor="middle" class="geo-label">長 ${l} ${unit}</text>` : ''}
-        ${!hideWidth ? `<text x="${x - 10}" y="${y + rh / 2}" text-anchor="end" class="geo-label">闊 ${w} ${unit}</text>` : ''}
+        ${note ? `<text x="${x + rw / 2}" y="${y - 6}" text-anchor="middle" class="geo-note-label">${note}</text>` : ''}
+        ${this._dimLine(x, y + rh + 4, x + rw, y + rh + 4, lengthLabel, { known: !hideLength })}
+        ${this._dimLine(x - 4, y, x - 4, y + rh, widthLabel, { vertical: true, known: !hideWidth })}
       </svg>
     `);
   },
@@ -68,33 +100,43 @@ const QuestionVisuals = {
     const y = (120 - sz) / 2 + 10;
     const areaLabel = opts.areaLabel || '';
     const hideSide = opts.hideSide;
+    const sideLabel = hideSide ? '邊長 ?' : `邊長 ${s} ${unit}`;
     return this.scene(`
-      <svg class="geo-svg" viewBox="0 0 200 135" role="img" aria-label="正方形圖">
+      <svg class="geo-svg" viewBox="0 0 200 145" role="img" aria-label="正方形圖">
         <rect x="${x}" y="${y}" width="${sz}" height="${sz}" class="geo-rect"/>
-        ${!hideSide ? `<text x="${x + sz / 2}" y="${y + sz + 18}" text-anchor="middle" class="geo-label">邊長 ${s} ${unit}</text>` : ''}
-        ${areaLabel ? `<text x="${x + sz / 2}" y="${y + sz / 2}" text-anchor="middle" class="geo-label">面積 ${areaLabel}</text>` : ''}
+        ${this._dimLine(x, y + sz + 8, x + sz, y + sz + 8, sideLabel, { known: !hideSide })}
+        ${areaLabel ? `<text x="${x + sz / 2}" y="${y + sz / 2 + 4}" text-anchor="middle" class="geo-known-label">面積 ${areaLabel}</text>` : ''}
       </svg>
     `);
   },
 
   circle(radius, unit = 'cm', opts = {}) {
     const r = Number(radius);
-    const cx = 100;
-    const cy = 95;
-    const scale = 70 / Math.max(r, 1);
+    const cx = 110;
+    const cy = 100;
+    const scale = 75 / Math.max(r, 1);
     const rr = r * scale;
     const hideRadius = opts.hideRadius;
-    const diameter = opts.diameter;
-    const dLine = diameter ? `
-        <line x1="${cx - rr}" y1="${cy}" x2="${cx + rr}" y2="${cy}" class="geo-radius-line"/>
-        <text x="${cx}" y="${cy - 10}" text-anchor="middle" class="geo-label">直徑 ${diameter} ${unit}</text>` : '';
+    const diameter = opts.diameter != null ? Number(opts.diameter) : r * 2;
+    const showDiameter = opts.diameter != null || opts.showDiameter;
+    let dims = '';
+    if (showDiameter) {
+      dims += this._dimLine(cx - rr, cy, cx + rr, cy, hideRadius ? `直徑 ${diameter} ${unit}` : `直徑 ${diameter} ${unit}`, { known: true });
+      if (hideRadius) {
+        dims += this._dimLine(cx, cy - rr * 0.55, cx + rr * 0.55, cy - rr * 0.55, '半徑 ?', { known: false, offset: -10 });
+      }
+    } else if (!hideRadius) {
+      dims += this._dimLine(cx, cy, cx + rr, cy, `半徑 ${r} ${unit}`, { known: true, offset: -12 });
+      dims += this._dimLine(cx - rr, cy + 18, cx + rr, cy + 18, `直徑 ?`, { known: false });
+    } else {
+      dims += this._dimLine(cx, cy, cx + rr, cy, '半徑 ?', { known: false, offset: -12 });
+    }
     return this.scene(`
-      <svg class="geo-svg" viewBox="0 0 200 170" role="img" aria-label="圓形圖">
+      <svg class="geo-svg" viewBox="0 0 220 185" role="img" aria-label="圓形圖">
         <circle cx="${cx}" cy="${cy}" r="${rr}" class="geo-circle"/>
-        ${!hideRadius ? `<line x1="${cx}" y1="${cy}" x2="${cx + rr}" y2="${cy}" class="geo-radius-line"/>
-        <text x="${cx + rr / 2}" y="${cy - 6}" text-anchor="middle" class="geo-label">半徑 ${r} ${unit}</text>` : ''}
-        ${dLine}
-        ${opts.label ? `<text x="${cx}" y="${cy + 5}" text-anchor="middle" class="geo-label">${opts.label}</text>` : ''}
+        <circle cx="${cx}" cy="${cy}" r="3.5" class="geo-circle-center"/>
+        ${dims}
+        ${opts.label ? `<text x="${cx}" y="${cy + 5}" text-anchor="middle" class="geo-known-label">${opts.label}</text>` : ''}
       </svg>
     `);
   },
@@ -109,13 +151,16 @@ const QuestionVisuals = {
     const x0 = 40;
     const y0 = 120;
     const pts = `${x0 + skew},${y0 - hh} ${x0 + bw + skew},${y0 - hh} ${x0 + bw},${y0} ${x0},${y0}`;
-    const hideLabels = opts.hideLabels;
+    const hideBase = opts.hideBase || opts.hideLabels;
+    const hideHeight = opts.hideHeight || opts.hideLabels;
+    const baseLabel = hideBase ? '底 ?' : `底 ${b} ${unit}`;
+    const heightLabel = hideHeight ? '高 ?' : `高 ${h} ${unit}`;
     return this.scene(`
-      <svg class="geo-svg" viewBox="0 0 240 145" role="img" aria-label="平行四邊形圖">
+      <svg class="geo-svg geo-svg--wide" viewBox="0 0 260 155" role="img" aria-label="平行四邊形圖">
         <polygon points="${pts}" class="geo-poly"/>
         <line x1="${x0 + bw + skew}" y1="${y0 - hh}" x2="${x0 + bw + skew}" y2="${y0}" class="geo-height-line"/>
-        ${!hideLabels ? `<text x="${x0 + bw / 2}" y="${y0 + 16}" text-anchor="middle" class="geo-label">底 ${b} ${unit}</text>
-        <text x="${x0 + bw + skew + 12}" y="${y0 - hh / 2}" class="geo-label">高 ${h} ${unit}</text>` : ''}
+        ${this._dimLine(x0, y0 + 8, x0 + bw, y0 + 8, baseLabel, { known: !hideBase })}
+        ${this._dimLine(x0 + bw + skew + 4, y0 - hh, x0 + bw + skew + 4, y0, heightLabel, { vertical: true, known: !hideHeight })}
       </svg>
     `);
   },
@@ -128,17 +173,20 @@ const QuestionVisuals = {
     const bw = b * scale;
     const tw = t * scale;
     const hh = h * scale;
-    const x0 = (220 - bw) / 2;
+    const x0 = (240 - bw) / 2;
     const y0 = 120;
     const pts = `${x0 + (bw - tw) / 2},${y0 - hh} ${x0 + (bw + tw) / 2},${y0 - hh} ${x0 + bw},${y0} ${x0},${y0}`;
-    const hideLabels = opts.hideLabels;
+    const hide = opts.hideLabels;
+    const topLabel = hide ? '上底 ?' : `上底 ${t} ${unit}`;
+    const bottomLabel = hide ? '下底 ?' : `下底 ${b} ${unit}`;
+    const heightLabel = hide ? '高 ?' : `高 ${h} ${unit}`;
     return this.scene(`
-      <svg class="geo-svg" viewBox="0 0 240 145" role="img" aria-label="梯形圖">
+      <svg class="geo-svg geo-svg--wide" viewBox="0 0 260 155" role="img" aria-label="梯形圖">
         <polygon points="${pts}" class="geo-poly"/>
         <line x1="${x0 + bw / 2}" y1="${y0 - hh}" x2="${x0 + bw / 2}" y2="${y0}" class="geo-height-line"/>
-        ${!hideLabels ? `<text x="${x0 + bw / 2}" y="${y0 - hh - 6}" text-anchor="middle" class="geo-label">上底 ${t} ${unit}</text>
-        <text x="${x0 + bw / 2}" y="${y0 + 16}" text-anchor="middle" class="geo-label">下底 ${b} ${unit}</text>
-        <text x="${x0 + bw + 14}" y="${y0 - hh / 2}" class="geo-label">高 ${h} ${unit}</text>` : ''}
+        ${this._dimLine(x0 + (bw - tw) / 2, y0 - hh - 8, x0 + (bw + tw) / 2, y0 - hh - 8, topLabel, { known: !hide })}
+        ${this._dimLine(x0, y0 + 8, x0 + bw, y0 + 8, bottomLabel, { known: !hide })}
+        ${this._dimLine(x0 + bw + 6, y0 - hh, x0 + bw + 6, y0, heightLabel, { vertical: true, known: !hide })}
       </svg>
     `);
   },
@@ -206,13 +254,14 @@ const QuestionVisuals = {
     return `<div class="geo-shapes-row" aria-hidden="true">${icons.join('')}</div>`;
   },
 
-  pieChart(data, unit = '人') {
+  pieChart(data, unit = '人', opts = {}) {
     const entries = Object.entries(data);
     const total = entries.reduce((s, [, v]) => s + Number(v), 0) || 1;
     const cx = 95;
     const cy = 95;
     const r = 78;
     let angle = -Math.PI / 2;
+    const showValues = opts.showValues !== false;
     const slices = entries.map(([label, val], i) => {
       const frac = Number(val) / total;
       const a2 = angle + frac * Math.PI * 2;
@@ -222,8 +271,14 @@ const QuestionVisuals = {
       const y2 = cy + r * Math.sin(a2);
       const large = frac > 0.5 ? 1 : 0;
       const d = `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z`;
+      const mid = angle + (a2 - angle) / 2;
+      const tx = cx + r * 0.58 * Math.cos(mid);
+      const ty = cy + r * 0.58 * Math.sin(mid);
+      const valueLabel = showValues && frac >= 0.08
+        ? `<text x="${tx}" y="${ty + 3}" text-anchor="middle" class="pie-slice-value">${val}</text>`
+        : '';
       angle = a2;
-      return `<path d="${d}" fill="${this._colors[i % this._colors.length]}" stroke="#fff" stroke-width="1.5"/>`;
+      return `<path d="${d}" fill="${this._colors[i % this._colors.length]}" stroke="#fff" stroke-width="1.5"/>${valueLabel}`;
     });
     const legend = entries.map(([label, val], i) =>
       `<span class="pie-legend-item"><i style="background:${this._colors[i % this._colors.length]}"></i>${label} ${val}${unit}</span>`
@@ -264,20 +319,33 @@ const QuestionVisuals = {
 
   directionMap(center, places) {
     const pos = {
-      '北': [80, 22], '南': [80, 118], '東': [128, 70], '西': [32, 70],
-      '東北': [112, 32], '東南': [112, 108], '西北': [48, 32], '西南': [48, 108],
-      '東北面': [112, 32], '東南面': [112, 108], '西北面': [48, 32], '西南面': [48, 108]
+      '北': [110, 42], '南': [110, 148], '東': [178, 95], '西': [42, 95],
+      '東北': [162, 52], '東南': [162, 138], '西北': [58, 52], '西南': [58, 138],
+      '東北面': [162, 52], '東南面': [162, 138], '西北面': [58, 52], '西南面': [58, 138]
     };
+    const cx = 110;
+    const cy = 95;
     const markers = Object.entries(places || {}).map(([dir, name]) => {
-      const p = pos[dir] || pos[dir.replace('面', '')] || [80, 70];
-      return `<g><circle cx="${p[0]}" cy="${p[1]}" r="14" class="geo-map-pin"/><text x="${p[0]}" y="${p[1] + 4}" text-anchor="middle" class="geo-map-label">${name}</text></g>`;
+      const p = pos[dir] || pos[dir.replace('面', '')] || [cx, cy];
+      return `
+        <line x1="${cx}" y1="${cy}" x2="${p[0]}" y2="${p[1]}" class="geo-map-link"/>
+        <g>
+          <circle cx="${p[0]}" cy="${p[1]}" r="16" class="geo-map-pin"/>
+          <text x="${p[0]}" y="${p[1] + 4}" text-anchor="middle" class="geo-map-label">${name}</text>
+          <text x="${p[0]}" y="${p[1] + 22}" text-anchor="middle" class="geo-map-dir">${dir}</text>
+        </g>`;
     }).join('');
     return this.scene(`
-      <svg class="geo-svg" viewBox="0 0 160 140" role="img" aria-label="方向圖">
-        <rect x="8" y="8" width="144" height="124" rx="8" class="geo-map-bg"/>
-        <circle cx="80" cy="70" r="12" class="geo-map-center"/><text x="80" y="74" text-anchor="middle" class="geo-map-label">${center}</text>
+      <svg class="geo-svg geo-svg--map" viewBox="0 0 220 185" role="img" aria-label="方向圖">
+        <rect x="12" y="12" width="196" height="158" rx="10" class="geo-map-bg"/>
+        <text x="110" y="30" text-anchor="middle" class="geo-map-edge">北 ↑</text>
+        <text x="110" y="172" text-anchor="middle" class="geo-map-edge">南 ↓</text>
+        <text x="24" y="98" text-anchor="middle" class="geo-map-edge">西</text>
+        <text x="196" y="98" text-anchor="middle" class="geo-map-edge">東</text>
         ${markers}
-        <text x="80" y="136" text-anchor="middle" class="geo-caption">↑ 北</text>
+        <circle cx="${cx}" cy="${cy}" r="14" class="geo-map-center"/>
+        <text x="${cx}" y="${cy + 4}" text-anchor="middle" class="geo-map-label geo-map-label--center">${center}</text>
+        ${this._mapCompass(188, 28)}
       </svg>
     `);
   },
@@ -359,6 +427,10 @@ const QuestionVisuals = {
     const fw = 90;
     const fh = 45;
     const hideLabels = opts.hideLabels;
+    const hideHeight = opts.hideHeight;
+    const lengthLabel = hideLabels ? '長 ?' : `長 ${l} ${unit}`;
+    const widthLabel = hideLabels ? '闊 ?' : `闊 ${w}`;
+    const heightLabel = hideHeight ? '高 ?' : `高 ${h}`;
     const front = `${x},${y} ${x + fw},${y} ${x + fw},${y - fh} ${x},${y - fh}`;
     const top = `${x},${y - fh} ${x + dx},${y - fh + dy} ${x + fw + dx},${y - fh + dy} ${x + fw},${y - fh}`;
     const side = `${x + fw},${y} ${x + fw + dx},${y + dy} ${x + fw + dx},${y - fh + dy} ${x + fw},${y - fh}`;
@@ -367,9 +439,10 @@ const QuestionVisuals = {
         <polygon points="${side}" class="geo-cuboid-side"/>
         <polygon points="${top}" class="geo-cuboid-top"/>
         <polygon points="${front}" class="geo-cuboid-front"/>
-        ${!hideLabels ? `<text x="${x + fw / 2}" y="${y + 16}" text-anchor="middle" class="geo-label">長 ${l} ${unit}</text>
-        <text x="${x + fw + dx + 8}" y="${y - fh / 2}" class="geo-label">闊 ${w}</text>
-        <text x="${x - 8}" y="${y - fh / 2}" text-anchor="end" class="geo-label">高 ${h}</text>` : ''}
+        ${!hideLabels ? `<text x="${x + fw / 2}" y="${y + 16}" text-anchor="middle" class="geo-dim-label">${lengthLabel}</text>` : ''}
+        ${!hideLabels ? `<text x="${x + fw + dx + 8}" y="${y - fh / 2}" class="geo-dim-label">${widthLabel}</text>` : ''}
+        ${!hideLabels && !hideHeight ? `<text x="${x - 8}" y="${y - fh / 2}" text-anchor="end" class="geo-dim-label">${heightLabel}</text>` : ''}
+        ${hideHeight ? `<text x="${x - 8}" y="${y - fh / 2}" text-anchor="end" class="geo-dim-label geo-dim-label--calc">${heightLabel}</text>` : ''}
       </svg>
     `);
   },
@@ -408,11 +481,44 @@ const QuestionVisuals = {
 
   facingPerson(direction) {
     const arrows = { '北方': '↑', '北': '↑', '東方': '→', '東': '→', '南方': '↓', '南': '↓', '西方': '←', '西': '←' };
+    const arrow = arrows[direction] || '↑';
     return this.scene(`
-      <div class="facing-person">
-        <div class="facing-arrow">${arrows[direction] || '↑'}</div>
-        <div class="facing-icon">🧒</div>
-        <div class="facing-label">面向${direction}</div>
+      <div class="facing-person facing-person--exam">
+        <div class="facing-compass-mini">
+          <span class="facing-compass-n">北↑</span>
+          <span class="facing-compass-w">西</span>
+          <span class="facing-compass-e">東</span>
+          <span class="facing-compass-s">南↓</span>
+        </div>
+        <div class="facing-body">
+          <div class="facing-arrow">${arrow}</div>
+          <div class="facing-icon">🧒</div>
+          <div class="facing-label">面向${direction.replace('方', '')}</div>
+          <div class="facing-hint">前=${arrow} · 左/右/後需自己判斷</div>
+        </div>
+      </div>
+    `);
+  },
+
+  speedDiagram(opts = {}) {
+    const speed = opts.speed;
+    const time = opts.time;
+    const distance = opts.distance;
+    const ask = opts.ask || 'distance';
+    const row = (label, value, unit, calc) => `
+      <div class="speed-row ${calc ? 'speed-row--calc' : ''}">
+        <span class="speed-label">${label}</span>
+        <span class="speed-value">${calc ? '?' : `${value} ${unit}`}</span>
+      </div>`;
+    return this.scene(`
+      <div class="speed-diagram">
+        <div class="speed-formula">距離 = 速度 × 時間</div>
+        ${row('速度', speed, 'km/h', ask === 'speed')}
+        <span class="speed-op">×</span>
+        ${row('時間', time, '小時', ask === 'time')}
+        <span class="speed-op">=</span>
+        ${row('距離', distance, 'km', ask === 'distance')}
+        <div class="speed-road">🚗 ————————————————→</div>
       </div>
     `);
   },
@@ -468,7 +574,7 @@ const QuestionVisuals = {
       </div>`);
   },
 
-  lShape(totalW, totalH, thick, unit = 'cm') {
+  lShape(totalW, totalH, thick, unit = 'cm', opts = {}) {
     const w = Number(totalW);
     const h = Number(totalH);
     const t = Number(thick);
@@ -476,48 +582,71 @@ const QuestionVisuals = {
     const rw = w * scale;
     const rh = h * scale;
     const rt = t * scale;
-    const x = (200 - rw) / 2;
-    const y = (120 - rh) / 2 + 10;
-    const pts = `${x},${y + rh} ${x + rw},${y + rh} ${x + rw},${y + rt} ${x + rt},${y + rt} ${x + rt},${y} ${x},${y}`;
+    const x = (220 - rw) / 2;
+    const y = (145 - rh) / 2 + 8;
+    const pts = `${x},${y + rh} ${x + rw},${y + rh} ${x + rw},${y + rh - rt} ${x + rt},${y + rh - rt} ${x + rt},${y} ${x},${y}`;
+    const showDims = opts.showDims !== false;
+    const dims = showDims ? `
+      ${this._dimLine(x, y + rh + 6, x + rw, y + rh + 6, `總闊 ${w} ${unit}`)}
+      ${this._dimLine(x - 6, y, x - 6, y + rh, `總高 ${h} ${unit}`, { vertical: true })}
+      ${this._dimLine(x + rt + 4, y + rh - rt, x + rw, y + rh - rt, `厚 ${t} ${unit}`)}
+    ` : '';
     return this.scene(`
-      <svg class="geo-svg" viewBox="0 0 200 135" role="img" aria-label="L形圖">
+      <svg class="geo-svg geo-svg--wide" viewBox="0 0 220 155" role="img" aria-label="L形圖">
         <polygon points="${pts}" class="geo-poly"/>
+        ${dims}
       </svg>
     `);
   },
 
-  overlapSquares(side, overlap, unit = 'cm') {
+  overlapSquares(side, overlap, unit = 'cm', opts = {}) {
     const s = Number(side);
     const o = Number(overlap);
-    const scale = 100 / s;
+    const scale = 90 / s;
     const sz = s * scale;
     const off = (s - o) * scale;
-    const x1 = 30;
-    const y = 25;
+    const x1 = 35;
+    const y = 28;
     const x2 = x1 + off;
+    const oSz = o * scale;
+    const overlapArea = opts.overlapArea;
+    const areaText = overlapArea != null ? `${overlapArea} cm²` : '';
+    const revealOverlap = opts.revealOverlap === true;
     return this.scene(`
-      <svg class="geo-svg" viewBox="0 0 200 135" role="img" aria-label="重疊正方形圖">
-        <rect x="${x1}" y="${y}" width="${sz}" height="${sz}" class="geo-rect" fill="none"/>
-        <rect x="${x2}" y="${y}" width="${sz}" height="${sz}" class="geo-rect" fill="rgba(59,130,246,0.15)"/>
-        <rect x="${x2}" y="${y}" width="${o * scale}" height="${o * scale}" class="geo-rect" fill="rgba(59,130,246,0.35)" stroke="#2563eb" stroke-dasharray="4 2"/>
+      <svg class="geo-svg geo-svg--wide" viewBox="0 0 240 165" role="img" aria-label="重疊正方形圖">
+        <rect x="${x1}" y="${y}" width="${sz}" height="${sz}" class="geo-rect" fill="rgba(219,234,254,0.5)"/>
+        <rect x="${x2}" y="${y}" width="${sz}" height="${sz}" class="geo-rect" fill="rgba(59,130,246,0.12)"/>
+        <rect x="${x2}" y="${y}" width="${oSz}" height="${oSz}" class="geo-overlap-region"/>
+        ${areaText ? `<text x="${x2 + oSz / 2}" y="${y + oSz / 2 + 4}" text-anchor="middle" class="geo-overlap-area">${areaText}</text>` : ''}
+        ${this._dimLine(x1, y + sz + 10, x1 + sz, y + sz + 10, `邊長 ${s} ${unit}`)}
+        ${this._dimLine(x2, y + sz + 26, x2 + oSz, y + sz + 26, revealOverlap ? `重疊邊 ${o} ${unit}` : '重疊邊 ?', { known: revealOverlap })}
+        ${this._dimLine(x1, y - 6, x1 + off, y - 6, revealOverlap ? `${s - o} ${unit}` : '?', { known: revealOverlap })}
+        ${this._dimLine(x2 + oSz, y - 6, x2 + sz, y - 6, revealOverlap ? `${s - o} ${unit}` : '?', { known: revealOverlap })}
+        <text x="120" y="158" text-anchor="middle" class="geo-caption">虛線框 = 重疊部分${areaText ? `（面積 ${areaText}）` : ''}</text>
       </svg>
     `);
   },
 
-  squareCutout(totalSide, cutW, cutH, unit = 'm') {
+  squareCutout(totalSide, cutW, cutH, unit = 'm', opts = {}) {
     const s = Number(totalSide);
     const cw = Number(cutW);
     const ch = Number(cutH);
     const scale = 90 / s;
     const sz = s * scale;
-    const cx = (200 - sz) / 2;
-    const cy = (120 - sz) / 2 + 8;
+    const cx = (240 - sz) / 2;
+    const cy = (145 - sz) / 2 + 10;
     const hx = cx + (sz - cw * scale) / 2;
     const hy = cy + (sz - ch * scale) / 2;
+    const cwPx = cw * scale;
+    const chPx = ch * scale;
     return this.scene(`
-      <svg class="geo-svg" viewBox="0 0 200 135" role="img" aria-label="挖去長方形後的正方形圖">
+      <svg class="geo-svg geo-svg--wide" viewBox="0 0 240 155" role="img" aria-label="挖去長方形後的正方形圖">
         <rect x="${cx}" y="${cy}" width="${sz}" height="${sz}" class="geo-rect"/>
-        <rect x="${hx}" y="${hy}" width="${cw * scale}" height="${ch * scale}" fill="#fff" stroke="#ef4444" stroke-dasharray="5 3"/>
+        <rect x="${hx}" y="${hy}" width="${cwPx}" height="${chPx}" class="geo-cutout-region"/>
+        <text x="${hx + cwPx / 2}" y="${hy + chPx / 2 + 4}" text-anchor="middle" class="geo-cutout-label">挖去</text>
+        ${this._dimLine(cx, cy + sz + 10, cx + sz, cy + sz + 10, `邊長 ${s} ${unit}`)}
+        ${this._dimLine(hx, hy + chPx + 8, hx + cwPx, hy + chPx + 8, `闊 ${cw} ${unit}`)}
+        ${this._dimLine(hx + cwPx + 8, hy, hx + cwPx + 8, hy + chPx, `高 ${ch} ${unit}`, { vertical: true })}
       </svg>
     `);
   }

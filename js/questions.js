@@ -42,6 +42,10 @@ const QuestionBank = {
     return this.generateRandomSet(count, tier, topics);
   },
 
+  generateTermExam(grade) {
+    return typeof TermExam !== 'undefined' ? TermExam.generatePaper(grade) : null;
+  },
+
   getPoolStats() {
     QuestionPool.init();
     return TOPICS.map(t => ({

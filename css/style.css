@@ -2006,6 +2006,97 @@ html[data-theme="dark"] .btn-read-question:hover {
   text-align: center;
 }
 
+.geo-svg--wide { max-width: 20rem; }
+
+.geo-dim-line {
+  stroke: #0f766e;
+  stroke-width: 1.5;
+  marker-end: url(#geo-arrow);
+}
+
+.geo-dim-label {
+  font-size: 11px;
+  font-weight: 700;
+  fill: #0f766e;
+}
+
+.geo-dim-label--calc {
+  fill: #c2410c;
+}
+
+.geo-known-label {
+  font-size: 12px;
+  font-weight: 700;
+  fill: #1d4ed8;
+}
+
+.geo-note-label {
+  font-size: 11px;
+  font-weight: 600;
+  fill: #7c3aed;
+}
+
+.geo-overlap-region {
+  fill: rgba(59, 130, 246, 0.28);
+  stroke: #2563eb;
+  stroke-width: 2;
+  stroke-dasharray: 5 3;
+}
+
+.geo-overlap-area {
+  font-size: 11px;
+  font-weight: 700;
+  fill: #1e40af;
+}
+
+.geo-cutout-region {
+  fill: #fff;
+  stroke: #ef4444;
+  stroke-width: 2;
+  stroke-dasharray: 5 3;
+}
+
+.geo-cutout-label {
+  font-size: 10px;
+  font-weight: 600;
+  fill: #b91c1c;
+}
+
+.geo-map-link {
+  stroke: #94a3b8;
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+}
+
+.geo-map-dir {
+  font-size: 8px;
+  font-weight: 600;
+  fill: #64748b;
+}
+
+.geo-map-edge {
+  font-size: 9px;
+  font-weight: 700;
+  fill: #15803d;
+}
+
+.geo-map-label--center {
+  font-weight: 700;
+  font-size: 10px;
+}
+
+.geo-map-compass-ring {
+  fill: #fff;
+  stroke: #cbd5e1;
+  stroke-width: 1.5;
+}
+
+.geo-map-compass-n {
+  font-size: 8px;
+  font-weight: 700;
+  fill: #ef4444;
+}
+
 .geo-right-angle {
   fill: none;
   stroke: #2563eb;
@@ -2055,6 +2146,15 @@ html[data-theme="dark"] .btn-read-question:hover {
   width: 0.75rem;
   height: 0.75rem;
   border-radius: 2px;
+}
+
+.pie-slice-value {
+  font-size: 10px;
+  font-weight: 800;
+  fill: #fff;
+  paint-order: stroke;
+  stroke: rgba(15, 23, 42, 0.45);
+  stroke-width: 2px;
 }
 
 .pictograph-chart { width: 100%; max-width: 18rem; }
@@ -2196,9 +2296,97 @@ html[data-theme="dark"] .btn-read-question:hover {
   align-items: center;
   gap: 0.25rem;
 }
-.facing-arrow { font-size: 1.5rem; font-weight: 700; color: #ef4444; }
-.facing-icon { font-size: 2rem; }
-.facing-label { font-size: 0.85rem; }
+.facing-person--exam {
+  flex-direction: row;
+  align-items: stretch;
+  gap: 1rem;
+  width: 100%;
+  max-width: 20rem;
+}
+.facing-compass-mini {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto auto;
+  gap: 0.15rem;
+  padding: 0.5rem;
+  background: #f8fafc;
+  border: 2px solid #cbd5e1;
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-align: center;
+  min-width: 5.5rem;
+  align-self: center;
+}
+.facing-compass-n { grid-column: 1 / 4; color: #ef4444; }
+.facing-compass-w { color: #64748b; }
+.facing-compass-e { color: #64748b; }
+.facing-compass-s { grid-column: 1 / 4; color: #64748b; }
+.facing-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  flex: 1;
+}
+.facing-arrow { font-size: 1.75rem; font-weight: 700; color: #ef4444; line-height: 1; }
+.facing-icon { font-size: 2.25rem; line-height: 1; }
+.facing-label { font-size: 0.9rem; font-weight: 700; color: var(--text); }
+.facing-hint { font-size: 0.72rem; color: var(--text-muted); text-align: center; }
+
+.speed-diagram {
+  width: 100%;
+  max-width: 18rem;
+  padding: 0.65rem 0.75rem;
+  background: #f0f9ff;
+  border: 2px solid #bae6fd;
+  border-radius: var(--radius-sm);
+}
+.speed-formula {
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #0369a1;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px dashed #7dd3fc;
+}
+.speed-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0.5rem;
+  margin: 0.15rem 0;
+  background: #fff;
+  border-radius: 4px;
+  border: 1px solid #e0f2fe;
+}
+.speed-row--calc {
+  background: #fff7ed;
+  border-color: #fdba74;
+}
+.speed-row--calc .speed-value {
+  color: #c2410c;
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+.speed-label { font-size: 0.85rem; font-weight: 600; color: #334155; }
+.speed-value { font-size: 0.9rem; font-weight: 700; color: #1d4ed8; }
+.speed-op {
+  display: block;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #64748b;
+  margin: 0.1rem 0;
+}
+.speed-road {
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: #475569;
+}
 
 .geo-angle-compare {
   display: flex;
@@ -2234,6 +2422,16 @@ html[data-theme="dark"] .btn-read-question:hover {
   font-size: 11px;
   font-weight: 800;
   fill: #1e40af;
+}
+
+.triangle-edge-label--calc {
+  fill: #c2410c;
+}
+
+.geo-circle-center {
+  fill: #2563eb;
+  stroke: #fff;
+  stroke-width: 1;
 }
 
 .triangle-height-line {
@@ -6442,6 +6640,59 @@ html[data-theme="dark"] .card-art-cinna .card-img {
   font-size: 24px;
 }
 
+/* ── 學期大考入場 ── */
+.exam-entry-card {
+  position: relative;
+  margin-bottom: 1.5rem;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 2px solid #3b82f6;
+  box-shadow: 0 8px 28px rgba(59, 130, 246, 0.22);
+}
+
+.exam-entry-glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 55%, #60a5fa 100%);
+  opacity: 0.95;
+}
+
+.exam-entry-inner {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.35rem;
+  color: #fff;
+}
+
+.exam-entry-icon {
+  font-size: 3rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.exam-entry-text {
+  flex: 1;
+  min-width: 200px;
+}
+
+.exam-entry-text h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.2rem;
+}
+
+.exam-entry-text p {
+  margin: 0;
+  font-size: 0.92rem;
+  opacity: 0.95;
+}
+
+.exam-entry-inner .btn {
+  flex-shrink: 0;
+}
+
 /* ── BOSS 關卡 ── */
 .boss-entry-card {
   position: relative;
@@ -7400,7 +7651,398 @@ html[data-theme="dark"] .profile-modal {
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.2));
 }
 
-.logo-img,
 .footer-logo {
   object-fit: cover;
+}
+
+/* Term exam */
+.exam-intro,
+.exam-active,
+.exam-result {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+}
+
+.exam-hero-wrap {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.exam-hero-img {
+  max-width: 120px;
+  height: auto;
+  opacity: 0.9;
+}
+
+.exam-rules {
+  margin: 1.25rem 0 1.5rem 1.5rem;
+  color: var(--text-muted);
+}
+
+.exam-rules li {
+  margin-bottom: 0.35rem;
+}
+
+.exam-scope-preview {
+  margin: 1.25rem 0;
+}
+
+.exam-scope-preview h4 {
+  margin-bottom: 0.5rem;
+  color: var(--primary-dark);
+}
+
+.exam-scope-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: 0.75rem 0 1rem;
+}
+
+.exam-scope-table th,
+.exam-scope-table td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.65rem;
+  text-align: left;
+}
+
+.exam-scope-table th {
+  background: #f8fafc;
+  font-weight: 700;
+}
+
+.exam-timer-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #1e3a5f, #2563eb);
+  color: #fff;
+  border-radius: var(--radius);
+  position: sticky;
+  top: 0.5rem;
+  z-index: 20;
+  box-shadow: var(--shadow);
+}
+
+.exam-timer-label {
+  font-weight: 600;
+}
+
+.exam-timer-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
+}
+
+.exam-timer-value--warn {
+  color: #fde047;
+}
+
+.exam-timer-value--urgent {
+  color: #fca5a5;
+  animation: exam-timer-pulse 1s ease-in-out infinite;
+}
+
+@keyframes exam-timer-pulse {
+  50% { opacity: 0.65; }
+}
+
+.exam-timer-bar .btn {
+  margin-left: auto;
+}
+
+.exam-paper-wrap {
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.exam-paper-wrap .geo-scene,
+.exam-paper-wrap .triangle-scene,
+.exam-paper-wrap .bar-chart-scene {
+  margin: 0.75rem 0 0.35rem;
+  padding: 1rem;
+  background: #fff;
+  border: 2px solid #cbd5e1;
+}
+
+.exam-paper-wrap .geo-svg {
+  max-width: 22rem;
+}
+
+.exam-paper-wrap .geo-svg--wide,
+.exam-paper-wrap .geo-svg--map {
+  max-width: 24rem;
+}
+
+.exam-paper-wrap .triangle-svg {
+  max-width: 18rem;
+}
+
+.exam-paper-wrap .bar-chart-wrap {
+  max-width: 100%;
+}
+
+.exam-paper-wrap .bar-chart-label,
+.exam-paper-wrap .bar-chart-value {
+  font-size: 0.78rem;
+}
+
+.exam-paper-wrap .pie-legend {
+  font-size: 0.88rem;
+}
+
+.exam-paper-wrap .geo-dim-label,
+.exam-paper-wrap .triangle-edge-label {
+  font-size: 12px;
+}
+
+.exam-paper-wrap .geo-caption {
+  font-size: 0.8rem;
+}
+
+.exam-paper-wrap .speed-diagram {
+  max-width: 100%;
+}
+
+.exam-paper-wrap .facing-person--exam {
+  max-width: 100%;
+}
+
+.exam-paper {
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.5rem 1.25rem 2rem;
+}
+
+.exam-paper-header h2 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: var(--primary-dark);
+}
+
+.exam-paper-meta {
+  text-align: center;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.exam-paper-section {
+  margin-top: 1.75rem;
+}
+
+.exam-section-title {
+  font-size: 1.05rem;
+  color: var(--primary-dark);
+  border-bottom: 2px solid var(--primary-light);
+  padding-bottom: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.exam-section-note {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.exam-section-score {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+.exam-q-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.exam-q-table td {
+  border: 1px solid #e2e8f0;
+  padding: 0.65rem 0.5rem;
+  vertical-align: top;
+}
+
+.exam-q-num {
+  width: 2.5rem;
+  text-align: center;
+  font-weight: 700;
+  background: #f8fafc;
+}
+
+.exam-q-answer {
+  width: 8rem;
+}
+
+.exam-answer-input {
+  width: 100%;
+  padding: 0.45rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+}
+
+.exam-answer-input--long {
+  max-width: 14rem;
+}
+
+.exam-mcq-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 0.5rem 0;
+}
+
+.exam-mcq-group .exam-mcq-option.selected {
+  border-color: var(--primary);
+  background: #eff6ff;
+}
+
+.exam-q-long {
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #fafbfc;
+}
+
+.exam-q-long-head {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.exam-q-long-head .exam-q-num {
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  text-align: center;
+}
+
+.exam-q-long-hint {
+  font-size: 0.85rem;
+  color: #b45309;
+  margin: 0.5rem 0;
+}
+
+.exam-working-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.75rem;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.exam-q-answer-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.exam-paper-end {
+  text-align: center;
+  margin-top: 2rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.exam-result h3 {
+  margin-bottom: 0.75rem;
+}
+
+.exam-result-grade {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.exam-result-score {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.exam-result-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.exam-result-table th,
+.exam-result-table td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+}
+
+.exam-result-table th {
+  background: #f8fafc;
+}
+
+.exam-result .btn {
+  margin: 0.5rem 0.5rem 0 0;
+}
+
+.exam-history {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.exam-history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card);
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .exam-intro,
+  .exam-active,
+  .exam-result {
+    padding: 1.25rem;
+  }
+
+  .exam-q-table,
+  .exam-q-table tbody,
+  .exam-q-table tr,
+  .exam-q-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .exam-q-row .exam-q-num {
+    display: inline-block;
+    width: auto;
+    margin-bottom: 0.35rem;
+  }
+
+  .exam-q-answer {
+    width: 100%;
+  }
+
+  .exam-timer-bar {
+    flex-wrap: wrap;
+  }
+
+  .exam-timer-bar .btn {
+    margin-left: 0;
+    width: 100%;
+  }
 }

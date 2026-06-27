@@ -988,7 +988,7 @@ const P12Questions = {
     const wrong = all.filter(d => d !== correct);
     const options = MathUtils.shuffle([correct, ...MathUtils.shuffle(wrong).slice(0, 3)]);
     const scenes = ['站着', '面向操場', '看地圖時', '依照指南針'];
-    const visual = QV.compassRose() + QV.facingPerson(`${facing}方`);
+    const visual = QV.facingPerson(`${facing}方`);
     return this._mcq('p2-direction',
       QV.withVisual(`${MathUtils.randomChoice(scenes)}，面向${facing}方，${labels[ask]}是什麼方向？`, visual),
       options, correct,

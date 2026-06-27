@@ -10,9 +10,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=65">
+  <link rel="stylesheet" href="css/style.css?v=70">
 </head>
 <body>
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden">
+    <defs>
+      <marker id="geo-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 Z" fill="#0f766e"/>
+      </marker>
+    </defs>
+  </svg>
   <header class="header">
     <div class="header-bg"></div>
     <div class="header-inner">
@@ -70,6 +77,7 @@
     <button class="nav-tab active" data-view="home"><img src="assets/img/art/tier-easy-ai.png" alt="" class="nav-icon">主頁</button>
     <button class="nav-tab" data-view="practice"><img src="assets/img/art/topic-chart-ai.png" alt="" class="nav-icon">分題練習</button>
     <button class="nav-tab" data-view="quiz"><img src="assets/img/quiz-hero-ai.png" alt="" class="nav-icon">模擬小測</button>
+    <button class="nav-tab" data-view="exam"><img src="assets/img/art/topic-ruler-ai.png" alt="" class="nav-icon">學期大考</button>
     <button class="nav-tab" data-view="rewards"><img src="assets/img/art/gift-big-ai.png" alt="" class="nav-icon">抽卡</button>
     <button class="nav-tab" data-view="tips"><img src="assets/img/art/logo-ai.png" alt="" class="nav-icon">溫習秘笈</button>
     <button class="nav-tab" data-view="progress"><img src="assets/img/art/tier-hard-ai.png" alt="" class="nav-icon">學習記錄</button>
@@ -126,6 +134,18 @@
             <p>操控<strong>比卡超</strong>連戰 <strong>3 關</strong>！每關 BOSS 隨機生成、愈打愈難；答題攻擊，連續答對放出<strong>十萬伏特</strong>！</p>
           </div>
           <button type="button" class="btn btn-boss" id="startBossBattle">挑戰 BOSS</button>
+        </div>
+      </div>
+
+      <div class="exam-entry-card" id="examEntryCard">
+        <div class="exam-entry-glow"></div>
+        <div class="exam-entry-inner">
+          <div class="exam-entry-icon">📋</div>
+          <div class="exam-entry-text">
+            <h3>學期大考</h3>
+            <p>仿照學校大考卷格式，<strong>限時 1 小時</strong>。P1–P6 各級獨立試卷，題目每次隨機出現！</p>
+          </div>
+          <button type="button" class="btn btn-primary" id="goToExam">開始大考</button>
         </div>
       </div>
 
@@ -235,6 +255,35 @@
       <div class="quiz-result hidden" id="quizResult"></div>
     </section>
 
+    <section class="view" id="view-exam">
+      <div class="exam-intro" id="examIntro">
+        <div class="exam-hero-wrap">
+          <img src="assets/img/art/topic-chart-ai.png" alt="" class="exam-hero-img">
+        </div>
+        <h2>📋 學期大考</h2>
+        <p id="examIntroDesc">仿照學校大考卷格式，<strong>限時 1 小時</strong>。請先揀年級。</p>
+        <div class="activity-grade-picker" id="examGradePicker"></div>
+        <div id="examScopePreview"></div>
+        <ul class="exam-rules">
+          <li>全卷限時 <strong>60 分鐘</strong>，時間到會自動交卷</li>
+          <li>短答題請喺答案格填寫；應用題須列橫式、計算步驟同答句</li>
+          <li>分數答案須約至最簡（適用年級）</li>
+          <li>選擇題可撳 🔊 朗讀選項</li>
+          <li>合格 <strong>60%</strong> 可獲積分獎勵</li>
+        </ul>
+        <button class="btn btn-primary btn-lg" id="startExam" disabled>開始大考</button>
+      </div>
+      <div class="exam-active hidden" id="examActive">
+        <div class="exam-timer-bar" id="examTimerBar">
+          <span class="exam-timer-label">剩餘時間</span>
+          <span class="exam-timer-value" id="examTimerValue">60:00</span>
+          <button type="button" class="btn btn-secondary btn-sm" id="submitExamBtn">交卷</button>
+        </div>
+        <div class="exam-paper-wrap" id="examPaperWrap"></div>
+      </div>
+      <div class="exam-result hidden" id="examResult"></div>
+    </section>
+
     <section class="view" id="view-rewards">
       <div class="view-hero-strip view-hero-strip--rewards">
         <img src="assets/img/rewards-hero-ai.png" alt="" class="view-hero-strip-img">
@@ -291,6 +340,8 @@
       <div class="topic-progress-list" id="topicProgressList"></div>
       <h3>最近測驗成績</h3>
       <div class="quiz-history" id="quizHistory"></div>
+      <h3>學期大考記錄</h3>
+      <div class="exam-history" id="examHistory"></div>
       <button class="btn btn-secondary btn-sm" id="switchProfile">登出</button>
     </section>
   </main>
@@ -372,6 +423,18 @@
     </div>
   </div>
 
+  <div class="modal hidden" id="examExitModal" role="dialog" aria-modal="true" aria-labelledby="examExitTitle">
+    <div class="modal-content boss-exit-modal">
+      <div class="modal-icon">📋</div>
+      <h3 id="examExitTitle">退出學期大考？</h3>
+      <p>你而家喺大考中，離開後<strong>唔會儲存</strong>作答進度。確定要退出嗎？</p>
+      <div class="boss-exit-actions">
+        <button type="button" class="btn btn-secondary" id="examExitCancel">繼續作答</button>
+        <button type="button" class="btn btn-boss" id="examExitConfirm">確定退出</button>
+      </div>
+    </div>
+  </div>
+
   <footer class="footer">
     <img src="assets/img/art/logo-ai.png" alt="" class="footer-logo">
     <p>舅父與晞晞、雋雋補習網 · 加油！🌟</p>
@@ -381,19 +444,20 @@
   <script src="js/supabase-config.js?v=18"></script>
   <script src="js/settings.js?v=24"></script>
   <script src="js/audio.js?v=28"></script>
-  <script src="js/utils.js?v=26"></script>
+  <script src="js/utils.js?v=28"></script>
   <script src="js/cloud-sync.js?v=31"></script>
-  <script src="js/scoring.js?v=25"></script>
+  <script src="js/scoring.js?v=26"></script>
   <script src="js/topics-config.js?v=27"></script>
   <script src="js/topic-art.js?v=1"></script>
-  <script src="js/question-visuals.js?v=6"></script>
-  <script src="js/p34-questions.js?v=29"></script>
-  <script src="js/p12-questions.js?v=33"></script>
-  <script src="js/p56-questions.js?v=26"></script>
-  <script src="js/exam-questions.js?v=5"></script>
+  <script src="js/question-visuals.js?v=8"></script>
+  <script src="js/p34-questions.js?v=31"></script>
+  <script src="js/p12-questions.js?v=34"></script>
+  <script src="js/p56-questions.js?v=27"></script>
+  <script src="js/exam-questions.js?v=7"></script>
   <script src="js/question-engine.js?v=21"></script>
-  <script src="js/question-pool.js?v=22"></script>
-  <script src="js/questions.js?v=22"></script>
+  <script src="js/question-pool.js?v=23"></script>
+  <script src="js/questions.js?v=23"></script>
+  <script src="js/term-exam.js?v=3"></script>
   <script src="js/sanrio-deck.js?v=5"></script>
   <script src="js/pixar-deck.js?v=2"></script>
   <script src="js/disney-deck.js?v=4"></script>
@@ -401,6 +465,6 @@
   <script src="js/gacha-animation.js?v=32"></script>
   <script src="js/gacha-pools.js?v=27"></script>
   <script src="js/boss-battle.js?v=4"></script>
-  <script src="js/app.js?v=54"></script>
+  <script src="js/app.js?v=57"></script>
 </body>
 </html>

@@ -83,6 +83,11 @@ const MathUtils = {
   },
 
   answersEqual(userAns, correctAns) {
+    if (correctAns?.type === 'text') {
+      const norm = (s) => String(s || '').replace(/\s+/g, '').replace(/＞/g, '>').toLowerCase();
+      return norm(userAns) === norm(correctAns.value);
+    }
+
     const parsed = this.parseAnswer(userAns);
     if (!parsed) return false;
 
@@ -105,11 +110,6 @@ const MathUtils = {
         const correctVal = correctAns.num / correctAns.den;
         return Math.abs(parsed.value - correctVal) < 0.001;
       }
-    }
-
-    if (correctAns.type === 'text') {
-      const norm = (s) => String(s || '').replace(/\s+/g, '').replace(/＞/g, '>').toLowerCase();
-      return norm(userAns) === norm(correctAns.value);
     }
 
     return false;
@@ -281,6 +281,7 @@ const Storage = {
       lastPracticeDate: null,
       topics: {},
       quizHistory: [],
+      examHistory: [],
       xp: 0,
       points: 0,
       badges: [],
@@ -504,6 +505,23 @@ const Storage = {
     });
     if (data.quizHistory.length > 10) data.quizHistory.pop();
     this.save(data);
+  },
+
+  recordTermExam(grade, score, total, sectionScores, timedOut = false, data = null) {
+    const target = data || this.load();
+    if (!target.examHistory) target.examHistory = [];
+    target.examHistory.unshift({
+      date: new Date().toISOString(),
+      grade,
+      score,
+      total,
+      percentage: total ? Math.round((score / total) * 100) : 0,
+      sectionScores,
+      timedOut
+    });
+    if (target.examHistory.length > 10) target.examHistory.pop();
+    if (!data) this.save(target);
+    return target;
   },
 
   reset() {
