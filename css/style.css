@@ -2412,6 +2412,53 @@ html[data-theme="dark"] .teach-hint {
   margin-top: 1.25rem;
 }
 
+.mcq-option-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+.mcq-option-row .option-btn {
+  flex: 1;
+  min-width: 0;
+}
+
+.btn-read-mcq-option {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  min-height: 44px;
+  padding: 0.4rem;
+  border-radius: var(--radius-sm);
+  border: 2px solid #93c5fd;
+  background: #eff6ff;
+  color: #1d4ed8;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.btn-read-mcq-option:hover {
+  background: #dbeafe;
+}
+
+.btn-read-mcq-option:active {
+  transform: scale(0.97);
+}
+
+html[data-theme="dark"] .btn-read-mcq-option {
+  background: rgba(30, 58, 138, 0.35);
+  border-color: rgba(147, 197, 253, 0.45);
+  color: #93c5fd;
+}
+
+html[data-theme="dark"] .btn-read-mcq-option:hover {
+  background: rgba(30, 58, 138, 0.55);
+}
+
 .option-btn {
   padding: 1rem 1.25rem;
   border: 2px solid var(--border);

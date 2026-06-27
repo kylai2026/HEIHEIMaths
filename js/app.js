@@ -270,11 +270,43 @@ const App = {
     return '<div class="question-read-row"><button type="button" class="btn-read-question" title="朗讀題目" aria-label="朗讀題目"><span class="btn-read-icon" aria-hidden="true">🔊</span><span class="btn-read-label">朗讀題目</span></button></div>';
   },
 
+  mcqOptionRowHtml(opt, index, optionClass = 'option-btn') {
+    const letter = String.fromCharCode(65 + index);
+    return `
+      <div class="mcq-option-row">
+        <button type="button" class="${optionClass}" data-index="${index}">${letter}. ${opt}</button>
+        <button type="button" class="btn-read-mcq-option" data-option-index="${index}" title="朗讀選項 ${letter}" aria-label="朗讀選項 ${letter}"><span class="btn-read-icon" aria-hidden="true">🔊</span></button>
+      </div>`;
+  },
+
   bindReadQuestion() {
     if (this._readQuestionBound) return;
     this._readQuestionBound = true;
     let lastReadAt = 0;
     const run = (e) => {
+      const mcqBtn = e.target.closest('.btn-read-mcq-option');
+      if (mcqBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (Date.now() - lastReadAt < 450) return;
+        lastReadAt = Date.now();
+        const i = parseInt(mcqBtn.dataset.optionIndex, 10);
+        if (Number.isNaN(i)) return;
+        let opt = '';
+        if (this.state.currentView === 'quiz' && this.state.quizQuestions?.length) {
+          opt = this.state.quizQuestions[this.state.quizIndex]?.options?.[i];
+        } else {
+          opt = this.state.currentQuestion?.options?.[i];
+        }
+        if (!opt) return;
+        const letter = String.fromCharCode(65 + i);
+        if (typeof AudioManager !== 'undefined') {
+          AudioManager.speakQuestion(`選項 ${letter}，${opt}`);
+          AudioManager.playSfx('click');
+        }
+        return;
+      }
+
       const btn = e.target.closest('.btn-read-question');
       if (!btn) return;
       e.preventDefault();
@@ -1216,9 +1248,9 @@ const App = {
       document.getElementById('answerArea').classList.add('hidden');
       const mcqEl = document.getElementById('practiceMcqArea');
       mcqEl.classList.remove('hidden');
-      mcqEl.innerHTML = q.options.map((opt, i) => `
-        <button class="option-btn practice-mcq" data-index="${i}">${String.fromCharCode(65 + i)}. ${opt}</button>
-      `).join('');
+      mcqEl.innerHTML = q.options.map((opt, i) =>
+        this.mcqOptionRowHtml(opt, i, 'option-btn practice-mcq')
+      ).join('');
       mcqEl.querySelectorAll('.practice-mcq').forEach(btn => {
         btn.addEventListener('click', () => this.checkMcqAnswer(parseInt(btn.dataset.index, 10)));
       });
@@ -1570,9 +1602,9 @@ const App = {
     `;
 
     const optionsEl = document.getElementById('quizOptions');
-    optionsEl.innerHTML = q.options.map((opt, i) => `
-      <button class="option-btn" data-index="${i}">${String.fromCharCode(65 + i)}. ${opt}</button>
-    `).join('');
+    optionsEl.innerHTML = q.options.map((opt, i) =>
+      this.mcqOptionRowHtml(opt, i, 'option-btn')
+    ).join('');
 
     optionsEl.querySelectorAll('.option-btn').forEach(btn => {
       btn.addEventListener('click', () => this.answerQuiz(parseInt(btn.dataset.index, 10)));
