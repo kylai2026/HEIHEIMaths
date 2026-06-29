@@ -346,6 +346,46 @@ const App = {
       </div>`;
   },
 
+  isShapeMcq(q) {
+    return q?.mcqVisual === 'shapes' || (q?.question && q.question.includes('geo-shapes-mcq'));
+  },
+
+  bindShapeMcq(root, onSelect, opts = {}) {
+    const btns = root?.querySelectorAll('.mcq-shape-btn');
+    if (!btns?.length) return false;
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.mcqIndex, 10);
+        if (Number.isNaN(idx)) return;
+        if (opts.markSelected !== false) {
+          btns.forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+        }
+        onSelect(idx, btn);
+      });
+    });
+    if (opts.selectedIndex != null) {
+      btns.forEach(btn => {
+        btn.classList.toggle('selected', parseInt(btn.dataset.mcqIndex, 10) === opts.selectedIndex);
+      });
+    } else if (typeof opts.selectedLetter === 'string' && opts.selectedLetter.length === 1) {
+      const idx = opts.selectedLetter.charCodeAt(0) - 65;
+      btns.forEach(btn => {
+        btn.classList.toggle('selected', parseInt(btn.dataset.mcqIndex, 10) === idx);
+      });
+    }
+    return true;
+  },
+
+  markShapeMcqResult(root, correctIndex, selectedIndex) {
+    root?.querySelectorAll('.mcq-shape-btn').forEach(btn => {
+      btn.disabled = true;
+      const idx = parseInt(btn.dataset.mcqIndex, 10);
+      if (idx === correctIndex) btn.classList.add('correct');
+      else if (idx === selectedIndex) btn.classList.add('wrong');
+    });
+  },
+
   bindReadQuestion() {
     if (this._readQuestionBound) return;
     this._readQuestionBound = true;
@@ -443,6 +483,13 @@ const App = {
 
   async logout() {
     if (!confirm('確定要登出嗎？')) return;
+    try {
+      if (CloudSync.client && CloudSync.profile) {
+        await CloudSync.push();
+      }
+    } catch (err) {
+      console.warn('push before logout failed:', err);
+    }
     CloudSync.clearProfile();
     localStorage.removeItem(Storage.KEY);
     this.updateAuthUI();
@@ -1329,15 +1376,21 @@ const App = {
     }
 
     if (q.type === 'mcq' && q.options) {
+      const shapeMcq = this.isShapeMcq(q);
       document.getElementById('answerArea').classList.add('hidden');
       const mcqEl = document.getElementById('practiceMcqArea');
-      mcqEl.classList.remove('hidden');
-      mcqEl.innerHTML = q.options.map((opt, i) =>
-        this.mcqOptionRowHtml(opt, i, 'option-btn practice-mcq')
-      ).join('');
-      mcqEl.querySelectorAll('.practice-mcq').forEach(btn => {
-        btn.addEventListener('click', () => this.checkMcqAnswer(parseInt(btn.dataset.index, 10)));
-      });
+      mcqEl.classList.toggle('hidden', shapeMcq);
+      if (!shapeMcq) {
+        mcqEl.innerHTML = q.options.map((opt, i) =>
+          this.mcqOptionRowHtml(opt, i, 'option-btn practice-mcq')
+        ).join('');
+        mcqEl.querySelectorAll('.practice-mcq').forEach(btn => {
+          btn.addEventListener('click', () => this.checkMcqAnswer(parseInt(btn.dataset.index, 10)));
+        });
+      } else {
+        mcqEl.innerHTML = '';
+        this.bindShapeMcq(document.getElementById('questionCard'), idx => this.checkMcqAnswer(idx));
+      }
     } else {
       document.getElementById('answerArea').classList.remove('hidden');
       document.getElementById('practiceMcqArea').classList.add('hidden');
@@ -1516,6 +1569,7 @@ const App = {
       if (i === q.correctIndex) btn.classList.add('correct');
       else if (i === selectedIndex) btn.classList.add('wrong');
     });
+    this.markShapeMcqResult(document.getElementById('questionCard'), q.correctIndex, selectedIndex);
 
     const userAnswer = q.options?.[selectedIndex] ?? String(selectedIndex);
     const tier = q.tier || this.state.practiceTier;
@@ -1778,16 +1832,20 @@ const App = {
 
   examQuestionRowHtml(q, answers) {
     if (q.type === 'mcq' && q.options) {
+      const shapeMcq = this.isShapeMcq(q);
+      const mcqBlock = shapeMcq ? '' : `
+            <p class="exam-mcq-hint">請選擇答案（可撳 🔊 朗讀選項）</p>
+            <div class="exam-mcq-group options-grid">
+              ${q.options.map((opt, i) => this.mcqOptionRowHtml(opt, i, `option-btn exam-mcq-option ${answers[q.examNum] === String.fromCharCode(65 + i) ? 'selected' : ''}`)).join('')}
+            </div>`;
       return `
         <tr class="exam-q-row exam-q-row--mcq" data-exam-num="${q.examNum}">
           <td class="exam-q-num">${q.examNum}</td>
           <td class="exam-q-text" colspan="2">
             <div class="math-expr">${q.question}</div>
             ${this.readQuestionBtnHtml(q.examNum)}
-            <p class="exam-mcq-hint">請選擇答案（可撳 🔊 朗讀選項）</p>
-            <div class="exam-mcq-group options-grid">
-              ${q.options.map((opt, i) => this.mcqOptionRowHtml(opt, i, `option-btn exam-mcq-option ${answers[q.examNum] === String.fromCharCode(65 + i) ? 'selected' : ''}`)).join('')}
-            </div>
+            ${shapeMcq ? '<p class="exam-mcq-hint">請點選圖形作答</p>' : ''}
+            ${mcqBlock}
           </td>
         </tr>`;
     }
@@ -1871,6 +1929,14 @@ const App = {
           b.classList.toggle('selected', b === btn);
         });
       });
+    });
+    document.querySelectorAll('.exam-q-row--mcq').forEach(row => {
+      const num = parseInt(row.dataset.examNum, 10);
+      const q = paper.questions.find(x => x.examNum === num);
+      if (!q || !this.isShapeMcq(q)) return;
+      this.bindShapeMcq(row, idx => {
+        this.state.examAnswers[num] = String.fromCharCode(65 + idx);
+      }, { selectedLetter: answers[num] });
     });
   },
 
@@ -1963,14 +2029,21 @@ const App = {
       ${this.readQuestionBtnHtml()}
     `;
 
+    const shapeMcq = this.isShapeMcq(q);
     const optionsEl = document.getElementById('quizOptions');
-    optionsEl.innerHTML = q.options.map((opt, i) =>
-      this.mcqOptionRowHtml(opt, i, 'option-btn')
-    ).join('');
-
-    optionsEl.querySelectorAll('.option-btn').forEach(btn => {
-      btn.addEventListener('click', () => this.answerQuiz(parseInt(btn.dataset.index, 10)));
-    });
+    if (shapeMcq) {
+      optionsEl.classList.add('hidden');
+      optionsEl.innerHTML = '';
+      this.bindShapeMcq(document.getElementById('quizQuestion'), idx => this.answerQuiz(idx));
+    } else {
+      optionsEl.classList.remove('hidden');
+      optionsEl.innerHTML = q.options.map((opt, i) =>
+        this.mcqOptionRowHtml(opt, i, 'option-btn')
+      ).join('');
+      optionsEl.querySelectorAll('.option-btn').forEach(btn => {
+        btn.addEventListener('click', () => this.answerQuiz(parseInt(btn.dataset.index, 10)));
+      });
+    }
   },
 
   answerQuiz(selectedIndex) {
@@ -1983,6 +2056,7 @@ const App = {
       if (i === q.correctIndex) btn.classList.add('correct');
       else if (i === selectedIndex) btn.classList.add('wrong');
     });
+    this.markShapeMcqResult(document.getElementById('quizQuestion'), q.correctIndex, selectedIndex);
 
     if (correct) {
       this.state.quizScore++;

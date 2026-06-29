@@ -50,12 +50,12 @@ const P12Questions = {
 
   pick(fns) { return MathUtils.randomChoice(fns)(); },
 
-  _mcq(topicId, question, options, correct, hint, solution, tier = 'medium') {
+  _mcq(topicId, question, options, correct, hint, solution, tier = 'medium', extra = {}) {
     const correctIndex = options.indexOf(correct);
     return this.base(topicId, question,
       { type: 'decimal', value: correctIndex }, correct,
       hint, solution, tier,
-      { type: 'mcq', options, correctIndex });
+      { type: 'mcq', options, correctIndex, ...extra });
   },
 
   _numToCn(n) {
@@ -625,34 +625,36 @@ const P12Questions = {
       { name: '正方形', clues: ['四條邊一樣長，四個直角', '四邊相等且四個直角', '像方格紙上的一格', '四條邊都一樣長'] },
       { name: '長方形', clues: ['四個角都是直角，對邊一樣長', '對邊相等，四個直角', '像門或書本的面', '不是正方形但四個直角'] }
     ];
-    const gallery = QV.shapesRow(shapes.map(s => s.name));
+    const mcqExtra = { mcqVisual: 'shapes' };
     const mode = MathUtils.randomChoice(['clue', 'match', 'circle']);
     if (mode === 'circle') {
       const options = MathUtils.shuffle(shapes.map(s => s.name));
       return this._mcq('p1-shapes',
-        QV.withVisual('哪個圖形沒有直邊？', gallery),
+        QV.withVisual('看圖：點選沒有直邊的圖形。', QV.shapesMcq(options)),
         options, '圓形',
         '提示：圓形是圓圓的，沒有直的邊',
-        '<h4>📖 解法</h4><p>答案是 <strong>圓形</strong></p>');
+        '<h4>📖 解法</h4><p>答案是 <strong>圓形</strong></p>',
+        'medium', mcqExtra);
     }
     const correct = MathUtils.randomChoice(shapes);
-    if (mode === 'match') {
-      const wrong = shapes.filter(s => s.name !== correct.name).map(s => s.name);
-      const options = MathUtils.shuffle([correct.name, ...MathUtils.shuffle(wrong).slice(0, 3)]);
-      return this._mcq('p1-shapes',
-        QV.withVisual(`圖中有四種圖形，哪一個是${correct.name}？`, gallery),
-        options, correct.name,
-        '提示：觀察邊和角的特徵',
-        `<h4>📖 解法</h4><p>答案是 <strong>${correct.name}</strong></p>`);
-    }
-    const clue = MathUtils.randomChoice(correct.clues);
     const wrong = shapes.filter(s => s.name !== correct.name).map(s => s.name);
     const options = MathUtils.shuffle([correct.name, ...MathUtils.shuffle(wrong).slice(0, 3)]);
+    const visual = QV.shapesMcq(options);
+    if (mode === 'match') {
+      return this._mcq('p1-shapes',
+        QV.withVisual(`看圖：點選${correct.name}。`, visual),
+        options, correct.name,
+        '提示：觀察邊和角的特徵',
+        `<h4>📖 解法</h4><p>答案是 <strong>${correct.name}</strong></p>`,
+        'medium', mcqExtra);
+    }
+    const clue = MathUtils.randomChoice(correct.clues);
     return this._mcq('p1-shapes',
-      QV.withVisual(`哪個圖形${clue}？`, gallery),
+      QV.withVisual(`看圖：點選${clue}的圖形。`, visual),
       options, correct.name,
       '提示：觀察邊和角的數量',
-      `<h4>📖 解法</h4><p>答案是 <strong>${correct.name}</strong></p>`);
+      `<h4>📖 解法</h4><p>答案是 <strong>${correct.name}</strong></p>`,
+      'medium', mcqExtra);
   },
 
   shapeSides() {

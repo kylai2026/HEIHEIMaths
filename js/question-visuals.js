@@ -254,6 +254,18 @@ const QuestionVisuals = {
     return `<div class="geo-shapes-row" aria-hidden="true">${icons.join('')}</div>`;
   },
 
+  shapesMcq(options) {
+    const items = (options || []).map((name, i) => {
+      const letter = String.fromCharCode(65 + i);
+      const icon = this.shapeIcon(name).replace('geo-scene', 'geo-shape-inner');
+      return `<button type="button" class="mcq-shape-btn" data-mcq-index="${i}" aria-label="選項 ${letter} ${name}">
+        <span class="mcq-shape-letter">${letter}</span>
+        ${icon}
+      </button>`;
+    }).join('');
+    return `<div class="geo-shapes-mcq" role="group" aria-label="圖形選項">${items}</div>`;
+  },
+
   pieChart(data, unit = '人', opts = {}) {
     const entries = Object.entries(data);
     const total = entries.reduce((s, [, v]) => s + Number(v), 0) || 1;

@@ -2120,6 +2120,83 @@ html[data-theme="dark"] .btn-read-question:hover {
   border-radius: var(--radius-sm);
 }
 
+.geo-shapes-mcq {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1rem auto 0.35rem;
+  max-width: 22rem;
+  width: 100%;
+}
+
+.mcq-shape-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 7.5rem;
+  padding: 0.55rem 0.4rem;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  font-family: inherit;
+}
+
+.mcq-shape-btn:hover:not(:disabled) {
+  border-color: var(--primary);
+  background: #eff6ff;
+}
+
+.mcq-shape-btn.selected {
+  border-color: var(--primary);
+  background: #eff6ff;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.mcq-shape-btn.correct {
+  border-color: #16a34a;
+  background: #f0fdf4;
+}
+
+.mcq-shape-btn.wrong {
+  border-color: #dc2626;
+  background: #fef2f2;
+}
+
+.mcq-shape-btn:disabled {
+  cursor: default;
+  opacity: 0.92;
+}
+
+.mcq-shape-letter {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--primary-dark);
+}
+
+.mcq-shape-btn .geo-shape-inner {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  pointer-events: none;
+}
+
+.mcq-shape-btn .geo-svg {
+  max-width: 5.5rem;
+  pointer-events: none;
+}
+
+.exam-paper-wrap .geo-shapes-mcq {
+  max-width: 24rem;
+}
+
+.exam-paper-wrap .mcq-shape-btn {
+  min-height: 8rem;
+}
+
 .pie-chart-wrap {
   display: flex;
   flex-direction: column;
