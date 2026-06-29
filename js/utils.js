@@ -180,6 +180,7 @@ const Storage = {
   migrate(data) {
     if (data.coins && !data.points) data.points = data.coins;
     if (!data.points && data.points !== 0) data.points = 0;
+    if (!data.bonusPoints && data.bonusPoints !== 0) data.bonusPoints = 0;
     if (!data.xp && data.xp !== 0) data.xp = 0;
     delete data.examScoreEstimate;
     delete data.targetExamScore;
@@ -284,6 +285,7 @@ const Storage = {
       examHistory: [],
       xp: 0,
       points: 0,
+      bonusPoints: 0,
       badges: [],
       redeemedGifts: [],
       weeklyPoints: { weekKey: null, easy: 0, medium: 0, hard: 0 },
@@ -328,7 +330,27 @@ const Storage = {
     if (typeof getActiveUnlimitedPoints === 'function' && getActiveUnlimitedPoints()) {
       return UNLIMITED_POINTS_VALUE;
     }
-    return data.points || 0;
+    return (data.points || 0) + (data.bonusPoints || 0);
+  },
+
+  spendPoints(data, amount) {
+    if (typeof getActiveUnlimitedPoints === 'function' && getActiveUnlimitedPoints()) return true;
+    let left = amount;
+    const bonus = data.bonusPoints || 0;
+    if (bonus >= left) {
+      data.bonusPoints = bonus - left;
+      return true;
+    }
+    left -= bonus;
+    data.bonusPoints = 0;
+    if ((data.points || 0) < left) return false;
+    data.points -= left;
+    return true;
+  },
+
+  canAffordPoints(data, amount) {
+    if (typeof getActiveUnlimitedPoints === 'function' && getActiveUnlimitedPoints()) return true;
+    return this.getPoints(data) >= amount;
   },
 
   recordAnswer(topicId, correct, extras = {}, dataRef = null) {

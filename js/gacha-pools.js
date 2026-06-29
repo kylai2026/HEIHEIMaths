@@ -317,10 +317,10 @@ const GachaSystem = {
     }
     this.ensureCollection(data);
     const unlimited = typeof getActiveUnlimitedPoints === 'function' && getActiveUnlimitedPoints();
-    if (!unlimited && (data.points || 0) < GACHA_PULL_COST) {
+    if (!unlimited && !Storage.canAffordPoints(data, GACHA_PULL_COST)) {
       return { ok: false, msg: `積分唔夠！抽 1 次需要 ${GACHA_PULL_COST} 分` };
     }
-    if (!unlimited) data.points -= GACHA_PULL_COST;
+    if (!unlimited) Storage.spendPoints(data, GACHA_PULL_COST);
     data.gachaStats.totalPulls++;
     data.gachaStats[poolId] = (data.gachaStats[poolId] || 0) + 1;
 
@@ -339,10 +339,10 @@ const GachaSystem = {
     }
     this.ensureCollection(data);
     const unlimited = typeof getActiveUnlimitedPoints === 'function' && getActiveUnlimitedPoints();
-    if (!unlimited && (data.points || 0) < GACHA_PULL10_COST) {
+    if (!unlimited && !Storage.canAffordPoints(data, GACHA_PULL10_COST)) {
       return { ok: false, msg: `積分唔夠！抽 10 次需要 ${GACHA_PULL10_COST} 分` };
     }
-    if (!unlimited) data.points -= GACHA_PULL10_COST;
+    if (!unlimited) Storage.spendPoints(data, GACHA_PULL10_COST);
     const results = [];
     for (let i = 0; i < 10; i++) {
       data.gachaStats.totalPulls++;

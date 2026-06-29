@@ -168,6 +168,7 @@ const CloudSync = {
     const merged = newerIsCloud ? { ...cloudBase } : { ...localBase };
 
     merged.points = Math.max(localBase.points || 0, cloudBase.points || 0);
+    merged.bonusPoints = Math.max(localBase.bonusPoints || 0, cloudBase.bonusPoints || 0);
     merged.xp = Math.max(localBase.xp || 0, cloudBase.xp || 0);
     merged.totalAnswered = Math.max(localBase.totalAnswered || 0, cloudBase.totalAnswered || 0);
     merged.totalCorrect = Math.max(localBase.totalCorrect || 0, cloudBase.totalCorrect || 0);
