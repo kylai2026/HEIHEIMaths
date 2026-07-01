@@ -12,7 +12,7 @@ const GACHA_PULL10_COST = 90;
 /** 暫時關閉嘅卡池：設為 false 即可 */
 const GACHA_POOL_ENABLED = {
   pokemon: true,
-  sanrio: false,
+  sanrio: true,
   pixar: false,
   disney: true,
   marvel: true
@@ -21,7 +21,7 @@ const GACHA_POOL_ENABLED = {
 /** 暫時關閉嘅卡冊分頁：設為 false 即可（即使有卡都唔顯示） */
 const GACHA_COLLECTION_ENABLED = {
   pokemon: true,
-  sanrio: false,
+  sanrio: true,
   pixar: false,
   disney: true,
   marvel: true
@@ -51,8 +51,13 @@ const GACHA_IMAGE = {
     bg: 'b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf'
   },
   sanrio: {
-    banner: 'assets/img/cinnamoroll/cinnamoroll-party.png',
-    bannerChar: 'assets/img/cinnamoroll/cinnamoroll-party.png',
+    banner: 'assets/img/sanrio/cards/card-007.png',
+    bannerChar: 'assets/img/sanrio/cards/card-021.png',
+    bannerHeroes: [
+      'assets/img/sanrio/cards/card-007.png',
+      'assets/img/sanrio/cards/card-021.png',
+      'assets/img/sanrio/cards/card-045.png'
+    ],
     style: 'lorelei',
     bg: 'b6e3f4,ffd5dc,fecaca,fde68a,e9d5ff'
   },
@@ -80,6 +85,13 @@ function getPoolBannerChar(poolId) {
   return GACHA_IMAGE[poolId]?.bannerChar || GACHA_IMAGE[poolId]?.banner || '';
 }
 
+function getPoolBannerHeroes(poolId) {
+  const cfg = GACHA_IMAGE[poolId];
+  if (cfg?.bannerHeroes?.length) return cfg.bannerHeroes;
+  const single = getPoolBannerChar(poolId);
+  return single ? [single] : [];
+}
+
 function getCardImageUrl(poolId, cardId) {
   const cfg = GACHA_IMAGE[poolId];
   if (!cfg) return '';
@@ -102,8 +114,8 @@ const CARD_POOLS = [
     icon: '🎀',
     theme: 'sanrio',
     bannerImage: GACHA_IMAGE.sanrio.banner,
-    banner: 'Hello Kitty、美樂蒂、庫洛米…百款 Sanrio 角色！',
-    desc: 'Hello Kitty、美樂蒂、庫洛米、布丁狗、肉桂狗…'
+    banner: 'Hello Kitty、美樂蒂、庫洛米…50 款 Sanrio 角色卡！',
+    desc: 'Hello Kitty、美樂蒂、庫洛米、布丁狗、肉桂狗…共 50 張收藏卡'
   },
   {
     id: 'pixar',
@@ -378,7 +390,7 @@ const GachaSystem = {
       return featured.map(dex => pool.find(c => c.dexId === dex)).filter(Boolean);
     }
     if (poolId === 'sanrio') {
-      const featured = ['sanrio-001', 'sanrio-002', 'sanrio-003', 'sanrio-013', 'sanrio-014', 'sanrio-020'];
+      const featured = ['sanrio-004', 'sanrio-007', 'sanrio-021', 'sanrio-035', 'sanrio-045', 'sanrio-017'];
       const pool = this.getCardsByPool(poolId);
       return featured.map(id => pool.find(c => c.id === id)).filter(Boolean);
     }

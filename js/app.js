@@ -2206,11 +2206,17 @@ const App = {
       const stats = GachaSystem.getCollectionStats(data, pool.id);
       const pct = Math.round((stats.owned / stats.total) * 100);
       const previews = GachaSystem.getPreviewCards(pool.id);
+      const bannerHeroes = getPoolBannerHeroes(pool.id);
+      const heroHtml = pool.id === 'sanrio'
+        ? bannerHeroes.map((src, i) => `
+            <img src="${src}?v=2" alt="" class="gacha-banner-hero gacha-banner-hero--sanrio gacha-banner-hero--sanrio-${i + 1}" loading="lazy"
+              onerror="this.onerror=null;this.style.display='none'">`).join('')
+        : `<img src="${getPoolBannerChar(pool.id)}" alt="${pool.name}" class="gacha-banner-hero" loading="lazy"
+              onerror="this.onerror=null;this.style.display='none'">`;
       return `
         <div class="gacha-pool-card pool-${pool.id}">
           <div class="gacha-pool-banner gacha-banner-${pool.id}">
-            <img src="${getPoolBannerChar(pool.id)}" alt="${pool.name}" class="gacha-banner-hero" loading="lazy"
-              onerror="this.onerror=null;this.style.display='none'">
+            ${heroHtml}
             <div class="gacha-pool-banner-overlay">
               <span class="gacha-pool-badge">${pool.icon} ${pool.name}</span>
               <p>${pool.banner}</p>
