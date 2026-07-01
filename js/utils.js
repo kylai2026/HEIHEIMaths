@@ -181,6 +181,10 @@ const Storage = {
     if (data.coins && !data.points) data.points = data.coins;
     if (!data.points && data.points !== 0) data.points = 0;
     if (!data.bonusPoints && data.bonusPoints !== 0) data.bonusPoints = 0;
+    if (data.gachaPointsSpent === undefined || data.gachaPointsSpent === null) {
+      const pulls = data.gachaStats?.totalPulls || 0;
+      data.gachaPointsSpent = pulls * 10;
+    }
     if (!data.xp && data.xp !== 0) data.xp = 0;
     delete data.examScoreEstimate;
     delete data.targetExamScore;
@@ -286,6 +290,7 @@ const Storage = {
       xp: 0,
       points: 0,
       bonusPoints: 0,
+      gachaPointsSpent: 0,
       badges: [],
       redeemedGifts: [],
       weeklyPoints: { weekKey: null, easy: 0, medium: 0, hard: 0 },
@@ -333,18 +338,20 @@ const Storage = {
     return (data.points || 0) + (data.bonusPoints || 0);
   },
 
-  spendPoints(data, amount) {
+  spendPoints(data, amount, reason = 'spend') {
     if (typeof getActiveUnlimitedPoints === 'function' && getActiveUnlimitedPoints()) return true;
     let left = amount;
     const bonus = data.bonusPoints || 0;
     if (bonus >= left) {
       data.bonusPoints = bonus - left;
+      if (reason === 'gacha') data.gachaPointsSpent = (data.gachaPointsSpent || 0) + amount;
       return true;
     }
     left -= bonus;
     data.bonusPoints = 0;
     if ((data.points || 0) < left) return false;
     data.points -= left;
+    if (reason === 'gacha') data.gachaPointsSpent = (data.gachaPointsSpent || 0) + amount;
     return true;
   },
 

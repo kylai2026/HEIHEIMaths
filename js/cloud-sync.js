@@ -158,6 +158,30 @@ const CloudSync = {
     return merged;
   },
 
+  mergePointsBalance(localBase, cloudBase, newerIsCloud) {
+    const pick = (base) => ({
+      points: base.points || 0,
+      bonusPoints: base.bonusPoints || 0
+    });
+    const local = pick(localBase);
+    const cloud = pick(cloudBase);
+    const localSpent = localBase.gachaPointsSpent || 0;
+    const cloudSpent = cloudBase.gachaPointsSpent || 0;
+
+    if (localSpent !== cloudSpent) {
+      return localSpent > cloudSpent ? local : cloud;
+    }
+
+    const newer = newerIsCloud ? cloud : local;
+    const older = newerIsCloud ? local : cloud;
+    const newerTotal = newer.points + newer.bonusPoints;
+    const olderTotal = older.points + older.bonusPoints;
+
+    if (newerTotal < olderTotal) return newer;
+    if (newerTotal > olderTotal) return newer;
+    return newer;
+  },
+
   mergeProgress(local, cloud, cloudUpdatedAt) {
     const localBase = Storage.migrate(local || Storage.defaultData());
     const cloudBase = Storage.migrate(cloud || Storage.defaultData());
@@ -167,8 +191,10 @@ const CloudSync = {
 
     const merged = newerIsCloud ? { ...cloudBase } : { ...localBase };
 
-    merged.points = Math.max(localBase.points || 0, cloudBase.points || 0);
-    merged.bonusPoints = Math.max(localBase.bonusPoints || 0, cloudBase.bonusPoints || 0);
+    const balance = this.mergePointsBalance(localBase, cloudBase, newerIsCloud);
+    merged.points = balance.points;
+    merged.bonusPoints = balance.bonusPoints;
+    merged.gachaPointsSpent = Math.max(localBase.gachaPointsSpent || 0, cloudBase.gachaPointsSpent || 0);
     merged.xp = Math.max(localBase.xp || 0, cloudBase.xp || 0);
     merged.totalAnswered = Math.max(localBase.totalAnswered || 0, cloudBase.totalAnswered || 0);
     merged.totalCorrect = Math.max(localBase.totalCorrect || 0, cloudBase.totalCorrect || 0);

@@ -231,10 +231,10 @@ const RewardSystem = {
     if (!gift) return { ok: false, msg: '找不到禮物' };
     if (!data.redeemedGifts) data.redeemedGifts = [];
     if (data.redeemedGifts.includes(giftId)) return { ok: false, msg: '已經兌換過呢個禮物' };
-    if ((data.points || 0) < gift.cost) {
-      return { ok: false, msg: `積分唔夠！需要 ${gift.cost} 分，你而家有 ${data.points || 0} 分` };
+    if (!Storage.canAffordPoints(data, gift.cost)) {
+      return { ok: false, msg: `積分唔夠！需要 ${gift.cost} 分，你而家有 ${Storage.getPoints(data)} 分` };
     }
-    data.points -= gift.cost;
+    Storage.spendPoints(data, gift.cost);
     data.redeemedGifts.push(giftId);
     return { ok: true, gift };
   }
