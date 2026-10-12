@@ -304,10 +304,13 @@ const CloudSync = {
         const merged = this.mergeProgress(cfBase, sb.data, sb.updated_at);
         const cfTs = cf.updated_at ? new Date(cf.updated_at).getTime() : 0;
         const sbTs = sb.updated_at ? new Date(sb.updated_at).getTime() : 0;
+        const latestTs = Math.max(cfTs, sbTs);
         this.activeBackend = 'dual';
         return {
           data: merged,
-          updated_at: new Date(Math.max(cfTs, sbTs, Date.now())).toISOString(),
+          updated_at: latestTs
+            ? new Date(latestTs).toISOString()
+            : (cf.updated_at || sb.updated_at || new Date().toISOString()),
           source: 'dual'
         };
       }
