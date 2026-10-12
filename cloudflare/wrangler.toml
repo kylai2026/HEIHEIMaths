@@ -1,0 +1,13 @@
+name = "heiheimaths-progress"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "heiheimaths-progress"
+database_id = "f1ef47dd-422e-4456-b84a-2955d4962594"
+migrations_dir = "migrations"
+
+[vars]
+# Optional: restrict writes in production via shared secret header
+# API_SECRET = "set-in-dashboard-or-wrangler-secret"

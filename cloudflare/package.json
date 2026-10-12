@@ -1,0 +1,17 @@
+{
+  "name": "heiheimaths-progress-worker",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:create": "wrangler d1 create heiheimaths-progress",
+    "db:migrate:local": "wrangler d1 migrations apply heiheimaths-progress --local",
+    "db:migrate:remote": "wrangler d1 migrations apply heiheimaths-progress --remote",
+    "db:import:local": "node scripts/import-backup.mjs --local",
+    "db:import:remote": "node scripts/import-backup.mjs --remote",
+    "db:import:api": "node scripts/import-via-curl.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

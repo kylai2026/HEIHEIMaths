@@ -4,3 +4,8 @@ scripts/marvel-keys.local.json
 
 # Cursor 暫存圖片
 assets/img/c__Users_*
+
+# Cloudflare / Node
+cloudflare/node_modules/
+cloudflare/.wrangler/
+cloudflare/scripts/_import-temp.sql

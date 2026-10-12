@@ -4,14 +4,45 @@ const CloudSync = {
   pushTimer: null,
   status: 'offline',
   lastError: null,
+  activeBackend: null,
 
   PROFILE_KEY: 'p5maths_profile',
 
-  isConfigured() {
+  syncMode() {
+    if (typeof CLOUD_SYNC_MODE === 'string' && CLOUD_SYNC_MODE) return CLOUD_SYNC_MODE;
+    return 'supabase';
+  },
+
+  cloudflareUrl() {
+    return typeof CLOUDFLARE_PROGRESS_URL === 'string'
+      ? CLOUDFLARE_PROGRESS_URL.trim().replace(/\/$/, '')
+      : '';
+  },
+
+  hasCloudflare() {
+    return this.cloudflareUrl().startsWith('https://');
+  },
+
+  hasSupabase() {
     return typeof SUPABASE_URL === 'string'
       && typeof SUPABASE_ANON_KEY === 'string'
       && SUPABASE_URL.startsWith('https://')
-      && !SUPABASE_URL.includes('YOUR_SUPABASE');
+      && !SUPABASE_URL.includes('YOUR_SUPABASE')
+      && typeof supabase !== 'undefined';
+  },
+
+  isConfigured() {
+    const mode = this.syncMode();
+    if (mode === 'cloudflare') return this.hasCloudflare();
+    if (mode === 'dual') return this.hasCloudflare() || this.hasSupabase();
+    return this.hasSupabase();
+  },
+
+  ensureSupabaseClient() {
+    if (this.client) return this.client;
+    if (!this.hasSupabase()) return null;
+    this.client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    return this.client;
   },
 
   makeProfileKey(familyCode, studentName) {
@@ -58,16 +89,17 @@ const CloudSync = {
     const info = map[status] || map.offline;
     el.className = `sync-status ${info.cls}`;
     el.textContent = info.text;
-    el.title = error ? String(error) : (this.profile ? `${this.profile.studentName} · 雲端已連線` : '');
+    const backend = this.activeBackend ? ` · ${this.activeBackend}` : '';
+    el.title = error
+      ? String(error)
+      : (this.profile ? `${this.profile.studentName} · 雲端已連線${backend}` : '');
   },
 
   async init() {
     this.profile = this.getProfile();
+    this.ensureSupabaseClient();
 
     if (!this.profile) {
-      if (this.isConfigured() && typeof supabase !== 'undefined') {
-        this.client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      }
       this.setStatus('offline');
       return { ok: false, needSetup: true, mode: this.isConfigured() ? 'cloud' : 'local' };
     }
@@ -76,13 +108,6 @@ const CloudSync = {
       this.setStatus('offline');
       return { ok: true, mode: 'local' };
     }
-
-    if (typeof supabase === 'undefined') {
-      this.setStatus('error', 'Supabase SDK 未載入');
-      return { ok: true, mode: 'local' };
-    }
-
-    this.client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     try {
       this.setStatus('syncing');
@@ -173,12 +198,6 @@ const CloudSync = {
     }
 
     const newer = newerIsCloud ? cloud : local;
-    const older = newerIsCloud ? local : cloud;
-    const newerTotal = newer.points + newer.bonusPoints;
-    const olderTotal = older.points + older.bonusPoints;
-
-    if (newerTotal < olderTotal) return newer;
-    if (newerTotal > olderTotal) return newer;
     return newer;
   },
 
@@ -234,62 +253,162 @@ const CloudSync = {
     return Storage.migrate(merged);
   },
 
-  async pull() {
-    if (!this.client || !this.profile) return;
+  async fetchFromCloudflare(profileKey) {
+    if (!this.hasCloudflare()) return null;
+    const url = `${this.cloudflareUrl()}/api/progress?profile_key=${encodeURIComponent(profileKey)}`;
+    const res = await fetch(url, { method: 'GET' });
+    if (!res.ok) throw new Error(`Cloudflare GET ${res.status}`);
+    const body = await res.json();
+    if (!body || !body.data) return null;
+    return { data: body.data, updated_at: body.updated_at, source: 'cloudflare' };
+  },
 
-    const { data, error } = await this.client
+  async fetchFromSupabase(profileKey) {
+    const client = this.ensureSupabaseClient();
+    if (!client) return null;
+    const { data, error } = await client
       .from('progress')
       .select('data, updated_at')
-      .eq('profile_key', this.profile.profileKey)
+      .eq('profile_key', profileKey)
       .maybeSingle();
-
     if (error) throw error;
-    if (!data || !data.data) return;
+    if (!data || !data.data) return null;
+    return { data: data.data, updated_at: data.updated_at, source: 'supabase' };
+  },
 
-    const cloud = Storage.migrate(data.data);
+  async readRemote(profileKey) {
+    const mode = this.syncMode();
+    const errors = [];
+
+    if (mode === 'cloudflare' || mode === 'dual') {
+      try {
+        const cf = await this.fetchFromCloudflare(profileKey);
+        if (cf) {
+          this.activeBackend = 'cloudflare';
+          return cf;
+        }
+      } catch (err) {
+        errors.push(err);
+        console.warn('Cloudflare pull failed:', err);
+      }
+    }
+
+    if (mode === 'supabase' || mode === 'dual') {
+      try {
+        const sb = await this.fetchFromSupabase(profileKey);
+        if (sb) {
+          this.activeBackend = mode === 'dual' ? 'supabase-fallback' : 'supabase';
+          return sb;
+        }
+      } catch (err) {
+        errors.push(err);
+        console.warn('Supabase pull failed:', err);
+      }
+    }
+
+    if (errors.length && mode !== 'dual') throw errors[0];
+    return null;
+  },
+
+  async writeCloudflare(profile, payload, updatedAt) {
+    if (!this.hasCloudflare()) return false;
+    const url = `${this.cloudflareUrl()}/api/progress?profile_key=${encodeURIComponent(profile.profileKey)}`;
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        family_code: profile.familyCode,
+        student_name: profile.studentName,
+        data: payload,
+        updated_at: updatedAt
+      })
+    });
+    if (!res.ok) throw new Error(`Cloudflare PUT ${res.status}`);
+    return true;
+  },
+
+  async writeSupabase(profile, payload, updatedAt) {
+    const client = this.ensureSupabaseClient();
+    if (!client) return false;
+    const row = {
+      profile_key: profile.profileKey,
+      family_code: profile.familyCode,
+      student_name: profile.studentName,
+      data: payload,
+      updated_at: updatedAt
+    };
+    const { error } = await client.from('progress').upsert(row, { onConflict: 'profile_key' });
+    if (error) throw error;
+    return true;
+  },
+
+  async writeRemote(profile, payload) {
+    const mode = this.syncMode();
+    const updatedAt = new Date().toISOString();
+    const results = { cloudflare: false, supabase: false };
+    const errors = [];
+
+    if (mode === 'cloudflare' || mode === 'dual') {
+      try {
+        results.cloudflare = await this.writeCloudflare(profile, payload, updatedAt);
+      } catch (err) {
+        errors.push(err);
+        console.warn('Cloudflare push failed:', err);
+      }
+    }
+
+    if (mode === 'supabase' || mode === 'dual') {
+      try {
+        results.supabase = await this.writeSupabase(profile, payload, updatedAt);
+      } catch (err) {
+        errors.push(err);
+        console.warn('Supabase push failed:', err);
+      }
+    }
+
+    if (!results.cloudflare && !results.supabase) {
+      throw errors[0] || new Error('No cloud backend available');
+    }
+
+    if (results.cloudflare) this.activeBackend = results.supabase ? 'dual' : 'cloudflare';
+    else this.activeBackend = 'supabase';
+
+    return updatedAt;
+  },
+
+  async pull() {
+    if (!this.profile || !this.isConfigured()) return;
+
+    const remote = await this.readRemote(this.profile.profileKey);
+    if (!remote || !remote.data) return;
+
+    const cloud = Storage.migrate(remote.data);
     const local = Storage.load();
-    const merged = this.mergeProgress(local, cloud, data.updated_at);
+    const merged = this.mergeProgress(local, cloud, remote.updated_at);
     Storage.saveLocal(merged);
   },
 
   schedulePush() {
-    if (!this.client || !this.profile) return;
+    if (!this.profile || !this.isConfigured()) return;
     clearTimeout(this.pushTimer);
     this.pushTimer = setTimeout(() => this.push(), 600);
   },
 
   async push() {
-    if (!this.client || !this.profile) return;
+    if (!this.profile || !this.isConfigured()) return;
 
     try {
       this.setStatus('syncing');
       let payload = Storage.load();
 
-      const { data: remote, error: readError } = await this.client
-        .from('progress')
-        .select('data, updated_at')
-        .eq('profile_key', this.profile.profileKey)
-        .maybeSingle();
-
-      if (!readError && remote?.data) {
+      const remote = await this.readRemote(this.profile.profileKey);
+      if (remote?.data) {
         payload = this.mergeProgress(payload, Storage.migrate(remote.data), remote.updated_at);
         Storage.saveLocal(payload);
       }
 
-      const row = {
-        profile_key: this.profile.profileKey,
-        family_code: this.profile.familyCode,
-        student_name: this.profile.studentName,
-        data: payload,
-        updated_at: new Date().toISOString()
-      };
-
-      const { error } = await this.client
-        .from('progress')
-        .upsert(row, { onConflict: 'profile_key' });
-
-      if (error) throw error;
-      payload._syncMeta = { updatedAt: row.updated_at };
+      const updatedAt = await this.writeRemote(this.profile, payload);
+      payload._syncMeta = { updatedAt };
       Storage.saveLocal(payload);
       this.setStatus('synced');
     } catch (err) {
@@ -308,12 +427,10 @@ const CloudSync = {
     }
 
     this.setProfile(familyCode, studentName);
-    if (!this.client) {
-      if (this.isConfigured() && typeof supabase !== 'undefined') {
-        this.client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      } else {
-        return { ok: true, mode: 'local' };
-      }
+    this.ensureSupabaseClient();
+
+    if (!this.isConfigured()) {
+      return { ok: true, mode: 'local' };
     }
 
     try {
@@ -330,21 +447,16 @@ const CloudSync = {
   },
 
   async resetCloud() {
-    if (!this.client || !this.profile) return;
+    if (!this.profile || !this.isConfigured()) return;
     const empty = Storage.defaultData();
     Storage.saveLocal(empty);
     await this.push();
   },
 
   async fetchStudentData(studentName) {
-    if (!this.client || !this.profile) return null;
+    if (!this.profile || !this.isConfigured()) return null;
     const profileKey = this.makeProfileKey(this.profile.familyCode, studentName);
-    const { data, error } = await this.client
-      .from('progress')
-      .select('data')
-      .eq('profile_key', profileKey)
-      .maybeSingle();
-    if (error) throw error;
-    return data?.data ? Storage.migrate(data.data) : null;
+    const remote = await this.readRemote(profileKey);
+    return remote?.data ? Storage.migrate(remote.data) : null;
   }
 };
