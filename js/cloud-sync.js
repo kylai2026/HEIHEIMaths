@@ -280,7 +280,49 @@ const CloudSync = {
     const mode = this.syncMode();
     const errors = [];
 
-    if (mode === 'cloudflare' || mode === 'dual') {
+    if (mode === 'dual') {
+      let cf = null;
+      let sb = null;
+      try {
+        cf = await this.fetchFromCloudflare(profileKey);
+      } catch (err) {
+        errors.push(err);
+        console.warn('Cloudflare pull failed:', err);
+      }
+      try {
+        sb = await this.fetchFromSupabase(profileKey);
+      } catch (err) {
+        errors.push(err);
+        console.warn('Supabase pull failed:', err);
+      }
+
+      if (cf && sb) {
+        const cfBase = {
+          ...Storage.migrate(cf.data),
+          _syncMeta: { updatedAt: cf.updated_at }
+        };
+        const merged = this.mergeProgress(cfBase, sb.data, sb.updated_at);
+        const cfTs = cf.updated_at ? new Date(cf.updated_at).getTime() : 0;
+        const sbTs = sb.updated_at ? new Date(sb.updated_at).getTime() : 0;
+        this.activeBackend = 'dual';
+        return {
+          data: merged,
+          updated_at: new Date(Math.max(cfTs, sbTs, Date.now())).toISOString(),
+          source: 'dual'
+        };
+      }
+      if (cf) {
+        this.activeBackend = 'cloudflare';
+        return cf;
+      }
+      if (sb) {
+        this.activeBackend = 'supabase-fallback';
+        return sb;
+      }
+      return null;
+    }
+
+    if (mode === 'cloudflare') {
       try {
         const cf = await this.fetchFromCloudflare(profileKey);
         if (cf) {
@@ -293,11 +335,11 @@ const CloudSync = {
       }
     }
 
-    if (mode === 'supabase' || mode === 'dual') {
+    if (mode === 'supabase') {
       try {
         const sb = await this.fetchFromSupabase(profileKey);
         if (sb) {
-          this.activeBackend = mode === 'dual' ? 'supabase-fallback' : 'supabase';
+          this.activeBackend = 'supabase';
           return sb;
         }
       } catch (err) {
@@ -306,7 +348,7 @@ const CloudSync = {
       }
     }
 
-    if (errors.length && mode !== 'dual') throw errors[0];
+    if (errors.length) throw errors[0];
     return null;
   },
 
